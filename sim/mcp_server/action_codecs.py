@@ -204,6 +204,7 @@ def cartesian_scales(meta: dict[str, Any], backend: str) -> tuple[float, float]:
         "maniskill": (0.003, 0.05),
         "robocasa": (0.05, 0.05),
         "dummy": (0.005, 0.05),
+        "robodojo": (0.01, 0.1),
     }.get(backend, (0.0, 0.0))
 
 
@@ -213,7 +214,7 @@ def cartesian_command_frame(meta: dict[str, Any], backend: str) -> str:
         return str(_declared_behavior_layout(meta).get("command_frame", "robot_base"))
     if backend == "robocasa":
         return "robot_base"
-    if backend in _DEFAULT_ACTION_DIMS:
+    if backend in _DEFAULT_ACTION_DIMS or backend == "robodojo":
         return "world"
     raise ControlCodecError(
         "unsupported_cartesian_control", backend, f"move_to is unsupported for {backend!r}"
@@ -225,8 +226,41 @@ def make_cartesian_action(
     delta_xyz: tuple[float, float, float] | list[float],
     backend: str,
     delta_rot: list[float] | None = None,
-) -> list[float]:
+    arm: str | None = None,
+) -> list[float] | dict[str, Any]:
     """Encode one normalized Cartesian delta without guessing action slots."""
+    if backend == "robodojo":
+        # RoboDojo's adapter consumes a structured ee_delta action. The
+        # caller supplies normalized values; convert them to metres/radians
+        # using the same explicit scales as the closed-loop controller.
+        position_scale, rotation_scale = cartesian_scales(meta, backend)
+        if meta.get("robot_variant") == "dual_x5":
+            selected = arm or "both"
+            if selected not in {"left", "right", "both"}:
+                raise ControlCodecError(
+                    "invalid_arm_selector", backend,
+                    "RoboDojo dual-arm move_to arm must be 'left', 'right', or 'both'",
+                )
+            arms = {
+                side: {"mode": "ee_delta", "delta_xyz": ([float(v) * position_scale for v in delta_xyz[:3]]
+                                      if selected in {"both", side} else [0.0, 0.0, 0.0]),
+                       "delta_rotvec": [0.0, 0.0, 0.0]}
+                for side in ("left", "right")
+            }
+            if delta_rot is not None:
+                for side in arms:
+                    if selected in {"both", side}:
+                        arms[side]["delta_rotvec"] = [float(v) * rotation_scale for v in delta_rot[:3]]
+            return {"arms": arms, "synchronization": {"barrier": True, "max_skew_steps": 0}}
+        action: dict[str, Any] = {
+            "mode": "ee_delta",
+            "arm": "primary",
+            "delta_xyz": [float(v) * position_scale for v in delta_xyz[:3]],
+            "delta_rotvec": [0.0, 0.0, 0.0],
+        }
+        if delta_rot is not None:
+            action["delta_rotvec"] = [float(v) * rotation_scale for v in delta_rot[:3]]
+        return action  # type: ignore[return-value]
     if backend == "behavior":
         layout = _declared_behavior_layout(meta)
     elif backend not in _DEFAULT_ACTION_DIMS:
@@ -271,7 +305,8 @@ def make_cartesian_action(
     return action
 
 
-def make_gripper_action(meta: dict[str, Any], *, open_gripper: bool, backend: str) -> list[float]:
+def make_gripper_action(meta: dict[str, Any], *, open_gripper: bool, backend: str,
+                        arm: str | None = None) -> list[float] | dict[str, Any]:
     """Encode one gripper command using a declared or known backend layout."""
     if backend == "behavior":
         spec = meta.get("control_spec")
@@ -280,6 +315,27 @@ def make_gripper_action(meta: dict[str, Any], *, open_gripper: bool, backend: st
             raise ControlCodecError(
                 "unsupported_gripper_control", backend, "BEHAVIOR gripper layout was not declared"
             )
+    elif backend == "robodojo":
+        if meta.get("robot_variant") == "dual_x5":
+            if arm not in {None, "left", "right", "both"}:
+                raise ControlCodecError(
+                    "invalid_arm_selector", backend,
+                    "RoboDojo dual gripper arm must be 'left', 'right', or 'both'",
+                )
+            value = 1.0 if open_gripper else 0.0
+            selected = "both" if arm is None else arm
+            return {"arms": {
+                        side: {"mode": "joint_position", "positions": [],
+                               **({"gripper": value} if selected in {"both", side} else {})}
+                        for side in ("left", "right")},
+                    "synchronization": {"barrier": True, "max_skew_steps": 0}}
+        return {
+            "mode": "ee_delta",
+            "arm": "primary",
+            "delta_xyz": [0.0, 0.0, 0.0],
+            "delta_rotvec": [0.0, 0.0, 0.0],
+            "gripper": 1.0 if open_gripper else 0.0,
+        }
     elif backend not in _DEFAULT_ACTION_DIMS:
         raise ControlCodecError(
             "unsupported_gripper_control", backend, f"gripper control is unsupported for {backend!r}"

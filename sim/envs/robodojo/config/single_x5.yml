@@ -1,0 +1,12 @@
+benchmark_commit: ee67a1468510da7624a089164402359f2afc72c8
+# Stage2 overlay in RoboDojo's native robot-config shape.  The upstream
+# checkout only ships dual_x5.yml, so this deliberately keeps one target arm.
+robots:
+  - {
+      robot_type: arm,
+      robot_name: x5,
+      coupled: false,
+      default_root_pos: [0.0, -0.45, 0.765],
+      default_root_rot: [0.707, 0.0, 0.0, 0.707],
+      grasp_perfect_direction: "top_down_little_right"
+    }

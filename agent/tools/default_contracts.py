@@ -13,6 +13,10 @@ from dataclasses import replace
 from typing import Any
 
 from adapter.protocol import JsonDict
+from agent.tools.grasp_types import (
+    GRASP_GEOMETRY_FAMILIES,
+    GRASP_GEOMETRY_FAMILY_HINT,
+)
 from agent.tools.contracts import (
     ContractMaturity,
     EvidenceLifetimeContract,
@@ -203,6 +207,7 @@ def build_default_contract_overrides(
 
     specs = {spec.name: spec for spec in tool_specs}
     builders = {
+        "inspect_evidence": _inspect_evidence,
         "observe": _observe,
         "create_simulator_env": _create_simulator_env,
         "close_simulator_env": _close_simulator_env,
@@ -267,20 +272,9 @@ def build_default_contract_overrides(
 
 
 _COMPILED_GRASP_REPAIR_CODES = (
-    "attached_release_after_failed_motion",
-    "compiled_clearance_not_reached",
-    "compiled_contact_approach_misaligned",
-    "compiled_contact_orientation_misaligned",
-    "compiled_contact_not_reached",
-    "compiled_contact_receipt_mismatch",
-    "compiled_contact_receipt_missing",
-    "compiled_contact_receipt_stale",
     "compiled_grasp_adjustment_invalid",
-    "compiled_grasp_adjustment_out_of_bounds",
     "compiled_grasp_adjustment_stale",
-    "compiled_grasp_adjustment_superseded",
     "compiled_grasp_adjustment_unresolved",
-    "compiled_grasp_adjustment_unverified_orientation_policy",
     "compiled_grasp_target_superseded",
 )
 
@@ -288,15 +282,29 @@ _COMPILED_GRASP_REPAIR_CODES = (
 def _runtime_gate_bindings(tool_name: str) -> tuple[GateCheckBinding, ...]:
     """Bind live gate branches to stable contract ids without prescribing order."""
 
-    bindings: list[GateCheckBinding] = []
+    bindings: list[GateCheckBinding] = [
+        GateCheckBinding(
+            check_id="runtime.tool_admission",
+            description=(
+                "Executable tool attempts require Host quota admission before "
+                "authorization and handler dispatch; Agent parameters cannot extend it."
+            ),
+            implementation="agent/tools/registry.py:ToolRegistry.call",
+            repair_codes=("tool_call_budget_exhausted",),
+            applies_when="a Host episode tool-call budget is bound to the execution scope",
+        ),
+    ]
     if tool_name != "observe":
         bindings.append(
             GateCheckBinding(
                 check_id="runtime.motion_reconciliation",
-                description="Unknown mutation outcomes must be observed and reconciled.",
+                description=(
+                    "Unknown remote mutations remain fenced; position-only observations "
+                    "cannot prove completion. Stop the episode pending Host cleanup."
+                ),
                 implementation="agent/runtime/memory.py:AgentMemory.motion_reconciliation_gate_error",
                 repair_codes=("motion_reconciliation_required",),
-                applies_when="motion reconciliation status is required or unresolved",
+                applies_when="a motion reconciliation record exists, including legacy position-only verdicts",
             )
         )
     if tool_name in {
@@ -367,7 +375,7 @@ def _runtime_gate_bindings(tool_name: str) -> tuple[GateCheckBinding, ...]:
         bindings.append(
             GateCheckBinding(
                 check_id="runtime.compiled_grasp_provenance",
-                description="Contact and close cannot treat stale or failed grasp evidence as success.",
+                description="Supplied motion references must be valid; failed grasp/placement outcomes are advisory, not gripper vetoes.",
                 implementation="agent/runtime/memory.py:AgentMemory.compiled_grasp_target_gate_error",
                 repair_codes=_COMPILED_GRASP_REPAIR_CODES,
                 applies_when="the action is geometrically tied to a compiled targeted grasp",
@@ -955,6 +963,7 @@ def _retrieve_asset_reference(spec: ToolSpecLike) -> ToolContract:
                 "target_object": _string(minLength=1),
                 "source_packet_id": _string(minLength=1),
                 "camera_frame_id": _string(minLength=1),
+                "localize": {"type": "boolean", "default": True},
             },
             required=("environment", "target_object", "source_packet_id"),
         ),
@@ -980,6 +989,14 @@ def _retrieve_asset_reference(spec: ToolSpecLike) -> ToolContract:
                 ),
             ),
             OutcomeContract(
+                "reference_images_available", True,
+                _outputs(("reference_images", "localization_status", "identity_confirmed"), {
+                    "reference_images": _array(_string(), minItems=1),
+                    "localization_status": _string(enum=["not_requested"]),
+                    "identity_confirmed": {"const": False},
+                }),
+            ),
+            OutcomeContract(
                 "reference_service_unavailable",
                 False,
                 _object(additional_properties=True),
@@ -991,7 +1008,7 @@ def _retrieve_asset_reference(spec: ToolSpecLike) -> ToolContract:
         host_resolution=HostResolutionContract(
             mode="object_memory_plus_packet",
             resolver="object-memory reference handler and packet resolver",
-            agent_parameters=("environment", "target_object", "source_packet_id", "camera_frame_id"),
+            agent_parameters=("environment", "target_object", "source_packet_id", "camera_frame_id", "localize"),
             resolved_parameters=("scene image", "ranked canonical references", "localizer inputs"),
             freshness_dimensions=("source packet id",),
             invalidated_by=("unknown packet", "ambiguous/low-confidence memory resolution"),
@@ -1143,9 +1160,16 @@ def _sam3(spec: ToolSpecLike) -> ToolContract:
         },
         required=("source_packet_id",),
         one_of=[
-            {"required": ["prompt"], "properties": {"mode": {"enum": ["text"]}}},
-            {"required": ["points"], "properties": {"mode": {"enum": ["points"]}}},
-            {"required": ["positive_points"]},
+            {"required": ["prompt"], "properties": {
+                "mode": {"enum": ["text"]}, "points": {"maxItems": 0},
+                "positive_points": {"maxItems": 0},
+            }},
+            {"required": ["points"], "properties": {
+                "mode": {"enum": ["points"]}, "prompt": {"maxLength": 0},
+            }},
+            {"required": ["positive_points"], "properties": {
+                "mode": {"enum": ["points"]}, "prompt": {"maxLength": 0},
+            }},
         ],
     )
     common = {
@@ -1238,12 +1262,20 @@ def _select_sam3(spec: ToolSpecLike) -> ToolContract:
             "detection_id": _string(minLength=1),
             "selection_confidence": _number(minimum=0, maximum=1),
             "reason": _string(),
-            "identity_anchor_id": _string(),
+            "identity_anchor_id": _string("Omit on first target selection; Host creates an anchor. For later target evidence copy the exact active anchor, not a catalog name."),
             "identity_relation": _string(
-                enum=["same_instance", "replace_misidentified_anchor"]
+                "Omit on first selection. With an existing anchor, explicitly confirm continuity, advance to another required target, or correct a misidentification.",
+                enum=[
+                    "same_instance",
+                    "new_task_target",
+                    "replace_misidentified_anchor",
+                ]
             ),
             "evidence_role": _string(enum=["target_object", "placement_region"]),
-            "target_geometry_family": _string(),
+            "target_geometry_family": _string(
+                GRASP_GEOMETRY_FAMILY_HINT,
+                enum=["", *sorted(GRASP_GEOMETRY_FAMILIES)],
+            ),
         },
         required=("sam3_result_id", "detection_id"),
     )
@@ -1309,6 +1341,15 @@ def _select_sam3(spec: ToolSpecLike) -> ToolContract:
     )
 
 
+def _handoff_bundles_schema() -> JsonDict:
+    return _array(_object({
+        "bundle_id": _string(minLength=1),
+        "kind": _string(enum=["grasp_candidates", "target_pose", "ik_result"]),
+        "summary": _object(additional_properties=True),
+        "path": _string(), "sha256": _string(), "session_id": _string(),
+    }, required=("bundle_id", "kind", "summary"), additional_properties=True), maxItems=8)
+
+
 def _grasp_pose_estimate(spec: ToolSpecLike) -> ToolContract:
     request = _object(
         {
@@ -1339,6 +1380,7 @@ def _grasp_pose_estimate(spec: ToolSpecLike) -> ToolContract:
                         "grasp_candidates": _array(_object(additional_properties=True), minItems=1),
                         "selected_backend": _string(),
                         "complete_outputs_artifact": _object(additional_properties=True),
+                        "handoff_bundles": _handoff_bundles_schema(),
                     },
                 ),
                 produces=(
@@ -1394,15 +1436,22 @@ def _grasp_pose_estimate(spec: ToolSpecLike) -> ToolContract:
 def _compile_grasp_seed(spec: ToolSpecLike) -> ToolContract:
     request = _object(
         {
+            "bundle_id": _string("Host-owned grasp candidate collection bundle.", minLength=1),
             "grasp_result_id": _string(minLength=1),
             "candidate_id": _string(minLength=1),
-            "target_geometry_family": _string(),
+            "target_geometry_family": _string(
+                "Optional geometry hint. Unlike select_sam3_detection, compilation "
+                "accepts extension strings; unmatched families use the generic "
+                "calibrated transform, not a validated task-family strategy.",
+                examples=sorted(GRASP_GEOMETRY_FAMILIES),
+            ),
             "target_class": _string(),
             "strategy_id": _string(),
             "articulated_handle_options": _object(additional_properties=False),
             "pregrasp_distance_m": _number(minimum=0.04, maximum=0.16),
         },
-        required=("grasp_result_id", "candidate_id"),
+        required=("candidate_id",),
+        one_of=[{"required": ["grasp_result_id"]}, {"required": ["bundle_id"]}],
     )
     return _explicit_contract(
         spec,
@@ -1418,6 +1467,7 @@ def _compile_grasp_seed(spec: ToolSpecLike) -> ToolContract:
                     ("schema_version", "compiled_grasp_id", "candidate_id"),
                     {
                         "schema_version": _string(enum=[COMPILED_GRASP]),
+                        "handoff_bundles": _handoff_bundles_schema(),
                         "compiled_grasp_id": _string(),
                         "candidate_id": _string(),
                         "contact_pose": _object(additional_properties=True),
@@ -1433,10 +1483,11 @@ def _compile_grasp_seed(spec: ToolSpecLike) -> ToolContract:
         host_resolution=HostResolutionContract(
             mode="evidence_graph_lookup",
             resolver="AgentMemory.resolve_grasp_candidate_input",
-            agent_parameters=("grasp_result_id", "candidate_id"),
+            agent_parameters=("bundle_id or grasp_result_id", "candidate_id"),
             resolved_parameters=("camera_pose", "source observation", "camera calibration"),
             freshness_dimensions=("object_scene_epoch",),
             invalidated_by=("candidate missing from result", "stale object-scene epoch"),
+            description="A registered grasp_candidates bundle is first resolved by AgentMemory.resolve_tool_bundle to the legacy result reference; candidate and provenance gates then run unchanged.",
         ),
         evidence_lifetime=EvidenceLifetimeContract(
             scope="provenance_branch",
@@ -1458,6 +1509,7 @@ def _compile_grasp_seed(spec: ToolSpecLike) -> ToolContract:
 
 
 def _propose_wrist_viewpoints(spec: ToolSpecLike) -> ToolContract:
+    vector = _array(_number(), minItems=3, maxItems=3)
     request = _object(
         {
             "compiled_grasp_id": _string(minLength=1),
@@ -1478,11 +1530,33 @@ def _propose_wrist_viewpoints(spec: ToolSpecLike) -> ToolContract:
                 "completed",
                 True,
                 _outputs(
-                    ("schema_version", "proposal_id", "candidates"),
+                    (
+                        "schema_version", "proposal_id", "candidates", "compiled_grasp_id",
+                        "source_packet_id", "camera_frame_id", "object_scene_epoch",
+                        "robot_motion_epoch", "target_anchor_world_xyz", "camera_mount",
+                    ),
                     {
                         "schema_version": _string(enum=[WRIST_VIEWPOINT_PROPOSAL]),
+                        "handoff_bundles": _handoff_bundles_schema(),
+                        "geometry_intent": _object(additional_properties=True),
                         "proposal_id": _string(),
-                        "candidates": _array(_object(additional_properties=True), minItems=1),
+                        "compiled_grasp_id": _string(minLength=1),
+                        "source_packet_id": _string(minLength=1),
+                        "camera_frame_id": _string(minLength=1),
+                        "object_scene_epoch": _integer(minimum=0),
+                        "robot_motion_epoch": _integer(minimum=0),
+                        "target_anchor_world_xyz": vector,
+                        "camera_mount": _object(
+                            {
+                                "eef_to_camera_translation_xyz": vector,
+                                "eef_to_camera_rotation_matrix": _array(vector, minItems=3, maxItems=3),
+                            },
+                            required=("eef_to_camera_translation_xyz", "eef_to_camera_rotation_matrix"),
+                            additional_properties=True,
+                        ),
+                        "candidates": _array(
+                            _object(additional_properties=True), minItems=1, maxItems=8,
+                        ),
                     },
                 ),
                 produces=(
@@ -1537,6 +1611,7 @@ def _compute_wrist_alignment(spec: ToolSpecLike) -> ToolContract:
                     ("adjusted_contact_pose",),
                     {
                         "adjusted_contact_pose": _object(additional_properties=True),
+                        "geometry_intent": _object(additional_properties=True),
                         "aligned_hover_pose": _object(additional_properties=True),
                         "adjusted_precontact_pose": _object(additional_properties=True),
                         "correction_world_xyz": _array(_number(), minItems=3, maxItems=3),
@@ -1599,6 +1674,7 @@ def _ik_preview_check(spec: ToolSpecLike) -> ToolContract:
     pose = _object(additional_properties=True)
     request = _object(
         {
+            "bundle_id": _string("Host-owned exact target pose bundle.", minLength=1),
             "target_pose": pose,
             "compiled_grasp_id": _string(minLength=1),
             "waypoint_role": _string(
@@ -1615,6 +1691,7 @@ def _ik_preview_check(spec: ToolSpecLike) -> ToolContract:
             "check_endpoint_collision": _boolean(),
         },
         one_of=[
+            {"required": ["bundle_id"]},
             {"required": ["target_pose"]},
             {"required": ["compiled_grasp_id", "waypoint_role"]},
             {"required": ["compiled_grasp_id", "path_fraction"]},
@@ -1622,6 +1699,12 @@ def _ik_preview_check(spec: ToolSpecLike) -> ToolContract:
             {"required": ["probe_id", "waypoint_index"]},
         ],
     )
+    request["oneOf"][0].update({
+        "properties": {key: schema for key, schema in request["properties"].items()
+                       if key in {"bundle_id", "position_tolerance_m", "orientation_tolerance_rad",
+                                  "preserve_current_orientation", "check_endpoint_collision"}},
+        "additionalProperties": False,
+    })
     executable = _fact(
         IK_EXECUTION_AUTHORIZATION,
         "outputs.motion_execution_ref.ik_receipt_id",
@@ -1668,6 +1751,7 @@ def _ik_preview_check(spec: ToolSpecLike) -> ToolContract:
                     ("ik_preview_receipt", "ik_receipt_id", "motion_execution_ref"),
                     {
                         "ik_preview_receipt": _object(additional_properties=True),
+                        "handoff_bundles": _handoff_bundles_schema(),
                         "ik_receipt_id": _string(),
                         "motion_execution_ref": _object(additional_properties=True),
                     },
@@ -1713,6 +1797,7 @@ def _ik_preview_check(spec: ToolSpecLike) -> ToolContract:
             mode="exclusive_reference_or_agent_pose",
             resolver="ActionPipeline IK reference resolver",
             agent_parameters=(
+                "bundle_id",
                 "target_pose",
                 "compiled_grasp_id + waypoint_role",
                 "compiled_grasp_id + path_fraction",
@@ -1745,6 +1830,7 @@ def _ik_preview_check(spec: ToolSpecLike) -> ToolContract:
 
 def additional_ik_properties() -> JsonDict:
     return {
+        "handoff_bundles": _handoff_bundles_schema(),
         "ik_preview_receipt": _object(additional_properties=True),
         "ik_receipt_id": _string(),
         "motion_execution_ref": _object(additional_properties=True),
@@ -1831,6 +1917,7 @@ def _prepare_attachment_probe(spec: ToolSpecLike) -> ToolContract:
         gate=GateContract(
             checks=(
                 "compiled grasp exists and target evidence is current",
+                "gripper command, aperture and proxy are reported as non-blocking probe context",
                 "linear direction is non-zero or arc has 2-5 bounded segments",
                 "total probe length is 0.05 m within tolerance",
                 "current EEF pose and exactly two required RGB views exist",
@@ -1901,13 +1988,14 @@ def _assess_attachment_probe(spec: ToolSpecLike) -> ToolContract:
 def _move_to(spec: ToolSpecLike) -> ToolContract:
     request = _object(
         {
+            "bundle_id": _string("Host-owned IK result bundle; current authorization gates still apply.", minLength=1),
             "ik_receipt_id": _string(minLength=1),
             "num_steps": _integer(minimum=1),
             "tolerance": _number(exclusiveMinimum=0),
             "ori_tolerance": _number(exclusiveMinimum=0),
             "enable_collision_check": _boolean(),
         },
-        required=("ik_receipt_id",),
+        one_of=[{"required": ["ik_receipt_id"]}, {"required": ["bundle_id"]}],
     )
     return _motion_contract(spec, request_schema=request, trajectory=False)
 
@@ -2022,7 +2110,7 @@ def _motion_contract(
         host_resolution=HostResolutionContract(
             mode="execution_receipt_lookup",
             resolver="AgentMemory.resolve_ik_execution_receipt",
-            agent_parameters=(("ik_receipt_ids",) if trajectory else ("ik_receipt_id",)),
+            agent_parameters=(("ik_receipt_ids",) if trajectory else ("bundle_id or ik_receipt_id",)),
             resolved_parameters=("target pose(s)", "orientation policy", "private IK seed(s)", "provenance"),
             freshness_dimensions=("robot_motion_epoch", "object_scene_epoch"),
             invalidated_by=("unknown receipt", "stale receipt", "non-executable IK classification"),
@@ -2039,7 +2127,7 @@ def _motion_contract(
                 "receipt exists and is executable",
                 "receipt pose policy and tolerances match the frozen preview",
                 "receipt epochs are current",
-                "compiled residual budget is respected when applicable",
+                "supplied compiled geometry is current; residuals are advisory",
                 "collision capability matches deferred-collision authorization",
             ),
             fail_closed=True,
@@ -2056,7 +2144,17 @@ def _gripper_control(spec: ToolSpecLike) -> ToolContract:
     return _explicit_contract(
         spec,
         request_schema=_object(
-            {"position": {"type": ["integer", "boolean"], "enum": [0, 1, False, True]}},
+            {
+                "position": {
+                    "type": "integer",
+                    "enum": [0, 1],
+                    "description": (
+                        "Required binary command: integer 0 closes and latches the "
+                        "gripper; integer 1 opens and latches it. This is not a "
+                        "measured aperture or fractional opening."
+                    ),
+                }
+            },
             required=("position",),
         ),
         outcomes=(
@@ -2566,6 +2664,29 @@ def _save_memory(spec: ToolSpecLike) -> ToolContract:
             fail_closed=True,
         ),
         source_paths=("agent/runtime/runtime.py", "agent/runtime/memory.py"),
+    )
+
+
+def _inspect_evidence(spec: ToolSpecLike) -> ToolContract:
+    image_reference = _string("Exact Host-published observation/current_observation image evidence_id or session-owned saved image path. Historical viewing never refreshes evidence.", minLength=1)
+    return _explicit_contract(
+        spec,
+        request_schema={"type": "object", "additionalProperties": False,
+                        "properties": {"bundle_id": _string(pattern="^bnd-[0-9a-f]{32}$"),
+                                       "offset": _integer(minimum=0), "image_ref": image_reference},
+                        "oneOf": [
+            _object({"image_ref": image_reference}, required=("image_ref",)),
+            _object({"bundle_id": _string(pattern="^bnd-[0-9a-f]{32}$"),
+                     "offset": _integer(minimum=0)}, required=("bundle_id",)),
+        ]},
+        outcomes=(OutcomeContract("completed", True, _object(additional_properties=True)),
+                  _operational_failure()),
+        maturity=ContractMaturity.DECLARED,
+        gate=GateContract(checks=("exact registered bundle hash/session/type or session-owned image",
+                                  "four mask-detail candidates; optional latest-reference comparison with up to eight crops and three reference views",
+                                  "bounded page/image size; no target selection or motion authorization")),
+        source_paths=("agent/tools/evidence_inspection.py",),
+        coverage_gaps=("New read-only interface pending collaborator review; not promoted to verified authority.",),
     )
 
 

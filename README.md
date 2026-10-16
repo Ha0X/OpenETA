@@ -32,6 +32,19 @@ change reality.
 
 ## What's New
 
+- **2026-10-16** — **RoboDojo + human-assisted harness RSI:** The
+  [`robodojo-v112`](https://github.com/OpenMOSS/OpenETA/tree/robodojo-v112) branch
+  adds a Codex CLI harness for RoboDojo, versioned task clarifications,
+  coarse native completion feedback, and measured finger collision geometry.
+  Across 42 tasks with **GPT-6 Astra / high**, interim cumulative coverage grows
+  from **54.8% Pass@1 → 64.3% RSI Pass@2 → 66.7% RSI Pass@3**.
+  These are cross-version, human-assisted results; unfinished/unfilled attempts
+  count as no success in this provisional curve, not final fixed-version pass@k.
+  [Setup](https://github.com/OpenMOSS/OpenETA/blob/robodojo-v112/docs/robodojo-v112.md)
+  · [Protocol and per-task results](docs/robodojo-rsi-results.md)
+
+  ![RoboDojo interim RSI cumulative success coverage](docs/assets/robodojo-rsi-progress-20261016.png)
+
 - **2026-09-06** — **Stage 2 Agent Harness:** We publish the Stage 2 closed-loop
   embodiment harness, adding 35 verified tool contracts, bounded
   multimodal context with durable rollouts, a universal evaluation entry point,

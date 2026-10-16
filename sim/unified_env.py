@@ -76,6 +76,9 @@ class UnifiedEnv(gym.Env):
     def _detect_backend(self) -> str:
         """Return a short string identifying the underlying env class."""
         env = self._unwrap()
+        explicit = getattr(env, "_backend", None) or getattr(env, "backend", None)
+        if explicit:
+            return str(explicit).lower()
         cls = type(env).__name__
         # Normalise common names
         if cls in ("DummySimEnv", "DummyAgentEnv"):
@@ -918,6 +921,23 @@ class UnifiedEnv(gym.Env):
 
         return obs
 
+    def _normalise_robodojo(self, raw: dict) -> dict:
+        """RoboDojo adapter already emits the canonical OpenETA schema."""
+        obs: dict[str, Any] = {}
+        cameras = raw.get("cameras")
+        if isinstance(cameras, dict):
+            obs["cameras"] = cameras
+        proprio = raw.get("proprio")
+        if isinstance(proprio, dict):
+            obs["proprio"] = proprio
+        if "objects" in raw and isinstance(raw["objects"], list):
+            obs["objects"] = raw["objects"]
+        if "metadata" in raw and isinstance(raw["metadata"], dict):
+            obs["metadata"] = raw["metadata"]
+        if "task_description" in raw:
+            obs["task_description"] = str(raw["task_description"])
+        return obs
+
     def _normalise_libero(self, raw: dict) -> dict:
         """LIBERO raw obs: agentview_image + robot0_eye_in_hand_image + depth + robot state."""
 
@@ -1020,6 +1040,10 @@ class UnifiedEnv(gym.Env):
                 }
                 object_state.update(bounds)
                 objects.append(object_state)
+            from sim.libero_contact_geometry import fixture_geometry
+            objects.extend(fixture_geometry(
+                model, data, getattr(inner_env, "fixtures", ()), self._mujoco_geom_world_aabb,
+            ))
             return objects
         except Exception:
             return []

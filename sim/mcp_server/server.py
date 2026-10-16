@@ -15,10 +15,14 @@ import hashlib
 import math
 import os
 import sys
-import threading
 import uuid
+from typing import Any
 
 import anyio.to_thread
+
+from sim.ik_search_policy import (
+    DEFAULT_IK_MAX_ATTEMPTS, DEFAULT_IK_MAX_NFEV_PER_ATTEMPT, DEFAULT_IK_TIMEOUT_S,
+)
 
 from starlette.applications import Starlette
 from starlette.routing import Route
@@ -41,6 +45,7 @@ from sim.mcp_server.worker_mgr import (
     _forget_obs_dirty,
     _proxy_observe,
     _proxy_controller_goal,
+    _proxy_gripper_goal,
     _proxy_reachability,
     _proxy_render,
     _proxy_reset,
@@ -48,6 +53,7 @@ from sim.mcp_server.worker_mgr import (
 )
 from sim.mcp_server.collision import (
     RECEPTACLE_CATEGORIES,
+    _object_aabb,
     check_attached_object_collision,
     get_checker,
     remove_checker,
@@ -72,24 +78,23 @@ from sim.mcp_server.rest_api import (
 )
 from sim.reachability import ROBUST_EXECUTION_JOINT_MARGIN_RAD
 from adapter.motion_profiles import motion_control_profile
+from sim.mcp_server.env_lifecycle import (
+    close_managed_environment,
+    environment_lock as _env_control_lock,
+)
 
 # ── FastMCP server ────────────────────────────────────────────────────
 
 from mcp.server.fastmcp import FastMCP
 mcp = FastMCP("OpenETA", log_level="WARNING")
 
-_env_control_locks: dict[tuple[str, str], threading.RLock] = {}
-_env_control_locks_guard = threading.Lock()
-
-
-def _env_control_lock(session_id: str, handle: str) -> threading.RLock:
-    key = (session_id, handle)
-    with _env_control_locks_guard:
-        lock = _env_control_locks.get(key)
-        if lock is None:
-            lock = threading.RLock()
-            _env_control_locks[key] = lock
-        return lock
+# Retire a conservative carried-object proxy only when fresh closed-gripper
+# telemetry is strongly inconsistent with the aperture measured when the proxy
+# was armed.  Absolute + relative guards preserve thin-object grasps while
+# allowing a slipped rigid object to stop poisoning collision recovery.
+_ATTACHMENT_APERTURE_COLLAPSE_MAX_OPEN_FRACTION = 0.05
+_ATTACHMENT_APERTURE_COLLAPSE_MAX_BASELINE_RATIO = 0.40
+_ATTACHMENT_APERTURE_COLLAPSE_MIN_ABSOLUTE_DROP = 0.05
 
 
 def _serialized_env_control(fn):
@@ -101,11 +106,13 @@ def _serialized_env_control(fn):
         sid = str(kwargs.get("session_id") or _current_session.get() or "")
         lock = _env_control_lock(sid, handle)
         with lock:
+            meta = _session_envs.get(sid, {}).get(handle, {})
+            if fn.__name__ != "close_env" and meta.get("close_lifecycle", {}).get("state") in {
+                "closing", "close_failed", "closed",
+            }:
+                return {"error": "Environment cleanup is pending; retry close_env before reuse.",
+                        "code": "environment_closing", "handle": handle}
             result = fn(*args, **kwargs)
-        if fn.__name__ == "close_env":
-            with _env_control_locks_guard:
-                if _env_control_locks.get((sid, handle)) is lock:
-                    _env_control_locks.pop((sid, handle), None)
         return result
 
     return _wrapper
@@ -248,6 +255,7 @@ def create_env(env_id: str, *, render_mode: str = "rgb_array", seed: int = 0,
         "remote_handle": remote_handle,
         "env_id": env_id,
         "backend": result.get("backend", "unknown"),
+        "robot_variant": result.get("robot_variant"),
         "action_dim": result.get("action_dim"),
         "robot": result.get("robot") or robot,
         "control_spec": result.get("control_spec", {}),
@@ -263,6 +271,7 @@ def create_env(env_id: str, *, render_mode: str = "rgb_array", seed: int = 0,
     return {
         "session_id": sid, "handle": h, "env_id": env_id,
         "action_dim": result.get("action_dim"), "backend": result.get("backend"),
+        "robot_variant": result.get("robot_variant"),
         "robot": result.get("robot") or robot,
         "control_spec": result.get("control_spec", {}),
         "action_hint": result.get("action_hint", ""),
@@ -401,7 +410,10 @@ def reset_env(handle: str, *, seed: int | None = None, session_id: str = "") -> 
     # gripper action.  Hold OPEN through settling and later arm motions until
     # gripper_close establishes the opposite latch.
     meta["_gripper_cmd"] = -1.0
+    if meta.get("robot_variant") == "dual_x5":
+        meta["_gripper_cmds"] = {"left": -1.0, "right": -1.0}
     meta.pop("_attachment_proxy", None)
+    meta.pop("_fixture_contact", None)
     reset_obs = _proxy_reset(meta, seed=seed)
     # Let physics settle before returning — objects can spawn hovering /
     # jittering right after reset; a few hold steps bring them to rest.
@@ -412,12 +424,18 @@ def reset_env(handle: str, *, seed: int | None = None, session_id: str = "") -> 
 
 @_blocking_tool
 @_serialized_env_control
-def step_env(handle: str, action: list | None = None, *, num_steps: int = 1, session_id: str = "") -> dict:
+def step_env(handle: str, action: list | dict | None = None, *, num_steps: int = 1, session_id: str = "") -> dict:
     """Execute one or more environment steps.
 
     Args:
         handle: Environment handle from create_env.
-        action: Action vector. If None, samples from action space.
+        action: Backend action: a vector for vector-action environments, or
+                a structured dictionary for RoboDojo. For single-arm RoboDojo,
+                use {"mode": "ee_delta", "delta_xyz": [0, 0, 0.01],
+                "delta_rotvec": [0, 0, 0], "gripper": 1.0} (metres/radians;
+                gripper 1 opens, 0 closes). Dual-arm actions require both
+                "left" and "right" entries under "arms". If None, samples
+                from action space; this is not a no-op.
         num_steps: Repeat the same action N times for visible cumulative
                    movement.  Set to 1 for fine-grained control, 5-10 for
                    visible arm displacement per MCP call.
@@ -449,18 +467,26 @@ def step_env(handle: str, action: list | None = None, *, num_steps: int = 1, ses
     return result
 
 
-def _extract_ee_xyz_from_result(result: dict) -> list[float]:
+def _extract_arm_state_from_result(result: dict, arm: str | None = None) -> dict:
+    """Return the selected role state, preserving the single-arm wire shape."""
+    obs = result.get("observation", result) if isinstance(result, dict) else {}
+    robot = obs.get("robot", {}) if isinstance(obs, dict) else {}
+    if not isinstance(robot, dict):
+        return {}
+    if arm in {"left", "right"}:
+        arms = robot.get("arms", {})
+        value = arms.get(arm, {}) if isinstance(arms, dict) else {}
+        return value if isinstance(value, dict) else {}
+    return robot
+
+
+def _extract_ee_xyz_from_result(result: dict, arm: str | None = None) -> list[float]:
     """Extract EE xyz from a step result or observe result dict.
 
     Handles both StepResult (has ``observation`` wrapper) and flat
     EnvObservation dicts (from observe / reset).
     """
-    obs = result.get("observation", result) if isinstance(result, dict) else {}
-    if not isinstance(obs, dict):
-        return []
-    robot = obs.get("robot", {})
-    if not isinstance(robot, dict):
-        return []
+    robot = _extract_arm_state_from_result(result, arm)
     ee = robot.get("end_effector_pose", {})
     if not isinstance(ee, dict):
         return []
@@ -468,19 +494,24 @@ def _extract_ee_xyz_from_result(result: dict) -> list[float]:
     return xyz if isinstance(xyz, list) else []
 
 
-def _extract_ee_quat_from_result(result: dict) -> list[float]:
+def _extract_ee_quat_from_result(result: dict, arm: str | None = None) -> list[float]:
     """Extract EE quaternion (xyzw) from a step result or observe result."""
-    obs = result.get("observation", result) if isinstance(result, dict) else {}
-    if not isinstance(obs, dict):
-        return []
-    robot = obs.get("robot", {})
-    if not isinstance(robot, dict):
-        return []
+    robot = _extract_arm_state_from_result(result, arm)
     ee = robot.get("end_effector_pose", {})
     if not isinstance(ee, dict):
         return []
     quat = ee.get("quat_xyzw", [])
     return quat if isinstance(quat, list) and len(quat) == 4 else []
+
+
+def _selected_ee_xyz(result: dict, arm: str | None) -> list[float]:
+    return (_extract_ee_xyz_from_result(result, arm) if arm
+            else _extract_ee_xyz_from_result(result))
+
+
+def _selected_ee_quat(result: dict, arm: str | None) -> list[float]:
+    return (_extract_ee_quat_from_result(result, arm) if arm
+            else _extract_ee_quat_from_result(result))
 
 
 def _extract_base_quat_from_result(result: dict) -> list[float]:
@@ -602,12 +633,20 @@ def _arm_attachment_proxy(
         else list(meta.get("_collision_objects", []))
     )
     for obj in candidates:
-        if not isinstance(obj, dict):
+        if not isinstance(obj, dict) or str(obj.get("geometry_kind", "")).startswith("fixture_"):
             continue
         category = str(obj.get("category") or "").strip().lower()
         if category in RECEPTACLE_CATEGORIES:
             continue
-        position = obj.get("position")
+        # An asset's free-joint origin need not be its geometry centre (the
+        # wine bottle's origin is near its base). Use the same world AABB for
+        # proximity and carry geometry, with the legacy origin fallback only
+        # when no bounds are available.
+        bounds = _object_aabb(obj)
+        position = (
+            [(bounds[0][i] + bounds[1][i]) / 2.0 for i in range(3)]
+            if bounds is not None else obj.get("position")
+        )
         if not isinstance(position, list) or len(position) < 3:
             continue
         distance = math.dist(
@@ -637,8 +676,16 @@ def _arm_attachment_proxy(
             ),
         }
     obj = nearest[1]
-    position = [float(value) for value in obj.get("position", [])[:3]]
-    dims = obj.get("dims")
+    bounds = _object_aabb(obj)
+    position = (
+        [(bounds[0][i] + bounds[1][i]) / 2.0 for i in range(3)]
+        if bounds is not None
+        else [float(value) for value in obj.get("position", [])[:3]]
+    )
+    dims = (
+        [bounds[1][i] - bounds[0][i] for i in range(3)]
+        if bounds is not None else obj.get("dims")
+    )
     if not isinstance(dims, list) or len(dims) < 3:
         dims = [0.06, 0.06, 0.10]
     meta["_attachment_proxy"] = {
@@ -648,9 +695,11 @@ def _arm_attachment_proxy(
         "relative_xyz": [position[i] - float(eef[i]) for i in range(3)],
         "dims": [max(0.01, float(value)) for value in dims[:3]],
         "anchor_eef_xyz": [float(value) for value in eef[:3]],
+        "anchor_eef_quat_xyzw": _extract_ee_quat_from_result(result),
         # Aperture is evidence for the independent attachment reviewer, not a
         # proxy-arming gate: thin objects may legitimately close near zero.
         "measured_open_fraction": float(openness),
+        "close_measured_open_fraction": float(openness),
         "binding_source": (
             "host_compiled_target_provenance"
             if isinstance(authorized_object, dict)
@@ -689,6 +738,29 @@ def _refresh_attachment_proxy(meta: dict, result: dict) -> dict | None:
         return None
     state = _extract_gripper_state_from_result(result)
     openness = state.get("openness")
+    baseline = proxy.get(
+        "close_measured_open_fraction",
+        proxy.get("measured_open_fraction"),
+    )
+    if _attachment_aperture_has_collapsed(baseline, openness):
+        retired = dict(proxy)
+        meta.pop("_attachment_proxy", None)
+        return {
+            "schema_version": "openeta.attachment_proxy_receipt.v1",
+            "status": "retired",
+            "reason": "measured_aperture_collapse",
+            "target_object_name": str(retired.get("object_name") or ""),
+            "binding_source": retired.get("binding_source"),
+            "close_measured_open_fraction": float(baseline),
+            "measured_open_fraction": float(openness),
+            "attachment_proven": False,
+            "interpretation": (
+                "Fresh closed-gripper telemetry collapsed far below the aperture "
+                "measured when the proxy was armed. The conservative carried-object "
+                "collision proxy was retired; attachment is now unknown and requires "
+                "fresh visual evidence before further carrying assumptions."
+            ),
+        }
     if isinstance(openness, (int, float)) and not isinstance(openness, bool):
         proxy["measured_open_fraction"] = float(openness)
     eef = _extract_ee_xyz_from_result(result)
@@ -718,6 +790,27 @@ def _refresh_attachment_proxy(meta: dict, result: dict) -> dict | None:
             "attachment from fresh dual-view co-motion and source-vacancy evidence."
         ),
     }
+
+
+def _attachment_aperture_has_collapsed(baseline: object, current: object) -> bool:
+    if (
+        not isinstance(baseline, (int, float))
+        or isinstance(baseline, bool)
+        or not isinstance(current, (int, float))
+        or isinstance(current, bool)
+    ):
+        return False
+    baseline_value = float(baseline)
+    current_value = float(current)
+    if baseline_value <= 0.0 or current_value < 0.0:
+        return False
+    return (
+        current_value <= _ATTACHMENT_APERTURE_COLLAPSE_MAX_OPEN_FRACTION
+        and current_value
+        <= baseline_value * _ATTACHMENT_APERTURE_COLLAPSE_MAX_BASELINE_RATIO
+        and baseline_value - current_value
+        >= _ATTACHMENT_APERTURE_COLLAPSE_MIN_ABSOLUTE_DROP
+    )
 
 
 def _collision_objects_without_attached(meta: dict) -> list[dict]:
@@ -791,6 +884,8 @@ def _check_attached_object_sweep(
     obstacles: list[dict],
     start_xyz: list[float],
     end_xyz: list[float],
+    *,
+    baseline_eef_xyz: list[float] | None = None,
 ) -> tuple[bool, dict]:
     """Sample the carry segment instead of testing only its endpoint.
 
@@ -814,7 +909,12 @@ def _check_attached_object_sweep(
     report it rather than letting a weaker check pass as an equal one.
     """
     if len(start_xyz) < 3 or len(end_xyz) < 3:
-        return check_attached_object_collision(attachment, obstacles, end_xyz)
+        return check_attached_object_collision(
+            attachment,
+            obstacles,
+            end_xyz,
+            baseline_eef_xyz=baseline_eef_xyz,
+        )
 
     dims = attachment.get("dims")
     smallest = 0.06
@@ -828,7 +928,12 @@ def _check_attached_object_sweep(
             [float(v) for v in start_xyz[:3]], [float(v) for v in end_xyz[:3]]
         )
     except (TypeError, ValueError):
-        return check_attached_object_collision(attachment, obstacles, end_xyz)
+        return check_attached_object_collision(
+            attachment,
+            obstacles,
+            end_xyz,
+            baseline_eef_xyz=baseline_eef_xyz,
+        )
 
     step_limit = max(0.01, smallest / 2.0)
     wanted = int(span / step_limit) + 1
@@ -842,7 +947,12 @@ def _check_attached_object_sweep(
             float(start_xyz[axis]) + (float(end_xyz[axis]) - float(start_xyz[axis])) * ratio
             for axis in range(3)
         ]
-        detected, info = check_attached_object_collision(attachment, obstacles, sample)
+        detected, info = check_attached_object_collision(
+            attachment,
+            obstacles,
+            sample,
+            baseline_eef_xyz=baseline_eef_xyz,
+        )
         last_info = info
         if detected:
             info["swept_samples"] = samples
@@ -927,10 +1037,11 @@ def ik_preview_check(
     yaw: float | None = None,
     position_tolerance_m: float = 0.002,
     orientation_tolerance_rad: float = 0.05,
-    max_attempts: int = 24,
-    max_nfev_per_attempt: int = 300,
-    timeout_s: float = 10.0,
+    max_attempts: int = DEFAULT_IK_MAX_ATTEMPTS,
+    max_nfev_per_attempt: int = DEFAULT_IK_MAX_NFEV_PER_ATTEMPT,
+    timeout_s: float = DEFAULT_IK_TIMEOUT_S,
     preserve_current_orientation: bool = True,
+    arm: str | None = None,
     check_endpoint_collision: bool = False,
     include_scene_objects: bool = False,
     session_id: str = "",
@@ -949,6 +1060,33 @@ def ik_preview_check(
     meta = _session_envs.get(sid, {}).get(handle)
     if not meta:
         return {"ok": False, "success": False, "error": f"Unknown: {handle}"}
+    backend = str(meta.get("backend") or "")
+    variant = str(meta.get("robot_variant") or "")
+    if backend == "robodojo":
+        if variant == "dual_x5" and arm not in {"left", "right"}:
+            return {
+                "ok": False,
+                "success": False,
+                "code": "arm_required",
+                "reason_code": "arm_required",
+                "error": "RoboDojo dual-arm IK preview requires arm='left' or arm='right'",
+            }
+        if variant != "dual_x5" and arm not in {None, "primary"}:
+            return {
+                "ok": False,
+                "success": False,
+                "code": "invalid_arm_selector",
+                "reason_code": "invalid_arm_selector",
+                "error": "RoboDojo single-arm IK preview accepts only arm='primary'",
+            }
+    elif arm is not None:
+        return {
+            "ok": False,
+            "success": False,
+            "code": "unsupported_arm_selector",
+            "reason_code": "unsupported_arm_selector",
+            "error": f"arm selection is unsupported for backend {backend!r}",
+        }
     orientation_values = (roll, pitch, yaw)
     if any(value is not None for value in orientation_values) and not all(
         value is not None for value in orientation_values
@@ -971,6 +1109,8 @@ def ik_preview_check(
     }
     if all(value is not None for value in orientation_values):
         body["target_euler_xyz_deg"] = [float(roll), float(pitch), float(yaw)]
+    if arm is not None:
+        body["arm"] = arm
 
     result = _proxy_reachability(meta, body)
     if not isinstance(result, dict):
@@ -1055,8 +1195,13 @@ def ik_preview_check(
 
     candidate = result.get("best_candidate")
     margin = candidate.get("joint_margin_min_rad") if isinstance(candidate, dict) else None
+    # A failed/expired numerical search also returns its best iterate. That
+    # iterate is diagnostic evidence, NOT a feasible execution seed. Preserve
+    # its raw margin/residuals without adding positive feasibility prose.
+    kinematic_solution_found = result.get("kinematic_status") == "reachable"
     if (
-        isinstance(margin, int | float)
+        kinematic_solution_found
+        and isinstance(margin, int | float)
         and float(margin) < ROBUST_EXECUTION_JOINT_MARGIN_RAD
     ):
         margin_value = float(margin)
@@ -1097,10 +1242,10 @@ def ik_preview_check(
         result["message"] = (
             str(result.get("message") or "IK solution found.").rstrip()
             + f" Execution seed margin is only {margin_value:.6f} rad; "
-            "the endpoint is feasible but execution-fragile."
+            "the kinematic solution is execution-fragile; this does not authorize motion."
         )
 
-    if isinstance(margin, int | float) and float(margin) < 0.05:
+    if kinematic_solution_found and isinstance(margin, int | float) and float(margin) < 0.05:
         proximity = {
             "near_limit": True,
             "margin_rad": float(margin),
@@ -1108,8 +1253,8 @@ def ik_preview_check(
             "nearest_joint_limit": candidate.get("nearest_joint_limit"),
             "interpretation": (
                 "The endpoint has a joint-limit-respecting IK solution, but its "
-                "minimum hard-limit margin is small. Bind this exact preview receipt "
-                "to execution; if local motion cannot converge, change the waypoint "
+                "minimum hard-limit margin is small. Execution still requires positive "
+                "authorization under the current gates; if motion cannot converge, change the waypoint "
                 "or wrist orientation instead of replaying the same target."
             ),
         }
@@ -1128,12 +1273,14 @@ def ik_preview_check(
 @_blocking_tool
 @_serialized_env_control
 def move_to(handle: str, x: float, y: float, z: float, *,
+            arm: str | None = None,
             roll: float | None = None, pitch: float | None = None, yaw: float | None = None,
             num_steps: int = 150, tolerance: float = 0.002, ori_tolerance: float = 0.05,
             session_id: str = "",
             enable_collision_check: bool = True,
             contact_authorization: dict | None = None,
-            ik_execution_seed: dict | None = None) -> dict:
+            ik_execution_seed: dict | None = None,
+            motion_mode: str = 'strict') -> dict:
     """Move the end-effector to an absolute pose using closed-loop interpolation.
 
     Re-observes the EE pose from step results for closed-loop correction:
@@ -1146,12 +1293,15 @@ def move_to(handle: str, x: float, y: float, z: float, *,
     Args:
         handle: Environment handle from create_env.
         x, y, z: Target end-effector position in world coordinates (metres).
+        arm: RoboDojo arm role. Single-arm environments accept ``primary`` or
+            omit it. Dual-arm environments require ``left`` or ``right``;
+            the unselected arm is held with a zero Cartesian delta.
         roll: Target roll angle in **degrees** (xyz-intrinsic Euler).
         pitch: Target pitch angle in **degrees**.
         yaw: Target yaw angle in **degrees**.
             If all three are provided, orientation control is enabled.
-            Only supported on ``libero`` and ``maniskill`` backends
-            (MetaWorld has no rotation control).
+            Supported when the selected backend advertises orientation
+            control, including RoboDojo. MetaWorld has no rotation control.
         num_steps: Maximum total steps (default 150). The controller stops early
             when the requested pose tolerance is reached; the larger ceiling
             accommodates safe, continuously converging full-pose rotations.
@@ -1179,6 +1329,18 @@ def move_to(handle: str, x: float, y: float, z: float, *,
         return {"error": f"Unknown: {handle}"}
 
     backend = meta.get("backend", "")
+    variant = meta.get("robot_variant")
+    if backend == "robodojo":
+        if variant == "dual_x5" and arm not in {"left", "right"}:
+            return {"ok": False, "code": "arm_required", "error":
+                    "RoboDojo dual-arm move_to requires arm='left' or arm='right'"}
+        if variant != "dual_x5" and arm not in {None, "primary"}:
+            return {"ok": False, "code": "invalid_arm_selector", "error":
+                    "RoboDojo single-arm move_to accepts only arm='primary'"}
+    elif arm is not None:
+        return {"ok": False, "code": "unsupported_arm_selector", "error":
+                f"arm selection is unsupported for backend {backend!r}"}
+    selected_arm = arm if arm in {"left", "right"} else None
     use_ori = roll is not None and pitch is not None and yaw is not None
 
     if use_ori and backend == "metaworld":
@@ -1196,6 +1358,11 @@ def move_to(handle: str, x: float, y: float, z: float, *,
         command_frame = cartesian_command_frame(meta, backend)
     except ControlCodecError as exc:
         return codec_error_result(exc)
+
+    if motion_mode not in ('strict', 'recovery') or (motion_mode == 'recovery' and
+            (not enable_collision_check or controller_capability.get('goal_executor') != 'openeta.worker_mink_goal.v1')):
+        return {'ok':False, 'error':'Recovery requires Mink and collision checks', 'steps_executed':0,
+                'stop_reason':'control_step_failed'}
 
     # Render cadence for the control loop.  Rendering is the dominant per-step
     # cost (~130 ms GPU); move_to itself only reads the EE pose from the
@@ -1224,11 +1391,14 @@ def move_to(handle: str, x: float, y: float, z: float, *,
             with _session_last_obs_lock:
                 cached = _session_last_obs.get(sid, {}).get(_obs_key(meta), {})
             baseline_eef = _extract_ee_xyz_from_result(cached)
+            baseline_quat = _extract_ee_quat_from_result(cached)
             attached_collision, attached_info = check_attached_object_collision(
                 attachment,
                 list(meta.get("_collision_objects", [])),
                 [float(x), float(y), float(z)],
                 baseline_eef_xyz=baseline_eef,
+                predicted_eef_quat_xyzw=target_quat if use_ori else baseline_quat,
+                baseline_eef_quat_xyzw=baseline_quat,
             )
             if attached_collision:
                 return {
@@ -1244,12 +1414,16 @@ def move_to(handle: str, x: float, y: float, z: float, *,
                         "trajectory_checked": False,
                         "world_checked": True,
                         **attached_info,
+                        "check_stage": "target_endpoint",
                     },
                     "steps_executed": 0,
                     "reached_target": False,
                     "stop_reason": "collision_detected",
                 }
-        resolved_contact: dict | None = None
+        resolved_contact: dict | None = (
+            dict(meta["_fixture_contact"])
+            if isinstance(meta.get("_fixture_contact"), dict) and _gripper_cmd(meta) > 0 else None
+        )
         if contact_authorization is not None:
             target_object, resolution = resolve_contact_object_authorization(
                 contact_authorization,
@@ -1271,10 +1445,17 @@ def move_to(handle: str, x: float, y: float, z: float, *,
                     "reached_target": False,
                     "stop_reason": "contact_authorization_unresolved",
                 }
-            resolved_contact = {
-                **resolution,
-                "target_object_name": str(target_object.get("name") or ""),
-            }
+            if resolved_contact is not None:
+                from sim.libero_contact_geometry import same_local_patch
+                if same_local_patch(resolved_contact, resolution):
+                    # Re-marking an adjacent piece cannot slide or expand a held grant.
+                    resolution = resolved_contact
+                elif (resolved_contact.get("contact_scope") == "local_articulated_patch" or
+                      resolution.get("target_geom_name") != resolved_contact.get("target_geom_name")):
+                    return {"ok": False, "code": "fixture_contact_conflict", "steps_executed": 0,
+                            "stop_reason": "contact_authorization_unresolved",
+                            "error": "Open the gripper before changing the fixture contact binding."}
+            resolved_contact = dict(resolution)
         body = {
             "target_xyz": [float(x), float(y), float(z)],
             "preserve_current_orientation": not use_ori,
@@ -1286,6 +1467,7 @@ def move_to(handle: str, x: float, y: float, z: float, *,
             # Host-private experiment configuration.  It is selected by the
             # server process and is never copied from an Agent tool argument.
             "motion_execution_condition": motion_profile.condition,
+            "motion_mode": motion_mode,
         }
         if resolved_contact is not None:
             body["contact_authorization"] = resolved_contact
@@ -1301,6 +1483,7 @@ def move_to(handle: str, x: float, y: float, z: float, *,
                     "relative_xyz",
                     "dims",
                     "anchor_eef_xyz",
+                    "anchor_eef_quat_xyzw",
                 )
             }
         if use_ori:
@@ -1318,25 +1501,25 @@ def move_to(handle: str, x: float, y: float, z: float, *,
     with _session_last_obs_lock:
         cached = _session_last_obs.get(sid, {}).get(_obs_key(meta), {})
     pose_result = cached
-    current_xyz = _extract_ee_xyz_from_result(cached)
+    current_xyz = _selected_ee_xyz(cached, selected_arm)
     if use_ori:
-        current_quat = _extract_ee_quat_from_result(cached)
+        current_quat = _selected_ee_quat(cached, selected_arm)
 
     if len(current_xyz) < 3:
         obs_result = _proxy_observe(meta)
         pose_result = obs_result
-        current_xyz = _extract_ee_xyz_from_result(obs_result)
+        current_xyz = _selected_ee_xyz(obs_result, selected_arm)
         if use_ori and len(current_quat) < 4:
-            current_quat = _extract_ee_quat_from_result(obs_result)
+            current_quat = _selected_ee_quat(obs_result, selected_arm)
 
     if len(current_xyz) < 3:
         reset_result = _proxy_reset(meta)
         # settle physics after the implicit reset, then read the settled pose
         settled = _settle_env(meta, backend)
         pose_result = settled if isinstance(settled, dict) and settled.get("observation") else reset_result
-        current_xyz = _extract_ee_xyz_from_result(pose_result)
+        current_xyz = _selected_ee_xyz(pose_result, selected_arm)
         if use_ori and len(current_quat) < 4:
-            current_quat = _extract_ee_quat_from_result(pose_result)
+            current_quat = _selected_ee_quat(pose_result, selected_arm)
 
     if len(current_xyz) < 3:
         return {"error": "Cannot determine current EE position — call reset_env first"}
@@ -1454,6 +1637,7 @@ def move_to(handle: str, x: float, y: float, z: float, *,
                     (action_xyz[0], action_xyz[1], action_xyz[2]),
                     backend,
                     delta_rot=action_rot if use_ori else None,
+                    arm=selected_arm,
                 )
             except ControlCodecError as exc:
                 return codec_error_result(exc)
@@ -1489,12 +1673,12 @@ def move_to(handle: str, x: float, y: float, z: float, *,
             final_result["attachment_proxy_receipt"] = attachment_receipt
 
         # Re-read pose from last step result (no extra HTTP call)
-        new_xyz = _extract_ee_xyz_from_result(final_result)
+        new_xyz = _selected_ee_xyz(final_result, selected_arm)
         pose_result = final_result
         if len(new_xyz) >= 3:
             current_xyz = new_xyz
         if use_ori:
-            new_quat = _extract_ee_quat_from_result(final_result)
+            new_quat = _selected_ee_quat(final_result, selected_arm)
             if len(new_quat) == 4:
                 current_quat = new_quat
 
@@ -1544,10 +1728,10 @@ def move_to(handle: str, x: float, y: float, z: float, *,
             pass  # best-effort; final pose is still read from final_result below
 
     # ── final pose ─────────────────────────────────────────────────
-    final_xyz = _extract_ee_xyz_from_result(final_result) if total_steps > 0 else start_xyz
+    final_xyz = _selected_ee_xyz(final_result, selected_arm) if total_steps > 0 else start_xyz
     if len(final_xyz) < 3:
         final_xyz = current_xyz
-    final_quat = _extract_ee_quat_from_result(final_result) if (use_ori and total_steps > 0) else []
+    final_quat = _selected_ee_quat(final_result, selected_arm) if (use_ori and total_steps > 0) else []
     if use_ori and len(final_quat) < 4:
         final_quat = current_quat
 
@@ -1559,6 +1743,8 @@ def move_to(handle: str, x: float, y: float, z: float, *,
         "terminated": final_terminated,
         "reward": final_reward,
     }
+    if arm is not None:
+        result["arm"] = arm
     final_position_error = (
         _math.sqrt(
             (x - final_xyz[0]) ** 2
@@ -1677,6 +1863,172 @@ def move_to(handle: str, x: float, y: float, z: float, *,
             "reason": collision_info.get("reason", "collision checking unavailable"),
         }
 
+    return result
+
+
+def _robodojo_dual_target(value: dict, role: str) -> tuple[list[float], list[float] | None]:
+    """Validate one agent-facing world-frame dual-arm target."""
+    import math as _math
+
+    if not isinstance(value, dict) or value.get("frame", "world") != "world":
+        raise ValueError(f"{role}_target must be a world-frame pose")
+    xyz = value.get("xyz")
+    if not isinstance(xyz, (list, tuple)) or len(xyz) != 3:
+        raise ValueError(f"{role}_target.xyz must contain three finite numbers")
+    position = [float(item) for item in xyz]
+    if not all(_math.isfinite(item) for item in position):
+        raise ValueError(f"{role}_target.xyz must contain three finite numbers")
+    euler = value.get("euler_xyz_deg")
+    if euler is None:
+        return position, None
+    if not isinstance(euler, (list, tuple)) or len(euler) != 3:
+        raise ValueError(f"{role}_target.euler_xyz_deg must contain three finite numbers")
+    angles = [float(item) for item in euler]
+    if not all(_math.isfinite(item) for item in angles):
+        raise ValueError(f"{role}_target.euler_xyz_deg must contain three finite numbers")
+    return position, _euler_to_quat(*[_math.radians(item) for item in angles])
+
+
+@_blocking_tool
+@_serialized_env_control
+def move_arms_to(handle: str, left_target: dict, right_target: dict, *,
+                 num_steps: int = 150, tolerance: float = 0.002,
+                 ori_tolerance: float = 0.05, session_id: str = "") -> dict:
+    """Move both RoboDojo arms concurrently to independent absolute poses.
+
+    Each target is ``{"frame":"world", "xyz":[x,y,z]}`` with an optional
+    ``euler_xyz_deg`` three-vector. Every physics step contains both arm
+    commands and a zero-skew synchronization barrier.
+    """
+    import math as _math
+
+    sid = session_id or _current_session.get() or ""
+    _touch_session(sid)
+    meta = _session_envs.get(sid, {}).get(handle)
+    if not meta:
+        return {"ok": False, "code": "unknown_handle", "error": f"Unknown: {handle}"}
+    if meta.get("backend") != "robodojo" or meta.get("robot_variant") != "dual_x5":
+        return {"ok": False, "code": "dual_arm_required",
+                "error": "move_arms_to requires a RoboDojo dual_x5 environment"}
+    if num_steps < 1 or tolerance <= 0 or ori_tolerance <= 0:
+        return {"ok": False, "code": "invalid_motion_limits",
+                "error": "num_steps and tolerances must be positive"}
+    try:
+        target = {}
+        target_quat = {}
+        for role, value in (("left", left_target), ("right", right_target)):
+            target[role], target_quat[role] = _robodojo_dual_target(value, role)
+    except (TypeError, ValueError) as exc:
+        return {"ok": False, "code": "invalid_dual_target", "error": str(exc)}
+
+    with _session_last_obs_lock:
+        state = _session_last_obs.get(sid, {}).get(_obs_key(meta), {})
+    current = {role: _extract_ee_xyz_from_result(state, role) for role in ("left", "right")}
+    if any(len(value) != 3 for value in current.values()):
+        state = _proxy_observe(meta)
+        current = {role: _extract_ee_xyz_from_result(state, role) for role in ("left", "right")}
+    if any(len(value) != 3 for value in current.values()):
+        state = _proxy_reset(meta)
+        current = {role: _extract_ee_xyz_from_result(state, role) for role in ("left", "right")}
+    if any(len(value) != 3 for value in current.values()):
+        return {"ok": False, "code": "dual_arm_state_unavailable",
+                "error": "Cannot determine both RoboDojo end-effector poses"}
+
+    current_quat = {
+        role: _extract_ee_quat_from_result(state, role) for role in ("left", "right")
+    }
+    for role in ("left", "right"):
+        if target_quat[role] is not None and len(current_quat[role]) != 4:
+            return {"ok": False, "code": "dual_arm_orientation_unavailable",
+                    "error": f"Cannot determine {role} end-effector orientation"}
+
+    start = {role: {"xyz": list(current[role])} for role in ("left", "right")}
+    scale, ori_scale = cartesian_scales(meta, "robodojo")
+    final_result: dict = {}
+    steps = 0
+    terminated = False
+    control_error = ""
+
+    for _ in range(num_steps):
+        actions = {}
+        all_reached = True
+        for role in ("left", "right"):
+            error = [target[role][i] - current[role][i] for i in range(3)]
+            position_ok = max(abs(item) for item in error) < tolerance
+            rotation = [0.0, 0.0, 0.0]
+            orientation_ok = target_quat[role] is None
+            if target_quat[role] is not None:
+                orientation_ok = _quat_angular_distance(
+                    current_quat[role], target_quat[role]
+                ) < ori_tolerance
+                dq = _quat_multiply(target_quat[role], _quat_conjugate(current_quat[role]))
+                if dq[3] < 0:
+                    dq = [-item for item in dq]
+                rotation = [max(-1.0, min(1.0, item / ori_scale))
+                            for item in _quat_to_axis_angle(dq)]
+            all_reached &= position_ok and orientation_ok
+            normalized = [max(-1.0, min(1.0, item / scale)) for item in error]
+            encoded = make_cartesian_action(meta, normalized, "robodojo",
+                                            delta_rot=rotation, arm=role)
+            actions[role] = encoded["arms"][role]
+        if all_reached:
+            break
+        action = {"arms": actions,
+                  "synchronization": {"barrier": True, "max_skew_steps": 0}}
+        final_result = _proxy_step(meta, action, num_steps=1, render=(steps + 1) % 15 == 0)
+        steps += 1
+        if final_result.get("error"):
+            control_error = str(final_result["error"])
+            break
+        if final_result.get("terminated") or final_result.get("truncated"):
+            terminated = True
+            break
+        for role in ("left", "right"):
+            observed = _extract_ee_xyz_from_result(final_result, role)
+            if len(observed) == 3:
+                current[role] = observed
+            observed_quat = _extract_ee_quat_from_result(final_result, role)
+            if len(observed_quat) == 4:
+                current_quat[role] = observed_quat
+
+    arms = {}
+    reached = not terminated and not control_error
+    for role in ("left", "right"):
+        position_error = _math.sqrt(sum(
+            (target[role][i] - current[role][i]) ** 2 for i in range(3)
+        ))
+        axis_error = max(abs(target[role][i] - current[role][i]) for i in range(3))
+        orientation_error = (_quat_angular_distance(current_quat[role], target_quat[role])
+                             if target_quat[role] is not None else None)
+        role_reached = axis_error < tolerance and (
+            orientation_error is None or orientation_error < ori_tolerance
+        )
+        reached &= role_reached
+        arms[role] = {
+            "target": {"xyz": target[role]}, "start": start[role],
+            "end": {"xyz": current[role]}, "reached_target": role_reached,
+            "position_error_m": position_error,
+            "max_axis_position_error_m": axis_error,
+        }
+        if orientation_error is not None:
+            arms[role]["orientation_error_rad"] = orientation_error
+
+    stop_reason = ("target_reached" if reached else "control_step_failed" if control_error
+                   else "episode_terminated" if terminated else "iteration_limit")
+    result = {
+        "ok": not bool(control_error), "reached_target": bool(reached),
+        "stop_reason": stop_reason, "steps_executed": steps,
+        "terminated": terminated, "arms": arms,
+        "synchronization": {"barrier": True, "max_skew_steps": 0},
+        "controller_receipt": {
+            "schema_version": "openeta.dual_controller_execution_receipt.v1",
+            "controller_id": "robodojo.eval_env_ik", "execution_location": "mcp_server",
+            "iteration_budget": int(num_steps), "steps_executed": steps,
+            "stop_reason": stop_reason, "reached_target": bool(reached),
+        },
+    }
+    if control_error:
+        result.update({"code": "control_step_failed", "error": control_error})
     return result
 
 
@@ -2121,6 +2473,85 @@ def follow_eef_trajectory(
 # CaP-X and do not prescribe any task-level action sequence.
 _GRIPPER_OPEN_STEPS = 40
 _GRIPPER_CLOSE_STEPS = 60
+# RoboDojo observations already capture all configured cameras from every
+# physics step. Its Isaac camera path is substantially more expensive than the
+# legacy backends, so use a shorter stationary horizon and avoid an additional
+# generic render during settling; refresh the final frame once afterward.
+_ROBODOJO_GRIPPER_OPEN_STEPS = 12
+_ROBODOJO_GRIPPER_CLOSE_STEPS = 20
+
+
+def _gripper_settle(meta: dict, action: Any, *, steps: int) -> tuple[dict, int]:
+    """Apply a gripper command and return the final observation packet.
+
+    RoboDojo's worker captures its camera observation inside every native
+    ``step``. Use a short backend-specific horizon, avoid the additional
+    generic render path during settling, and refresh the final frame once
+    after the actuator horizon completes.
+    """
+    backend = meta.get("backend", "")
+    actual_steps = (
+        _ROBODOJO_GRIPPER_OPEN_STEPS
+        if steps == _GRIPPER_OPEN_STEPS and backend == "robodojo"
+        else _ROBODOJO_GRIPPER_CLOSE_STEPS
+        if steps == _GRIPPER_CLOSE_STEPS and backend == "robodojo"
+        else steps
+    )
+    if backend == "robodojo":
+        result = _proxy_step(meta, action, num_steps=actual_steps, render=False)
+    else:
+        # Keep the established call shape for other backends and adapters.
+        result = _proxy_step(meta, action, num_steps=actual_steps)
+    if backend == "robodojo":
+        try:
+            rendered = _proxy_render(meta)
+            if isinstance(rendered, dict) and rendered.get("cameras"):
+                observation = result.get("observation")
+                if isinstance(observation, dict):
+                    result["observation"] = {
+                        **observation,
+                        "cameras": rendered["cameras"],
+                    }
+        except Exception:
+            pass
+    return result, actual_steps
+
+
+def _step_gripper_with_final_observation(meta: dict, action, *, num_steps: int,
+                                         contact_authorization: dict | None = None) -> dict:
+    """Settle without intermediate camera transport, then render once.
+
+    Called under the gripper tool's environment lock. Keep the step's reward,
+    terminal flags and info; a render response is only an observation. Terminal
+    steps already carry their exact visual evidence and must not be replaced.
+    """
+    controller = (meta.get('control_spec') or {}).get('controller') or {}
+    if controller.get('goal_executor') == 'openeta.worker_mink_goal.v1':
+        result = _proxy_gripper_goal(meta, {'action':list(action), 'max_steps':num_steps,
+            'contact_authorization':contact_authorization})
+        result.setdefault('steps_executed',None)
+        if result.get('stop_reason') == 'collision_detected':
+            result.update(ok=False, code='collision_detected')
+        return result
+    result = _proxy_step(meta, action, num_steps=num_steps, render=False)
+    if result.get("error") or result.get("terminated") or result.get("truncated"):
+        return result
+    try:
+        observation = _proxy_render(meta)
+        if not isinstance(observation, dict) or observation.get("error"):
+            raise RuntimeError(
+                observation.get("error") if isinstance(observation, dict)
+                else "invalid render response"
+            )
+    except Exception as exc:
+        # Actuation has happened: retain its receipt, but never present cached
+        # pre-actuation images as a successful final visual observation.
+        result["error"] = f"Post-actuation render failed: {exc}"
+        return result
+    result["observation"] = observation
+    with _session_last_obs_lock:
+        _session_last_obs.setdefault(meta.get("_sid", ""), {})[_obs_key(meta)] = observation
+    return result
 
 
 def _gripper_actuation_receipt(
@@ -2140,9 +2571,13 @@ def _gripper_actuation_receipt(
         "schema_version": "openeta.gripper_actuation_receipt.v1",
         "command": command,
         "command_latched": True,
-        "steps_executed": steps_executed,
+        "steps_executed": result.get('steps_executed', steps_executed),
+        **({'horizon_completed':result['gripper_horizon_completed']}
+           if 'gripper_horizon_completed' in result else {}),
         "settling_policy": (
-            "stationary_continuous_position_hold"
+            "zero_arm_velocity_with_checked_finger_actuation"
+            if 'gripper_horizon_completed' in result
+            else "stationary_continuous_position_hold"
             if command == "close"
             else "stationary_position_actuation"
         ),
@@ -2156,11 +2591,13 @@ def _gripper_actuation_receipt(
 
 @_blocking_tool
 @_serialized_env_control
-def gripper_open(handle: str, *, session_id: str = "") -> dict:
+def gripper_open(handle: str, *, arm: str | None = None, session_id: str = "") -> dict:
     """Open the gripper and let the position actuator settle.
 
     Args:
         handle: Environment handle from create_env.
+        arm: Optional RoboDojo dual-arm role (``left`` or ``right``). Omit to
+            open both grippers. Single-arm environments accept ``primary``.
         session_id: Optional session id to reuse an existing session.
 
     Returns:
@@ -2173,17 +2610,41 @@ def gripper_open(handle: str, *, session_id: str = "") -> dict:
     if not meta:
         return {"error": f"Unknown: {handle}"}
     backend = meta.get("backend", "")
+    if backend == "robodojo" and meta.get("robot_variant") == "dual_x5":
+        if arm not in {None, "left", "right"}:
+            return {"ok": False, "code": "invalid_arm_selector", "error":
+                    "dual gripper arm must be 'left' or 'right'"}
+        commands = meta.setdefault("_gripper_cmds", {})
+        for role in ((arm,) if arm else ("left", "right")):
+            commands[role] = -1.0
+    elif arm not in {None, "primary"}:
+        return {"ok": False, "code": "invalid_arm_selector", "error":
+                "single-arm gripper accepts only arm='primary'"}
+    release_contact = meta.get('_fixture_contact')
+    if release_contact is None and isinstance(meta.get('_attachment_proxy'),dict):
+        release_contact = {'target_object_name':meta['_attachment_proxy'].get('object_name')}
     meta["_gripper_cmd"] = -1.0  # latch OPEN — held on every subsequent step
     meta.pop("_attachment_proxy", None)
+    meta.pop("_fixture_contact", None)
     try:
-        act = make_gripper_action(meta, open_gripper=True, backend=backend)
+        act = make_gripper_action(meta, open_gripper=True, backend=backend, arm=arm)
     except ControlCodecError as exc:
         return codec_error_result(exc)
-    result = _proxy_step(meta, act, num_steps=_GRIPPER_OPEN_STEPS)
+    if backend == "robodojo":
+        result, settle_steps = _gripper_settle(meta, act, steps=_GRIPPER_OPEN_STEPS)
+    else:
+        result = _step_gripper_with_final_observation(meta, act, num_steps=_GRIPPER_OPEN_STEPS,
+                                                     contact_authorization=release_contact)
+        if result.get('stop_reason') == 'collision_detected' and release_contact is not None:
+            # Preserve the narrow binding for another checked release attempt.
+            # No carry/attachment claim is re-established by this recovery state.
+            if release_contact.get('contact_kind') == 'articulated_fixture':
+                meta['_fixture_contact'] = dict(release_contact)
+        settle_steps = _GRIPPER_OPEN_STEPS
     result["gripper_actuation_receipt"] = _gripper_actuation_receipt(
         result,
         command="open",
-        steps_executed=_GRIPPER_OPEN_STEPS,
+        steps_executed=settle_steps,
     )
     return result
 
@@ -2193,6 +2654,7 @@ def gripper_open(handle: str, *, session_id: str = "") -> dict:
 def gripper_close(
     handle: str,
     *,
+    arm: str | None = None,
     session_id: str = "",
     contact_authorization: dict | None = None,
 ) -> dict:
@@ -2200,6 +2662,8 @@ def gripper_close(
 
     Args:
         handle: Environment handle from create_env.
+        arm: Optional RoboDojo dual-arm role (``left`` or ``right``). Omit to
+            close both grippers. Single-arm environments accept ``primary``.
         session_id: Optional session id to reuse an existing session.
         contact_authorization: Optional host-private compiled target evidence.
             When supplied, the tentative carried-object collision proxy is
@@ -2216,7 +2680,10 @@ def gripper_close(
     if not meta:
         return {"error": f"Unknown: {handle}"}
     authorized_object: dict | None = None
-    authorization_receipt: dict | None = None
+    authorization_receipt: dict | None = (
+        dict(meta["_fixture_contact"])
+        if isinstance(meta.get("_fixture_contact"), dict) and _gripper_cmd(meta) > 0 else None
+    )
     if contact_authorization is not None:
         authorized_object, authorization_receipt = resolve_contact_object_authorization(
             contact_authorization,
@@ -2242,24 +2709,58 @@ def gripper_close(
                 },
             }
     backend = meta.get("backend", "")
+    if backend == "robodojo" and meta.get("robot_variant") == "dual_x5":
+        if arm not in {None, "left", "right"}:
+            return {"ok": False, "code": "invalid_arm_selector", "error":
+                    "dual gripper arm must be 'left' or 'right'"}
+        commands = meta.setdefault("_gripper_cmds", {})
+        for role in ((arm,) if arm else ("left", "right")):
+            commands[role] = 1.0
+    elif arm not in {None, "primary"}:
+        return {"ok": False, "code": "invalid_arm_selector", "error":
+                "single-arm gripper accepts only arm='primary'"}
     meta["_gripper_cmd"] = 1.0  # latch CLOSED — held (clamping) on every subsequent step
     try:
-        act = make_gripper_action(meta, open_gripper=False, backend=backend)
+        act = make_gripper_action(meta, open_gripper=False, backend=backend, arm=arm)
     except ControlCodecError as exc:
         return codec_error_result(exc)
-    result = _proxy_step(meta, act, num_steps=_GRIPPER_CLOSE_STEPS)
+    if backend == "robodojo":
+        result, settle_steps = _gripper_settle(meta, act, steps=_GRIPPER_CLOSE_STEPS)
+    else:
+        result = _step_gripper_with_final_observation(meta, act, num_steps=_GRIPPER_CLOSE_STEPS,
+                                                     contact_authorization=authorization_receipt)
+        settle_steps = _GRIPPER_CLOSE_STEPS
     result["gripper_actuation_receipt"] = _gripper_actuation_receipt(
         result,
         command="close",
-        steps_executed=_GRIPPER_CLOSE_STEPS,
+        steps_executed=settle_steps,
     )
-    result["attachment_proxy_receipt"] = _arm_attachment_proxy(
-        meta,
-        result,
-        authorized_object=authorized_object,
-    )
+    if result.get("error") or result.get("ok") is False:
+        meta.pop("_fixture_contact", None)
+        meta.pop("_attachment_proxy", None)
+        if result.get('stop_reason') == 'collision_detected' and (authorization_receipt or {}).get('contact_kind') == 'articulated_fixture':
+            meta['_fixture_contact'] = dict(authorization_receipt)
+        return result
+    if (authorization_receipt or {}).get("contact_kind") == "articulated_fixture":
+        # A clamped drawer handle is an articulated contact, never a free-body
+        # attachment. Retain only this geom exemption until opening/reset.
+        meta.pop("_attachment_proxy", None)
+        meta["_fixture_contact"] = dict(authorization_receipt)
+        result["attachment_proxy_receipt"] = {
+            "status": "not_armed", "reason": "articulated_fixture_contact",
+            "attachment_proven": False,
+        }
+    else:
+        meta.pop("_fixture_contact", None)
+        result["attachment_proxy_receipt"] = _arm_attachment_proxy(
+            meta, result, authorized_object=authorized_object,
+        )
     if isinstance(authorization_receipt, dict):
         result["contact_authorization"] = authorization_receipt
+        if authorization_receipt.get("source_kind") == "model_rgbd_point":
+            if isinstance(meta.get("_attachment_proxy"), dict):
+                meta["_attachment_proxy"]["binding_source"] = "host_model_point_provenance"
+            result["attachment_proxy_receipt"]["binding_source"] = "host_model_point_provenance"
     return result
 
 
@@ -2545,7 +3046,8 @@ def _overlay_trunk_hold(meta: dict, act: list[float]) -> None:
 
 
 def _make_action_for_step(meta: dict, delta_xyz: tuple[float, float, float], backend: str,
-                           delta_rot: list[float] | None = None) -> list[float]:
+                           delta_rot: list[float] | None = None,
+                           arm: str | None = None) -> list[float] | dict:
     """Build a Cartesian motion action, holding the gripper only if latched.
 
     Delegates slot layout to the explicit action codec (``make_cartesian_action``).
@@ -2562,7 +3064,24 @@ def _make_action_for_step(meta: dict, delta_xyz: tuple[float, float, float], bac
     ``make_gripper_action`` emits — so ``open_gripper=<cmd is open>`` reproduces
     the held gripper vector.
     """
-    act = make_cartesian_action(meta, delta_xyz, backend, delta_rot=delta_rot)
+    act = make_cartesian_action(meta, delta_xyz, backend, delta_rot=delta_rot, arm=arm)
+    if backend == "robodojo":
+        if isinstance(act.get("arms"), dict) and isinstance(meta.get("_gripper_cmds"), dict):
+            for role, arm_action in act["arms"].items():
+                command = meta["_gripper_cmds"].get(role)
+                if command is not None and isinstance(arm_action, dict):
+                    arm_action["gripper"] = 1.0 if command < 0.0 else 0.0
+        elif "_gripper_cmd" in meta:
+            # RoboDojo uses openness [0,1], unlike the normalized [-1,1]
+            # gripper convention of the vector-action backends.
+            gripper = 1.0 if _gripper_cmd(meta) < 0.0 else 0.0
+            if isinstance(act.get("arms"), dict):
+                for arm_action in act["arms"].values():
+                    if isinstance(arm_action, dict):
+                        arm_action["gripper"] = gripper
+            else:
+                act["gripper"] = gripper
+        return act
     _overlay_trunk_hold(meta, act)
     if "_gripper_cmd" not in meta:
         return act  # no explicit gripper command yet — don't force the dim
@@ -2600,6 +3119,12 @@ def _settle_env(meta: dict, backend: str) -> dict:
     """
     if _SETTLE_STEPS <= 0:
         return {}
+    # RoboDojo exposes native joint/meta-control actions rather than the
+    # Cartesian action vector used by the generic MCP settle path. Its reset
+    # already advances Isaac to a valid observation, so do not synthesize an
+    # unsupported Cartesian hold action here.
+    if backend == "robodojo":
+        return {}
     # Hold action: zero position/rotation delta, gripper held at its latched
     # state (open by default).  _make_action_for_step already fills the gripper
     # dim from the env's latched command.
@@ -2615,8 +3140,13 @@ def _settle_env(meta: dict, backend: str) -> dict:
 
 
 @_blocking_tool
+@_serialized_env_control
 def observe_env(handle: str, *, session_id: str = "") -> dict:
-    """Return the current observation without stepping.
+    """Return a non-stepping snapshot after current same-handle control exits.
+
+    This uses the complete-control lock, not just the worker's per-step render
+    lock: otherwise an outer OSC loop can resume moving after this snapshot.
+    It is not an operation-ID receipt and cannot fence a not-yet-arrived request.
 
     Args:
         handle: Environment handle from create_env.
@@ -2672,37 +3202,18 @@ def render_env(handle: str, *, session_id: str = "") -> dict:
 def close_env(handle: str, *, session_id: str = "") -> dict:
     sid = session_id or _current_session.get() or ""
     _touch_session(sid)
-    meta = _session_envs.get(sid, {}).pop(handle, None)
-    if meta:
-        remote_result: dict = {}
-        cleanup_errors: list[str] = []
+    def retire(meta):
         # Evict the cache by the SAME composite key used to write it — the old
         # code popped by bare ``handle`` and so never actually cleared the
         # entry, leaking stale frames for a since-closed env.
         with _session_last_obs_lock:
             _session_last_obs.get(sid, {}).pop(_obs_key(meta), None)
         _forget_obs_dirty(_obs_key(meta))
-        try:
-            remote_result = _get_mgr().proxy_handle_op(
-                meta, f"/env/{meta['remote_handle']}", method="DELETE"
-            )
-        except Exception as exc:
-            cleanup_errors.append(f"remote_close: {type(exc).__name__}: {exc}")
-        finally:
-            # Always release the worker reference, including transport errors.
-            try:
-                _get_mgr().release_worker(meta.get("worker_url", ""))
-            except Exception as exc:
-                cleanup_errors.append(f"release_worker: {type(exc).__name__}: {exc}")
-            remove_checker(handle)
-        return {
-            "ok": not cleanup_errors,
-            "already_closed": False,
-            "remote": remote_result,
-            "cleanup_errors": cleanup_errors,
-        }
-    # Closing is deliberately idempotent so finally-block retries are safe.
-    return {"ok": True, "already_closed": True, "cleanup_errors": []}
+        remove_checker(handle)
+
+    return close_managed_environment(
+        session_id=sid, handle=handle, envs=_session_envs, manager=_get_mgr(), retire=retire,
+    )
 
 
 @_blocking_tool
@@ -2715,7 +3226,7 @@ def list_active_envs(*, session_id: str = "") -> dict:
 
     Returns:
         dict with keys: **session_id**, **count**, **envs** (list of
-        ``{index, handle, env_id, backend}``).
+        ``{index, handle, env_id, backend, lifecycle_state}``).
     """
     sid = session_id or _current_session.get() or ""
     _touch_session(sid)
@@ -2727,6 +3238,7 @@ def list_active_envs(*, session_id: str = "") -> dict:
             "handle": h,
             "env_id": meta.get("env_id", "unknown"),
             "backend": meta.get("backend", "unknown"),
+            "lifecycle_state": meta.get("close_lifecycle", {}).get("state", "active"),
         })
     return {
         "session_id": sid,
@@ -2887,6 +3399,9 @@ def main() -> None:
     finally:
         _reap_workers()
 
+
+from sim.envs.robodojo.worker_bridge import install_server
+install_server(sys.modules[__name__])
 
 if __name__ == "__main__":
     main()

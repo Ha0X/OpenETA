@@ -7,10 +7,13 @@ import threading
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from enum import Enum
+from functools import wraps
 from typing import Any
 from typing import Callable
 
 from adapter.protocol import EnvObservation, JsonDict
+from agent.tools.call_budget import ToolCallBudget
+from agent.tools.grasp_types import GRASP_GEOMETRY_FAMILY_HINT
 
 TOOL_RESULT_SCHEMA_VERSION = "openeta.tool_result.v1"
 TOOL_RESULT_PROVENANCE_SCHEMA_VERSION = "openeta.tool_result_provenance.v1"
@@ -88,6 +91,21 @@ class ToolExecutionContext:
 ToolHandler = Callable[[ToolExecutionContext], ToolResult | JsonDict | str | None]
 ToolEventListener = Callable[[JsonDict], None]
 ToolExecutionGate = Callable[[ToolExecutionContext], Any]
+
+
+def cooperative_cancellation_when(predicate: Callable[[ToolExecutionContext], bool]):
+    """Host-only opt-in: the handler cancels and reaps its work before returning.
+
+    Only use for execution paths that poll the private cancellation event and
+    bound their own work. Unlike legacy blocking handlers these must not be
+    abandoned in an untracked daemon thread. This is not a planner parameter.
+    """
+
+    def decorate(handler):
+        handler._cooperative_cancellation_when = predicate
+        return handler
+
+    return decorate
 
 
 def tool_result_type(spec: ToolSpec) -> str:
@@ -210,6 +228,8 @@ class ToolRegistry:
 
         previous = getattr(self._execution_local, "metadata", None)
         self._execution_local.metadata = dict(metadata or {})
+        if isinstance(previous, dict) and "_tool_call_budget" in previous:
+            self._execution_local.metadata["_tool_call_budget"] = previous["_tool_call_budget"]
         try:
             yield
         finally:
@@ -291,6 +311,9 @@ class ToolRegistry:
             **(dict(scope_metadata) if isinstance(scope_metadata, dict) else {}),
             **dict(metadata or {}),
         }
+        if isinstance(scope_metadata, dict) and "_tool_call_budget" in scope_metadata:
+            # Nested caller metadata cannot remove or replace the Host quota.
+            combined_metadata["_tool_call_budget"] = scope_metadata["_tool_call_budget"]
         requested_name = name
         if _execution_cancelled(combined_metadata):
             return _cancelled_tool_result(requested_name, parameters)
@@ -363,6 +386,27 @@ class ToolRegistry:
             observation=observation,
             metadata=combined_metadata,
         )
+        budget = combined_metadata.get("_tool_call_budget")
+        if budget is not None and (not isinstance(budget, ToolCallBudget) or not budget.reserve()):
+            quota = budget.snapshot() if isinstance(budget, ToolCallBudget) else {}
+            result = make_tool_result(
+                context, success=False,
+                content="Tool-call admission budget exhausted or invalid; handler was not dispatched.",
+                diagnostics=[{
+                    "code": "tool_call_budget_exhausted",
+                    "dispatched": False,
+                    "admission": quota,
+                }],
+                recovery_options=[{
+                    "action": "stop_episode",
+                    "reason": "The Host tool-call quota cannot be increased by Agent parameters.",
+                }],
+            )
+            self._emit_tool_result(
+                requested_name, parameters, result, spec=spec,
+                metadata=_public_execution_metadata(combined_metadata),
+            )
+            return result
         if spec.effect == ToolEffect.WORLD_MUTATING and self._execution_gate is not None:
             try:
                 authorization = self._execution_gate(context)
@@ -419,8 +463,17 @@ class ToolRegistry:
                 )
                 return result
         try:
+            @wraps(handler)
+            def scoped_handler(handler_context: ToolExecutionContext):
+                # _invoke_tool_handler may create a worker thread. Preserve the
+                # quota for synchronous nested registry calls in that worker.
+                with self.execution_scope(combined_metadata):
+                    if _execution_cancelled(combined_metadata):
+                        return _cancelled_tool_result(requested_name, parameters, spec=spec)
+                    return handler(handler_context)
+
             result = _coerce_tool_result(
-                _invoke_tool_handler(handler, context, combined_metadata),
+                _invoke_tool_handler(scoped_handler, context, combined_metadata),
                 tool=name,
             )
             normalized = _normalize_tool_result(result, spec=spec, parameters=context.parameters)
@@ -794,6 +847,42 @@ def _semantic_result_projection(
                         ),
                     }
                 )
+        elif (
+            spec.name == "gripper_control"
+            and status == "not_armed"
+            and str(receipt.get("reason") or "")
+            == "close_not_supported_by_host_contact_envelope"
+        ):
+            outcome = "no_attachment_evidence"
+            recovery.extend(
+                [
+                    {
+                        "action": "inspect_fresh_dual_view",
+                        "reason": (
+                            "the close receipt did not arm a carried-object proxy; "
+                            "do not infer attachment"
+                        ),
+                    },
+                    {
+                        "action": "prepare_articulated_attachment_probe",
+                        "tool": "prepare_attachment_probe",
+                        "reason": (
+                            "for a drawer, door, or other articulated handle, ask the "
+                            "host to validate the exact compiled contact and freeze a "
+                            "short probe; the carried-object proxy is not the required "
+                            "evidence for an articulated mechanism"
+                        ),
+                    },
+                    {
+                        "action": "reopen_and_repair_contact",
+                        "reason": (
+                            "for a portable object, or if articulated probe validation "
+                            "rejects the compiled contact, reopen and reacquire contact "
+                            "instead of transporting without a collision proxy"
+                        ),
+                    },
+                ]
+            )
         else:
             outcome = "no_attachment_evidence"
             recovery.extend(
@@ -1159,6 +1248,12 @@ def _invoke_tool_handler(
     if "_cancel_event" not in metadata:
         return handler(context)
 
+    cooperative = getattr(handler, "_cooperative_cancellation_when", None)
+    if callable(cooperative) and cooperative(context):
+        # Keep the handler on the owning turn thread: wait_for_idle must not
+        # report idle before the cancellation-aware supervisor has reaped it.
+        return handler(context)
+
     result_queue: queue.Queue[tuple[str, Any]] = queue.Queue(maxsize=1)
 
     def invoke() -> None:
@@ -1226,6 +1321,16 @@ def build_default_tool_registry() -> ToolRegistry:
 
     registry = ToolRegistry()
     for spec in [
+        ToolSpec(
+            name="inspect_evidence",
+            category="perception",
+            description="Show SAM3 candidates beside the latest retrieved catalog references, plus mask details; or open a session image. Compare original colors and reference name. No inference, selection, motion, or evidence renewal.",
+            parameters={"bundle_id": "registered SAM3 detection bundle; mutually exclusive with image_ref",
+                        "offset": "optional zero-based candidate offset, default 0; use next_offset",
+                        "image_ref": "exact Host-published image evidence_id (observation:… or current_observation:…) or saved image path in this session; mutually exclusive with bundle_id/offset"},
+            effect=ToolEffect.READ_ONLY,
+            batchable=False,
+        ),
         ToolSpec(
             name="observe",
             category="perception",
@@ -1321,7 +1426,7 @@ def build_default_tool_registry() -> ToolRegistry:
                 "code": (
                     "Python code. Set a JSON-serializable `result` variable. The "
                     "session artifact API exposes describe(), list_files(), "
-                    "list_images(), read_json(), read_text(), and grep_text(); use "
+                    "list_images(), read_json(), read_text(), grep_text(), and read_bundle(bundle_id); use "
                     "those helpers instead of reconstructing host paths or embedding "
                     "large artifacts in model context"
                 ),
@@ -1396,7 +1501,7 @@ def build_default_tool_registry() -> ToolRegistry:
                 ),
                 "mode": "text | points; defaults to text",
                 "prompt": (
-                    "required only for mode=text: concise visual object phrase, preferably English"
+                    "required only for mode=text: use 'object' to propose scene instances before semantic selection, or a concise visual phrase for targeted segmentation; neither guarantees complete coverage"
                 ),
                 "points": (
                     "required only for mode=points: one to 64 objects with exactly "
@@ -1438,12 +1543,15 @@ def build_default_tool_registry() -> ToolRegistry:
                 "Low-confidence or ambiguous search fails structurally "
                 "instead of silently choosing rank 1. A static environment-scoped "
                 "catalog remains a compatibility fallback. The planner never supplies "
-                "a URL. Example: for 'pick up the black bowl on the cookie box', "
+                "a URL. Set localize=false to retrieve only reference images without "
+                "calling the isolated localizer; the main Agent then compares them with "
+                "the scene. Example: for 'pick up the black bowl on the cookie box', "
                 "pass target_object='black bowl'; keep 'on the cookie box' as scene "
                 "context for visual localization, not as part of target_object."
             ),
             parameters={
                 "environment": ("active simulator env_id or catalog environment alias"),
+                "localize": "optional boolean, default true; false retrieves appearance images only, without pixel/identity evidence",
                 "target_object": (
                     "object identity/appearance only, such as 'black bowl' or "
                     "'alphabet soup'; do not include relations or locations such as "
@@ -1495,24 +1603,21 @@ def build_default_tool_registry() -> ToolRegistry:
                 "selection_confidence": "optional VLM confidence in the semantic selection",
                 "reason": "short visual or task-semantic justification",
                 "identity_anchor_id": (
-                    "required for target_object selection from new detection evidence: "
-                    "copy the exact active target identity anchor id"
+                    "omit on the first target selection; Host creates an anchor. "
+                    "After an anchor exists, copy its exact id for new target evidence; never use a catalog name"
                 ),
                 "identity_relation": (
-                    "required with identity_anchor_id for new target evidence: "
+                    "omit on first selection; with an existing identity_anchor_id use: "
                     "same_instance after cross-view comparison, or "
+                    "new_task_target when advancing to another explicitly required "
+                    "object in a multi-object task, or "
                     "replace_misidentified_anchor when the previous selection was wrong"
                 ),
                 "evidence_role": (
                     "optional exact semantic role from the pending SAM3 result: "
                     "target_object or placement_region; omission inherits the pending role"
                 ),
-                "target_geometry_family": (
-                    "optional truthful gross-geometry hint: upright_can, "
-                    "upright_bottle, lying_bottle, boxed_item, bowl, apple, articulated_handle, "
-                    "drawer_handle, other, "
-                    "or unknown; omit when uncertain"
-                ),
+                "target_geometry_family": GRASP_GEOMETRY_FAMILY_HINT,
             },
             safe_by_default=True,
             effect=ToolEffect.PLANNING,
@@ -1784,7 +1889,8 @@ def build_default_tool_registry() -> ToolRegistry:
                 "does not move the robot or re-estimate orientation/axial contact depth. "
                 "The host checks wrist-mask clipping, robot/object freshness, proximity "
                 "to the compiled clearance reference, correction clamping, and the "
-                "compiled-grasp residual budget. Outside that geometric operating region "
+                "local estimator correction envelope. These are estimator limits, not "
+                "a global motion budget. Outside that geometric operating region "
                 "it returns requires_better_view diagnostics and no executable poses. "
                 "For orientation or depth uncertainty, run a full fresh wrist-view grasp "
                 "estimate."

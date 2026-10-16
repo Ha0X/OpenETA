@@ -375,6 +375,7 @@ class RobotState:
     gripper_state: JsonDict = field(default_factory=dict)
     base_pose: JsonDict | None = None
     metadata: JsonDict = field(default_factory=dict)
+    arms: JsonDict = field(default_factory=dict)
 
     def to_dict(self) -> JsonDict:
         """Convert to a plain JSON-serialisable dict."""
@@ -391,6 +392,8 @@ class RobotState:
             d["base_pose"] = self.base_pose
         if self.metadata:
             d["metadata"] = self.metadata
+        if self.arms:
+            d["arms"] = self.arms
         return d
 
     @classmethod
@@ -457,6 +460,10 @@ class RobotState:
         jn_raw = d.get("joint_names") or []
         jn = [str(n) for n in jn_raw] if isinstance(jn_raw, (list, tuple)) else []
 
+        arms_raw = d.get("arms") or {}
+        arms = {str(role): cls.from_dict(value).to_dict() for role,value in arms_raw.items()
+                if isinstance(value, dict)} if isinstance(arms_raw, dict) else {}
+
         return cls(
             joint_positions=jp,
             joint_velocities=jv,
@@ -465,6 +472,7 @@ class RobotState:
             gripper_state=gs,
             base_pose=bp,
             metadata=meta,
+            arms=arms,
         )
 
 

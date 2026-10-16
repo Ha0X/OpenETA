@@ -23,6 +23,18 @@ OpenETA 将从数字智能体（Digital Agent）到物理智能体（Physical Ag
 
 ## 最新动态
 
+- **2026-10-16** — **RoboDojo 测试与人类参与的 Harness RSI：** 发布
+  [`robodojo-v112`](https://github.com/OpenMOSS/OpenETA/tree/robodojo-v112) 分支，
+  支持通过 Codex CLI 测试 RoboDojo，并提供版本化任务说明补充、粗粒度原生完成反馈和实际夹指碰撞几何。
+  在 42 项任务上使用 **GPT-6 Astra / high**，阶段性累计成功覆盖率为
+  **54.8% Pass@1 → 64.3% RSI Pass@2 → 66.7% RSI Pass@3**。
+  这是人类参与、跨版本修订的累计结果；未完成及尚未补齐的尝试暂按未成功计入，
+  不代表最终 RSI Pass@n 成功率或固定版本独立采样 pass@k。
+  [使用指南](https://github.com/OpenMOSS/OpenETA/blob/robodojo-v112/docs/robodojo-v112.md)
+  · [统计口径与逐项结果](docs/robodojo-rsi-results.md)
+
+  ![RoboDojo 阶段性 RSI 累计成功覆盖率](docs/assets/robodojo-rsi-progress-20261016.png)
+
 - **2026-09-06** — **Stage 2 Agent Harness：** 我们将 Stage 2 闭环具身智能体 Harness
   合入 `main`，新增 35 个经过验证的工具契约、支持持久化 Rollout 的有界多模态上下文、
   统一评测入口、具备可达性与碰撞感知的运动能力，以及 Human VLM 人工操作工作台。

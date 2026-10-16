@@ -125,7 +125,7 @@ def test_eval_preflight_marks_incompatible_anygrasp_unavailable(monkeypatch) -> 
             "configured": True,
             "checked": True,
             "available": True,
-            "endpoint": "http://10.11.18.197:8080",
+            "endpoint": "http://127.0.0.1:8080",
             "status": "ok",
         },
     )

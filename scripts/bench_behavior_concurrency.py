@@ -23,8 +23,8 @@ import sys
 import time
 from pathlib import Path
 
-REPO = "/home/yfzhang/nvme1/openeta_fix_wt"
-BEHAVIOR_PY = "/home/yfzhang/anaconda3/envs/behavior/bin/python"
+REPO = "/opt/openeta-data/openeta_fix_wt"
+BEHAVIOR_PY = "/opt/openeta-data/python"
 ACTIVITY = os.environ.get("BENCH_ACTIVITY", "picking_up_trash")
 WARMUP_STEPS = 5
 MEASURE_STEPS = 30

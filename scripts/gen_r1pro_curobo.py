@@ -41,11 +41,11 @@ from pathlib import Path
 
 import yaml
 
-SRC = Path("/home/yfzhang/nvme1/BEHAVIOR-1K/datasets/omnigibson-robot-assets"
+SRC = Path("/opt/openeta-data/omnigibson-robot-assets"
            "/models/r1pro/curobo/r1pro_description_curobo_default.yaml")
-URDF_DIR = Path("/home/yfzhang/nvme1/BEHAVIOR-1K/datasets/omnigibson-robot-assets"
+URDF_DIR = Path("/opt/openeta-data/omnigibson-robot-assets"
                 "/models/r1pro/urdf")
-DST = Path("/home/yfzhang/WorkSpace/openeta/third_party/curobo/src/curobo"
+DST = Path("/opt/openeta-data/curobo"
            "/content/configs/robot/r1pro.yml")
 # Patched URDF lives beside the config, not in the read-only asset tree.
 PATCHED_URDF = DST.parent / "r1pro_description" / "r1pro_curobo.urdf"

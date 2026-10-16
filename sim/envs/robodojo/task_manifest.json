@@ -1,0 +1,29 @@
+{
+  "schema_version": "1",
+  "benchmark_commit": "ee67a1468510da7624a089164402359f2afc72c8",
+  "robot_variant": "single_x5",
+  "tasks": [
+    {
+      "task": "general_pickup",
+      "class_path": "task.RoboDojo.tasks.general_pickup.general_pickup",
+      "required_arms": 1,
+      "requires_support_arm": false,
+      "allowed_action_modes": ["ee_delta", "joint_position"],
+      "single_arm_status": "verified",
+      "verification": {
+        "smoke": "outputs/robodojo/smoke.json",
+        "verified_at": "2026-09-07",
+        "steps": 1,
+        "success": true
+      }
+    },
+    {
+      "task": "insert_key",
+      "class_path": "task.RoboDojo.tasks.insert_key.insert_key",
+      "required_arms": 1,
+      "requires_support_arm": false,
+      "allowed_action_modes": ["ee_delta", "joint_position"],
+      "single_arm_status": "untested"
+    }
+  ]
+}

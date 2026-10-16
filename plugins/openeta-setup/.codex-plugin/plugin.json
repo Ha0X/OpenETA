@@ -1,0 +1,19 @@
+{
+  "name": "openeta-setup",
+  "version": "0.1.0+codex.20260914082333",
+  "description": "Select and bind a registered OpenETA harness configuration before execution.",
+  "author": {
+    "name": "Local developer"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "OpenETA Setup",
+    "shortDescription": "Choose a compatible harness for the assigned task.",
+    "longDescription": "Inspect registered configurations and create an immutable task binding for a separate robot execution session.",
+    "developerName": "Local developer",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Select an executable OpenETA harness configuration for the assigned benchmark task."
+  },
+  "mcpServers": "./.mcp.json"
+}

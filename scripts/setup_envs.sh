@@ -44,7 +44,7 @@ fi
 BENCHES=""
 for arg in "$@"; do
     case "$arg" in
-        all) BENCHES="$BENCHES metaworld maniskill libero robocasa behavior genesis d4rl" ;;
+        all) BENCHES="$BENCHES metaworld maniskill libero robocasa behavior robodojo genesis d4rl" ;;
         *)   for b in ${arg//,/ }; do BENCHES="$BENCHES $b"; done ;;
     esac
 done
@@ -278,6 +278,38 @@ SH
         ;;
 
     # ═══════════════ Genesis ═══════════════════════════════════
+    robodojo)
+        ROBODOJO_PYTHON_VERSION="${ROBODOJO_PYTHON_VERSION:-3.11}"
+        ROBODOJO_COMMIT="${ROBODOJO_COMMIT:-ee67a1468510da7624a089164402359f2afc72c8}"
+        SOURCE_DIR="$VENV/src"
+        ROBODOJO_DIR="$SOURCE_DIR/RoboDojo"
+        echo ""
+        echo "==> RoboDojo → $VENV"
+        uv venv -q --python "$ROBODOJO_PYTHON_VERSION" "$VENV" 2>&1 || true
+        mkdir -p "$SOURCE_DIR"
+        if [ ! -d "$ROBODOJO_DIR/.git" ]; then
+            git clone -q https://github.com/robodojo-benchmark/RoboDojo.git "$ROBODOJO_DIR"
+        fi
+        git -C "$ROBODOJO_DIR" fetch -q origin "$ROBODOJO_COMMIT"
+        git -C "$ROBODOJO_DIR" checkout -q "$ROBODOJO_COMMIT"
+        echo "   RoboDojo checkout ready at $ROBODOJO_DIR"
+        echo "   Install Isaac Sim 5.1 / Isaac Lab 2.3 per upstream scripts/install.sh"
+        if [ "${ROBODOJO_RUN_INSTALL:-0}" = "1" ] && [ -x "$ROBODOJO_DIR/scripts/install.sh" ]; then
+            (cd "$ROBODOJO_DIR" && bash scripts/install.sh)
+        fi
+        cat > "$VENV/activate_extra.sh" << SH
+export ROBODOJO_ROOT=${ROBODOJO_DIR}
+export ROBODOJO_ASSET_ROOT=${ROBODOJO_ASSET_ROOT:-$ROBODOJO_DIR/Assets}
+export ISAAC_SIM_ROOT=${ISAAC_SIM_ROOT:-}
+export ROBODOJO_ENV_CFG=${ROBODOJO_ENV_CFG:-arx_x5}
+export ROBODOJO_ROBOT_CONFIG=${ROBODOJO_ROBOT_CONFIG:-$REPO_ROOT/sim/envs/robodojo/config/single_x5.yml}
+export OMNI_KIT_ACCEPT_EULA=YES
+export OMNIGIBSON_HEADLESS=True
+SH
+        echo "   Done. Run: python scripts/robodojo_preflight.py"
+        ;;
+
+
     genesis)
         echo ""
         echo "==> Genesis → $VENV"
@@ -307,7 +339,7 @@ SH
 
     *)
         echo "Unknown bench: '$BENCH'"
-        echo "Available: metaworld maniskill libero robocasa behavior genesis d4rl all"
+        echo "Available: metaworld maniskill libero robocasa behavior robodojo genesis d4rl all"
         ;;
     esac
 done

@@ -9,6 +9,7 @@ import time
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any, Protocol
+from uuid import uuid4
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
@@ -54,8 +55,12 @@ as necessary feasibility constraints, but do not trade away grasp stability for
 a merely convenient approach among otherwise executable candidates.
 
 The filled dot and jaw line are centred on `executed_contact_center_xyz`, the
-backend-normalized point that OpenETA will actually compile onto the calibrated
-EEF/grip site. The arrow ends at that same executed contact centre. Native
+backend-normalized candidate point before any later strategy override. The
+rendered jaw axes describe this candidate, not a subsequently clamped or refined
+execution pose. Your recommendation applies only to the rendered geometry;
+changing its orientation or approach requires fresh geometric assessment and
+does not inherit this candidate's closing-span or contact-quality evidence.
+The arrow ends at that same candidate contact centre. Native
 `translation_xyz` and `gripper_tip_position_xyz` use backend-specific origins;
 rank the normalized rendered centre rather than assuming either raw field has
 one universal meaning.
@@ -114,6 +119,14 @@ class GraspPoseAdvisor(Protocol):
         """Return one structured recommendation without activating a candidate."""
 
 
+class GraspAdvisorResponseError(ValueError):
+    """Invalid advice with known call accounting, never a substitute recommendation."""
+
+    def __init__(self, message: str, diagnostics: JsonDict) -> None:
+        super().__init__(message)
+        self.advisor_diagnostics = diagnostics
+
+
 class BackendGraspPoseAdvisor:
     """Clean-context visual advisor backed by a dedicated planner client."""
 
@@ -139,6 +152,14 @@ class BackendGraspPoseAdvisor:
             else []
         )
         vision_paths = [value for value in [overview_ref, *sheet_refs] if value]
+        parent_session_id = selection_bundle.get("_host_parent_session_id")
+        request_lineage = {}
+        if isinstance(parent_session_id, str) and parent_session_id.strip():
+            request_lineage = {
+                "parent_session_id": parent_session_id.strip(),
+                "child_session_id": f"advisor-{uuid4().hex}",
+                "parent_tool": "grasp_pose_estimate",
+            }
         started = time.monotonic()
         result = self.backend.decide(
             PlannerBackendRequest(
@@ -146,6 +167,7 @@ class BackendGraspPoseAdvisor:
                 tool_context={
                     "schema_version": GRASP_SELECTION_ADVICE_SCHEMA,
                     "role": "read_only_grasp_pose_advisor",
+                    **({"request_lineage": request_lineage} if request_lineage else {}),
                     "task": task,
                     "selection_bundle_id": selection_bundle.get("bundle_id"),
                     "source_backend": selection_bundle.get("source_backend"),
@@ -177,6 +199,24 @@ class BackendGraspPoseAdvisor:
                 metadata={"isolated_context": True},
             )
         )
+        try:
+            return self._validate_advice(result, selection_bundle, candidates, started)
+        except ValueError as exc:
+            details = result.details if isinstance(result.details, dict) else {}
+            usage = details.get("usage")
+            # Do not retain the rejected model text or arbitrary provider details.
+            known_usage = {key: value for key, value in (usage.items() if isinstance(usage, Mapping) else [])
+                           if key in {"total_tokens", "prompt_tokens", "completion_tokens", "input_tokens", "output_tokens"}
+                           and type(value) is int and value >= 0}
+            raise GraspAdvisorResponseError(str(exc), {
+                "failure_phase": "response_validation",
+                "provider": result.provider, "model": result.model,
+                "usage": known_usage,
+                "usage_source": "provider_reported" if known_usage else "unknown",
+                "latency_ms": round((time.monotonic() - started) * 1000.0, 3),
+            }) from exc
+
+    def _validate_advice(self, result, selection_bundle, candidates, started) -> JsonDict:
         payload = result.payload
         if isinstance(payload, str):
             try:

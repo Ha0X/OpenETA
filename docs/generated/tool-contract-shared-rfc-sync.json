@@ -2,7 +2,7 @@
   "schema_version": "openeta.tool_contract_shared_rfc_sync.v1",
   "status": "synced",
   "synced_at": "2026-08-24",
-  "document": "https://sii-czxy.feishu.cn/docx/HFB9d1ws8ow1CuxQeiacxMbonXe",
+  "document": "https://github.com/OpenMOSS/OpenETA",
   "section": "C.8.1 其余 34 个公共工具的 verified promotion",
   "revision": 2145,
   "review_decision": "docs/generated/tool-contract-review-decision.json",

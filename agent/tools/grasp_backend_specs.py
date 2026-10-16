@@ -77,3 +77,4 @@ def build_retired_contact_graspnet_spec() -> ToolSpec:
         },
         effect=ToolEffect.PLANNING,
     )
+

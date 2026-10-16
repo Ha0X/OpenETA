@@ -1,0 +1,1345 @@
+{
+  "schema_version": 1,
+  "presets": [
+    {
+      "id": "libero_panda_v1",
+      "description": "Fixed Panda parallel gripper on LIBERO; validated legacy atomic tools and Mink execution.",
+      "components": {
+        "benchmark": "libero_v1",
+        "embodiment": "panda_parallel_v1",
+        "execution": "libero_mink_v1",
+        "interface": "libero_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_v1",
+      "description": "Dual X5 on RoboDojo; registered adaptation target, execution pending capability validation.",
+      "components": {
+        "benchmark": "robodojo_v1",
+        "embodiment": "dual_x5_parallel_v1",
+        "execution": "robodojo_dual_ik_v1",
+        "interface": "atomic_dual_v1"
+      }
+    },
+    {
+      "id": "robodojo_single_x5_left_mount_v1",
+      "description": "Fixed left-mounted X5, calibrated RGB-D/TCP, checked joint IK and official RoboDojo pickup outcome. Single-arm acceptance profile.",
+      "components": {
+        "benchmark": "robodojo_official_v1",
+        "embodiment": "single_x5_left_parallel_v1",
+        "execution": "robodojo_checked_single_v1",
+        "interface": "robodojo_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_checked_v1",
+      "description": "Native fixed dual X5 with calibrated RGB-D/TCP, independent arm holds, synchronized checked Cartesian actions and inter-arm collision detection.",
+      "components": {
+        "benchmark": "robodojo_dual_official_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_checked_dual_v1",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_cooperation_v1",
+      "description": "Development acceptance profile for native sweep_blocks and pour_balls_into_vase; same calibrated fixed dual X5 and checked execution as pickup, task success unverified.",
+      "components": {
+        "benchmark": "robodojo_dual_cooperation_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_checked_dual_v1",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_rigid32_acceptance_v1",
+      "description": "Development admission canary for 32 static/rigid base task candidates. Candidate registration does not establish geometry coverage or task success.",
+      "components": {
+        "benchmark": "robodojo_rigid32_acceptance_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_checked_dual_v1",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_cloth_v1",
+      "description": "Development cloth profile: short TCP segments, per-physics-step measured cloth checks, local finger contact, synchronized shared cloth. No future deformation guarantee. Task success unverified.",
+      "components": {
+        "benchmark": "robodojo_cloth_acceptance_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_checked_cloth_v1",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_align_blocks_400_v1",
+      "description": "Extended-budget experiment: align_blocks native action quota 200 -> 400; unchanged native success predicates. Not comparable to the original 200-action baseline.",
+      "components": {
+        "benchmark": "robodojo_align_blocks_400_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_checked_dual_v1",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_single_x5_physical_contact_v1",
+      "description": "Experimental rigid contact profile: generic motion/gripper, no intent authorization or automatic spatial detours; measured bounded finger contact, no force control or held-object trajectory prediction.",
+      "components": {
+        "benchmark": "robodojo_official_v1",
+        "embodiment": "single_x5_left_parallel_v1",
+        "execution": "robodojo_physical_contact_single_v1",
+        "interface": "robodojo_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_physical_contact_v1",
+      "description": "Experimental rigid contact profile: generic motion/gripper, no intent authorization or automatic spatial detours; measured bounded finger contact, no force control or held-object trajectory prediction.",
+      "components": {
+        "benchmark": "robodojo_dual_official_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_physical_contact_400_v1",
+      "description": "Experimental rigid contact profile: generic motion/gripper, no intent authorization or automatic spatial detours; measured bounded finger contact, no force control or held-object trajectory prediction.",
+      "components": {
+        "benchmark": "robodojo_align_blocks_400_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_capabilities_v71",
+      "description": "Experimental v71: billed bounded wait, public-frame relative translation, verified live world-articulation links. Admission/diagnostic coverage only, not task success or force control. Native budgets unchanged.",
+      "components": {
+        "benchmark": "robodojo_capabilities_diagnostic_v71",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_capabilities_v72",
+      "description": "Experimental v72: explicit 0.5–3 mm final-position criteria, bounded native tracking and truthful failure feedback. No change to native drives, assets or scoring. SDF/GPU and force control are not enabled.",
+      "components": {
+        "benchmark": "robodojo_capabilities_diagnostic_v71",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_gpu_v73",
+      "description": "Isolated GPU tensor pipeline and Fabric experiment; unchanged native assets/reward/budget. Native SDF reads under diagnosis, SDF collision admission remains disabled; not comparable to CPU baseline without regression.",
+      "components": {
+        "benchmark": "robodojo_gpu_diagnostic_v73",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_gpu_contact_dual_v73",
+        "interface": "robodojo_gpu_atomic_v73"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_visual_cloth_v74",
+      "description": "Visual short-horizon cloth; generic finger contact, synchronized dual-arm requests, private geometry for safety only. Native material friction unchanged.",
+      "components": {
+        "benchmark": "robodojo_cloth_acceptance_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_visual_cloth_v74",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_visual_cloth_friction_2x_v74",
+      "description": "Visual short-horizon cloth; generic finger contact, synchronized dual-arm requests, private geometry for safety only. Garment material friction doubled in an isolated service; separate modified-physics condition, not native baseline.",
+      "components": {
+        "benchmark": "robodojo_cloth_acceptance_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_visual_cloth_friction_2x_v74",
+        "interface": "robodojo_dual_atomic_v1"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_visual_cloth_v75",
+      "description": "Visual short-horizon cloth; generic finger contact, synchronized dual-arm requests, private geometry for safety only. Native material friction unchanged. Public calibrated TCP overlays alongside original images; no demonstration loaded by default.",
+      "components": {
+        "benchmark": "robodojo_cloth_acceptance_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_visual_cloth_v74",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_visual_cloth_friction_2x_v75",
+      "description": "Visual short-horizon cloth; generic finger contact, synchronized dual-arm requests, private geometry for safety only. Garment material friction doubled in an isolated service; separate modified-physics condition, not native baseline. Public calibrated TCP overlays alongside original images; no demonstration loaded by default.",
+      "components": {
+        "benchmark": "robodojo_cloth_acceptance_v1",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_visual_cloth_friction_2x_v74",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_physical_visual_v75",
+      "description": "Build-tower ablation: native rigid dual X5 physical contact, public TCP overlays, unchanged native/adapter quotas.",
+      "components": {
+        "benchmark": "robodojo_build_tower_v75",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_physical_visual_2000_v76",
+      "description": "Build-tower paired ablation; explicit 2000 native and adapter actions, unchanged controller, RGB/TCP aids, physics and rewards. Separate modified-budget condition.",
+      "components": {
+        "benchmark": "robodojo_build_tower_2000_v76",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_physical_visual_4000_v77",
+      "description": "Build-tower feasibility run: explicit 4000 native and adapter actions; unchanged controller, RGB/TCP aids, physics and rewards. Separate modified-budget condition.",
+      "components": {
+        "benchmark": "robodojo_build_tower_4000_v77",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_completion_oracle_v78",
+      "description": "Opt-in build-tower semantic completion oracle; 4000 actions, same physical control and public TCP overlays. Privileged-derived feedback must be reported separately.",
+      "components": {
+        "benchmark": "robodojo_build_tower_oracle_v78",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_completion_oracle_recording_v79",
+      "description": "Same semantic completion oracle and robot control as v78; records same-frame public TCP/calibration for annotated and raw review videos.",
+      "components": {
+        "benchmark": "robodojo_build_tower_oracle_recording_v79",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_coarse_completion_v80",
+      "description": "Opt-in native coarse completion feedback; observes existing evaluator calls and historical state, without extra predicate evaluation. General checker supports 42 pinned base task sources; this preset is the build-tower live canary, not 42-task execution certification.",
+      "components": {
+        "benchmark": "robodojo_build_tower_coarse_v80",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_native_surface_v81",
+      "description": "Native query surface voxel covers at 0.5 mm, with conservative union contact bounds and unchanged physical-contact execution. Catalog registration covers 42 native tasks; registration is not execution or task success certification.",
+      "components": {
+        "benchmark": "robodojo_build_tower_coarse_v80",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_image_v85",
+      "description": "Conveyor image task diagnostic: native physics and action budget, visual TCP, coarse completion feedback; bounded motion available.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_lossless_v86",
+      "description": "Conveyor diagnostic with unchanged six public original/TCP views, opt-in verified lossless WebP when smaller, native physics/reward/budgets.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_clearance_v87",
+      "description": "Conveyor diagnostic with public-visual held-object traffic-clearance skill revision; same lossless six views and native physics/reward/budgets as v86.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_experience_v88",
+      "description": "Conveyor host with optional hash-pinned historical visual/action experience reader; native physics/reward/budgets. Experience selection and conditioning are separately recorded.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_aperture_v89",
+      "description": "Conveyor visual/action experience condition with robot-only measured TCP-plane jaw aperture feedback and grasp-region skill advice; unchanged actions, physics, reward and native budgets.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_planning_v90",
+      "description": "Conveyor with four-second per-edge Cartesian certification inside the existing total planning deadline, unchanged collision criteria and native controller; optional fixed visual/action history.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_feedback_v91",
+      "description": "Conveyor with checked partial dual schedules under explicit observation ceilings, prominent public collision evidence summaries, unchanged native physics/reward/budgets. Conditioning is separately recorded.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_hold_v92",
+      "description": "Conveyor retaining issued finger drive targets at ordinary requested observation-horizon stops, with explicit robot-only hold readback and unchanged collision stops, native drives, physics/reward/budgets. Conditioning is separately recorded.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_attribution_v93",
+      "description": "Conveyor with explicit closest-tested IK collision evidence, actual finger-role contact-bound attribution and positive-gap feedback; unchanged admission, native drives, physics/reward/budgets. Conditioning is separately recorded.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_recovery_v94",
+      "description": "Compose existing-overlap retreat and positive-submargin recovery without changing either guarantee; same native physics/reward/budgets and separately recorded conditioning.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_conveyor_placement_v95",
+      "description": "Same v94 runtime with optional pick-place advice for public visual point offsets and supported receiving containers; unchanged tools, controller, physics/reward/budgets.",
+      "components": {
+        "benchmark": "robodojo_conveyor_image_v85",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_kong_auxiliary_v99",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified.",
+      "components": {
+        "benchmark": "robodojo_make_kong_auxiliary_v99",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_imitate_sorting_sequence_auxiliary_v99",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified.",
+      "components": {
+        "benchmark": "robodojo_imitate_sorting_sequence_auxiliary_v99",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_tic_tac_toe_auxiliary_v99",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified.",
+      "components": {
+        "benchmark": "robodojo_play_tic_tac_toe_auxiliary_v99",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_kong_auxiliary_v100",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories.",
+      "components": {
+        "benchmark": "robodojo_make_kong_auxiliary_v99",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_imitate_sorting_sequence_auxiliary_v100",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories.",
+      "components": {
+        "benchmark": "robodojo_imitate_sorting_sequence_auxiliary_v99",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_tic_tac_toe_auxiliary_v100",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories.",
+      "components": {
+        "benchmark": "robodojo_play_tic_tac_toe_auxiliary_v99",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_kong_auxiliary_v101",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories. Stop and report sustained low measured joint progress without skipping knots or relaxing precision.",
+      "components": {
+        "benchmark": "robodojo_make_kong_auxiliary_v99",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_tic_tac_toe_auxiliary_v101",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories. Stop and report sustained low measured joint progress without skipping knots or relaxing precision. Explicitly align adapter quota with the unchanged native task limit; record separately from the former 1000-action adapter cap.",
+      "components": {
+        "benchmark": "robodojo_play_tic_tac_toe_auxiliary_v101",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_imitate_sorting_sequence_auxiliary_v101",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories. Stop and report sustained low measured joint progress without skipping knots or relaxing precision. Explicitly align adapter quota with the unchanged native task limit; record separately from the former 1000-action adapter cap.",
+      "components": {
+        "benchmark": "robodojo_imitate_sorting_sequence_auxiliary_v101",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_kong_auxiliary_v102",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories. Stop and report sustained low measured joint progress without skipping knots or relaxing precision. Preserve unchanged measured native finger geometry without treating it as an out-of-limit Agent command; retain cross-actor collision checks.",
+      "components": {
+        "benchmark": "robodojo_make_kong_auxiliary_v99",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_tic_tac_toe_auxiliary_v102",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories. Stop and report sustained low measured joint progress without skipping knots or relaxing precision. Explicitly align adapter quota with the unchanged native task limit; record separately from the former 1000-action adapter cap. Preserve unchanged measured native finger geometry without treating it as an out-of-limit Agent command; retain cross-actor collision checks.",
+      "components": {
+        "benchmark": "robodojo_play_tic_tac_toe_auxiliary_v101",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_imitate_sorting_sequence_auxiliary_v102",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories. Stop and report sustained low measured joint progress without skipping knots or relaxing precision. Explicitly align adapter quota with the unchanged native task limit; record separately from the former 1000-action adapter cap. Preserve unchanged measured native finger geometry without treating it as an out-of-limit Agent command; retain cross-actor collision checks.",
+      "components": {
+        "benchmark": "robodojo_imitate_sorting_sequence_auxiliary_v101",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_kong_auxiliary_v103",
+      "description": "Public kong replacement-draw rule in task prompt; current native requirements explained with coarse semantic feedback, without exact targets or thresholds.",
+      "components": {
+        "benchmark": "robodojo_make_kong_auxiliary_v103",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_tic_tac_toe_auxiliary_v103",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories. Stop and report sustained low measured joint progress without skipping knots or relaxing precision. Explicitly align adapter quota with the unchanged native task limit; record separately from the former 1000-action adapter cap. Preserve unchanged measured native finger geometry without treating it as an out-of-limit Agent command; retain cross-actor collision checks. Explicit coarse native turn-taking violation feedback; historical feedback is separately opt-in and recorded as cross-attempt conditioning.",
+      "components": {
+        "benchmark": "robodojo_play_tic_tac_toe_auxiliary_v101",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_imitate_sorting_sequence_auxiliary_v103",
+      "description": "Experimental native auxiliary ownership: two Agent X5 effectors, task-owned Franka, live cross-actor checks and lossless pause; native task reward and physics unchanged. Task success not certified. Cartesian TCP enumeration restricted to Agent target roles; auxiliary state remains in collision trajectories. Stop and report sustained low measured joint progress without skipping knots or relaxing precision. Explicitly align adapter quota with the unchanged native task limit; record separately from the former 1000-action adapter cap. Preserve unchanged measured native finger geometry without treating it as an out-of-limit Agent command; retain cross-actor collision checks. Explicit coarse native turn-taking violation feedback; historical feedback is separately opt-in and recorded as cross-attempt conditioning.",
+      "components": {
+        "benchmark": "robodojo_imitate_sorting_sequence_auxiliary_v101",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_tic_tac_toe_auxiliary_v104",
+      "description": "Operator-authorized extended action budget: native and adapter limits 1300, versus native 1100 and original adapter 1000. All v103 controls, physics and reward predicates retained; report separately from prior budget conditions.",
+      "components": {
+        "benchmark": "robodojo_play_tic_tac_toe_auxiliary_v104",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_kong_auxiliary_v105",
+      "description": "Future auxiliary-task experiments: no episode native or adapter action cap; count tool requests and retain per-call watchdogs, collision checks, native success and task-rule failure. Record separately from capped experiments.",
+      "components": {
+        "benchmark": "robodojo_make_kong_auxiliary_v105",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_tic_tac_toe_auxiliary_v105",
+      "description": "Future auxiliary-task experiments: no episode native or adapter action cap; count tool requests and retain per-call watchdogs, collision checks, native success and task-rule failure. Record separately from capped experiments.",
+      "components": {
+        "benchmark": "robodojo_play_tic_tac_toe_auxiliary_v105",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_imitate_sorting_sequence_auxiliary_v105",
+      "description": "Future auxiliary-task experiments: no episode native or adapter action cap; count tool requests and retain per-call watchdogs, collision checks, native success and task-rule failure. Record separately from capped experiments.",
+      "components": {
+        "benchmark": "robodojo_imitate_sorting_sequence_auxiliary_v105",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_egg_settle_v107",
+      "description": "Egg-holder only: 300 passive steps before the unchanged native stability check; explicit altered initialization, unlimited native/adapter action budgets, coarse completion feedback and public TCP overlays.",
+      "components": {
+        "benchmark": "robodojo_egg_settle_v107",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_visual_v75"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_align_blocks_batch_v108",
+      "description": "v108 frozen all-task campaign: align_blocks; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_align_blocks_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_arrange_largest_number_batch_v108",
+      "description": "v108 frozen all-task campaign: arrange_largest_number; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_arrange_largest_number_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_build_tower_batch_v108",
+      "description": "v108 frozen all-task campaign: build_tower; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_build_tower_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_classify_objects_batch_v108",
+      "description": "v108 frozen all-task campaign: classify_objects; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_classify_objects_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_classify_objects_by_language_batch_v108",
+      "description": "v108 frozen all-task campaign: classify_objects_by_language; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_classify_objects_by_language_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_cover_blocks_batch_v108",
+      "description": "v108 frozen all-task campaign: cover_blocks; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_cover_blocks_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_deposit_coin_batch_v108",
+      "description": "v108 frozen all-task campaign: deposit_coin; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_deposit_coin_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fasten_screws_batch_v108",
+      "description": "v108 frozen all-task campaign: fasten_screws; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_fasten_screws_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fill_egg_holder_batch_v108",
+      "description": "v108 frozen all-task campaign: fill_egg_holder; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_fill_egg_holder_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fill_pen_holder_batch_v108",
+      "description": "v108 frozen all-task campaign: fill_pen_holder; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_fill_pen_holder_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fold_clothes_batch_v108",
+      "description": "v108 frozen all-task campaign: fold_clothes; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_fold_clothes_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_visual_cloth_v74",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_general_pickup_batch_v108",
+      "description": "v108 frozen all-task campaign: general_pickup; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_general_pickup_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_hang_mugs_batch_v108",
+      "description": "v108 frozen all-task campaign: hang_mugs; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_hang_mugs_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_imitate_sorting_sequence_batch_v108",
+      "description": "v108 frozen all-task campaign: imitate_sorting_sequence; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_imitate_sorting_sequence_batch_v108",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_insert_key_batch_v108",
+      "description": "v108 frozen all-task campaign: insert_key; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_insert_key_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_insert_tubes_batch_v108",
+      "description": "v108 frozen all-task campaign: insert_tubes; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_insert_tubes_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_kong_batch_v108",
+      "description": "v108 frozen all-task campaign: make_kong; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_make_kong_batch_v108",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_toast_batch_v108",
+      "description": "v108 frozen all-task campaign: make_toast; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_make_toast_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_match_and_pick_from_conveyor_batch_v108",
+      "description": "v108 frozen all-task campaign: match_and_pick_from_conveyor; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_match_and_pick_from_conveyor_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_organize_table_batch_v108",
+      "description": "v108 frozen all-task campaign: organize_table; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_organize_table_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pack_objects_into_box_batch_v108",
+      "description": "v108 frozen all-task campaign: pack_objects_into_box; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_pack_objects_into_box_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pick_from_conveyor_by_image_batch_v108",
+      "description": "v108 frozen all-task campaign: pick_from_conveyor_by_image; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_pick_from_conveyor_by_image_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_xylophone_batch_v108",
+      "description": "v108 frozen all-task campaign: play_Xylophone; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_play_xylophone_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_stacking_toy_batch_v108",
+      "description": "v108 frozen all-task campaign: play_stacking_toy; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_play_stacking_toy_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_tic_tac_toe_batch_v108",
+      "description": "v108 frozen all-task campaign: play_tic_tac_toe; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_play_tic_tac_toe_batch_v108",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_plug_in_charger_batch_v108",
+      "description": "v108 frozen all-task campaign: plug_in_charger; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_plug_in_charger_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pour_balls_into_vase_batch_v108",
+      "description": "v108 frozen all-task campaign: pour_balls_into_vase; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_pour_balls_into_vase_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pour_by_language_batch_v108",
+      "description": "v108 frozen all-task campaign: pour_by_language; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_pour_by_language_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pour_liquid_into_cup_batch_v108",
+      "description": "v108 frozen all-task campaign: pour_liquid_into_cup; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_pour_liquid_into_cup_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_press_by_number_batch_v108",
+      "description": "v108 frozen all-task campaign: press_by_number; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_press_by_number_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_push_t_batch_v108",
+      "description": "v108 frozen all-task campaign: push_T; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_push_t_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_put_bottles_into_dustbin_batch_v108",
+      "description": "v108 frozen all-task campaign: put_bottles_into_dustbin; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_put_bottles_into_dustbin_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_solve_equation_batch_v108",
+      "description": "v108 frozen all-task campaign: solve_equation; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_solve_equation_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_sort_nesting_dolls_by_size_batch_v108",
+      "description": "v108 frozen all-task campaign: sort_nesting_dolls_by_size; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_sort_nesting_dolls_by_size_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_stack_blocks_batch_v108",
+      "description": "v108 frozen all-task campaign: stack_blocks; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_stack_blocks_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_stack_blocks_by_language_batch_v108",
+      "description": "v108 frozen all-task campaign: stack_blocks_by_language; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_stack_blocks_by_language_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_stack_bowls_batch_v108",
+      "description": "v108 frozen all-task campaign: stack_bowls; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_stack_bowls_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_store_laptop_and_headphones_batch_v108",
+      "description": "v108 frozen all-task campaign: store_laptop_and_headphones; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_store_laptop_and_headphones_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_store_tools_in_toolbox_batch_v108",
+      "description": "v108 frozen all-task campaign: store_tools_in_toolbox; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_store_tools_in_toolbox_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_swap_t_batch_v108",
+      "description": "v108 frozen all-task campaign: swap_T; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_swap_t_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_swap_blocks_batch_v108",
+      "description": "v108 frozen all-task campaign: swap_blocks; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_swap_blocks_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_sweep_blocks_batch_v108",
+      "description": "v108 frozen all-task campaign: sweep_blocks; coarse completion feedback, public TCP views, unlimited actions; exact task and robot binding.",
+      "components": {
+        "benchmark": "robodojo_sweep_blocks_batch_v108",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_press_by_number_repair_v109",
+      "description": "v109 feedback/diagnostics candidate; task-rule supplement approved separately in the retry manifest; native safety and reward unchanged.",
+      "components": {
+        "benchmark": "robodojo_press_by_number_instruction_corrected_v109",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_organize_table_repair_v109",
+      "description": "v109 feedback/diagnostics candidate; task-rule supplement approved separately in the retry manifest; native safety and reward unchanged.",
+      "components": {
+        "benchmark": "robodojo_organize_table_instruction_corrected_v109",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_organize_table_repair_v110",
+      "description": "v110 approved complete task wording and object-specific coarse completion feedback; native predicates, safety and action budgets unchanged.",
+      "components": {
+        "benchmark": "robodojo_organize_table_instruction_corrected_v110",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_arrange_largest_number_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_arrange_largest_number_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fasten_screws_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_fasten_screws_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fill_egg_holder_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_fill_egg_holder_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fill_pen_holder_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_fill_pen_holder_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fold_clothes_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_fold_clothes_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_visual_cloth_v74",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_insert_key_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_insert_key_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_kong_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_make_kong_instruction_corrected_v111",
+        "embodiment": "dual_x5_native_franka_v99",
+        "execution": "robodojo_native_auxiliary_v99",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_toast_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_make_toast_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_stacking_toy_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_play_stacking_toy_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pour_balls_into_vase_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_pour_balls_into_vase_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pour_by_language_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_pour_by_language_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pour_liquid_into_cup_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_pour_liquid_into_cup_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_put_bottles_into_dustbin_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_put_bottles_into_dustbin_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_store_laptop_and_headphones_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_store_laptop_and_headphones_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_store_tools_in_toolbox_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_store_tools_in_toolbox_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_swap_blocks_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_swap_blocks_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_sweep_blocks_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_sweep_blocks_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_organize_table_repair_v111",
+      "description": "v111 approved task requirements plus reviewed controller feedback/diagnostics; original reward and safety preserved.",
+      "components": {
+        "benchmark": "robodojo_organize_table_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fasten_screws_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_fasten_screws_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fill_egg_holder_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_fill_egg_holder_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_fill_pen_holder_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_fill_pen_holder_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_insert_key_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_insert_key_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_make_toast_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_make_toast_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_organize_table_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_organize_table_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_play_stacking_toy_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_play_stacking_toy_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pour_balls_into_vase_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_pour_balls_into_vase_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pour_by_language_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_pour_by_language_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_pour_liquid_into_cup_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_pour_liquid_into_cup_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_put_bottles_into_dustbin_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_put_bottles_into_dustbin_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_store_laptop_and_headphones_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_store_laptop_and_headphones_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_store_tools_in_toolbox_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_store_tools_in_toolbox_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_swap_blocks_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_swap_blocks_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    },
+    {
+      "id": "robodojo_dual_x5_sweep_blocks_repair_v112",
+      "description": "v112 measured finger collision geometry and stop/resume disclosure; v111 task requirements, reward and drive policy unchanged.",
+      "components": {
+        "benchmark": "robodojo_sweep_blocks_instruction_corrected_v111",
+        "embodiment": "dual_x5_calibrated_v1",
+        "execution": "robodojo_physical_contact_dual_v1",
+        "interface": "robodojo_dual_atomic_lossless_v86_fk_v112"
+      }
+    }
+  ]
+}

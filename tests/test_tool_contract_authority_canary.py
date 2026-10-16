@@ -29,3 +29,4 @@ def test_reviewed_estimate_depth_prior_request_authority_canary(tmp_path) -> Non
     assert first["enforcing"] is True
     assert first["contract_accepted"] is False
     assert repaired["contract_accepted"] is True
+
