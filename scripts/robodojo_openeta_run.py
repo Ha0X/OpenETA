@@ -95,8 +95,18 @@ print(json.dumps({'config_sha256': config.sha256, 'task_rule_prompt': prompt,
     return guidance
 
 
-def reference_instructions(guidance, *, max_turns: int, max_tool_calls: int, timeout: float):
+def reference_instructions(guidance, *, max_turns: int, max_tool_calls: int, timeout: float,
+                           recommend_pick_place: bool = False):
     text = "\n\n" + guidance["workflow"] + guidance["task_rule_prompt"]
+    if recommend_pick_place:
+        text += (
+            '\nRecommended remote workflow: after the initial observation, read '
+            'robodojo_read_skill(skill_id="pick-place") before choosing a grasp '
+            'for rigid-object acquisition and transport. Reuse the guide once read. '
+            'This is optional advice, not an execution prerequisite. The local '
+            'relevant_skills and skill_usage fields describe the local registry; '
+            'empty lists there do not mean that this Host-packaged guide is unavailable.\n'
+        )
     if guidance["completion_feedback"]:
         text += (
             "\nThis run enables robodojo_check_task_completion. It returns semantic "
@@ -147,6 +157,8 @@ def parser():
     p.add_argument("--model", help="Override the existing OpenETA provider's model")
     p.add_argument("--reasoning-effort", choices=("none", "minimal", "low", "medium", "high", "xhigh", "max"),
                    help="Explicit API reasoning effort; supported levels depend on the model")
+    p.add_argument("--recommend-pick-place", action="store_true",
+                   help="Recommend reading the remote pick-place guide; does not force a tool call")
     p.add_argument("--smoke-test", action="store_true",
                    help="Observe, request a 2 cm upward move, then report; at most 3 turns / 180 s")
     p.add_argument("--max-turns", type=int, default=80)
@@ -207,6 +219,7 @@ def main(argv=None):
     command, host_args = host_command(args, root=root, output=output, task=task)
     task_guidance = reference_instructions(
         guidance, max_turns=args.max_turns, max_tool_calls=args.max_tool_calls, timeout=args.timeout,
+        recommend_pick_place=args.recommend_pick_place,
     )
     output.mkdir(parents=True, exist_ok=False)
     (output / "guidance.json").write_text(json.dumps(guidance, indent=2) + "\n")
@@ -220,6 +233,7 @@ def main(argv=None):
         "source": "RoboDojoOpenEtaRun", "require_official_reward": True,
         "model": provider.model, "provider": provider.provider,
         "reasoning_effort": args.reasoning_effort,
+        "recommend_pick_place": args.recommend_pick_place,
         "config_id": args.config_id, "env_id": args.env_id, "seed": args.seed,
         "smoke_test": args.smoke_test,
         "config_sha256": args.config_sha256,

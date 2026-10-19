@@ -371,7 +371,8 @@ def test_smoke_instructions_keep_checks_and_disable_validation_retries(tmp_path)
     assert runtime.planner.max_validation_retries == 0
 
 
-def test_reference_workflow_and_rules_reach_provider_without_codex(tmp_path):
+@pytest.mark.parametrize("recommend_pick_place", [False, True])
+def test_reference_workflow_and_rules_reach_provider_without_codex(tmp_path, recommend_pick_place):
     root = tmp_path / "reference"
     (root / "tools").mkdir(parents=True)
     (root / "tools/__init__.py").write_text("")
@@ -397,7 +398,8 @@ def task_rule_supplement(benchmark, env_id):
                                        config_id="preset_v1", env_id="matching-env")
     assert guidance["workflow_sha256"] == hashlib.sha256(source.encode()).hexdigest()
     assert guidance["config_sha256"] == "bound-hash"
-    instructions = reference_instructions(guidance, max_turns=80, max_tool_calls=82, timeout=1200)
+    instructions = reference_instructions(guidance, max_turns=80, max_tool_calls=82, timeout=1200,
+                                          recommend_pick_place=recommend_pick_place)
     backend = build_backend(PlannerProviderConfig(model="test", api_base="https://example.test", api_key="test"))
     bodies = []
 
@@ -406,7 +408,8 @@ def task_rule_supplement(benchmark, env_id):
         return {"choices": [{"message": {"content": "<decision><kind>tool_call</kind><name>observe</name><parameters/></decision>"}}]}
 
     backend.transport = transport
-    bridge = RoboDojoTools(FakeHost(), output=tmp_path / "artifacts")
+    host = FakeHost()
+    bridge = RoboDojoTools(host, output=tmp_path / "artifacts")
     runtime = build_runtime(bridge, backend, memory_root=tmp_path / "memory", task_guidance=instructions)
     runner = OpenEtaEpisodeRunner(runtime=runtime, environment=RoboDojoEpisodeEnvironment(bridge))
     runner.run(task="pour balls", max_turns=1, timeout_s=30)
@@ -416,6 +419,8 @@ def task_rule_supplement(benchmark, env_id):
     assert "82 Host requests, 1200 seconds" in sent
     assert "oracle-assisted" in sent and "robodojo_ tools" in sent
     assert "name: test" not in sent
+    assert ('robodojo_read_skill(skill_id="pick-place")' in sent) is recommend_pick_place
+    assert all(name != "read_skill" for name, _ in host.calls)
     with pytest.raises(subprocess.CalledProcessError):
         load_reference_guidance(root=root, python=sys.executable,
                                 config_id="preset_v1", env_id="wrong-env")

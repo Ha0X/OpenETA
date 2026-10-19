@@ -2,6 +2,12 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：增加可选的 pick-place 阅读推荐
+
+- 完成：RoboDojo 单任务入口新增 `--recommend-pick-place`，默认关闭；启用时建议初次观察后读取远程 `pick-place`，再考虑刚体抓取和搬运。说明本地技能推荐字段与 Host 远程文档是不同来源。推荐不强制调用、不自动预加载正文、不添加轨迹或抓取坐标；不更改技能注册表、动作历史或控制器行为。
+- 记录：推荐开关写入运行摘要，具体文字保存到 `environment-instructions.txt` 并进入真实 provider 系统消息。任务、通用 workflow 和 preset 哈希沿用原配置。
+- 验证：RoboDojo 入口、提示词归属和对话历史相关测试 44 项通过；覆盖开关开启／关闭的实际请求，以及开启后模型仍可选择 observe 而不被自动改成读取技能。实时效果待本次单任务试跑记录。
+
 ## 2026-10-19：核对 OpenETA 未读取 RoboDojo 技能的原因
 
 - 33 份真实 provider 请求都包含 `robodojo_read_skill` 的工具说明与 schema，`pick-place` 在枚举中；逐份 schema 校验均接受 `{"skill_id":"pick-place"}`。公共 workflow 明确给出技能索引和读取方式，没有禁用或拒绝该工具的证据。
