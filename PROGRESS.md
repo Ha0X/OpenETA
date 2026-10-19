@@ -2,6 +2,16 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：20 分钟预算自主试跑与 TCP 观测复盘
+
+- 完成：按用户要求暂不处理超时收尾和计量问题，基于 `03a38f5` 重新运行同一场景、seed 0、icodeeasy / `gpt-5.6-sol`。保持原始倒球指令，关闭 smoke 引导，预算改为 1200 秒、最多 80 轮；单次 API 请求 60 秒且不重试，没有中途指导。
+- 轨迹：40 轮中包含观察 1 次、测点 14 次、读取 `pick-place` 技能 1 次、移动请求 19 次、夹爪控制 5 次。模型在路径被拒绝后改用小步接近，完成姿态调整并尝试夹持杯沿；第一次抬升后识别到杯子仍在桌面，重新张开并调整抓取。第二次闭合／抬升后尝试向花瓶搬运，连续目标因 IK 无有效解或碰撞被拒绝，没有完成转移或倒球；第二次抓取的稳定搬运能力未得到验证。
+- 结果：`task_success=false`，官方状态仍为 `running`。Host 预算到期后关闭环境，最后一次移动请求被拒绝；主循环记录 `stop_reason=environment`，不是官方成功或失败。总计 245 个原生动作、2434 个物理步；11 次移动返回到达目标。接触穿透限制出现 3 次，涉及闭合和抬升。有限 IK 搜索失败不等于证明目标不可达。
+- 验证：40 次 API 请求均一次返回，40 份模型决策均通过参数校验；除第一轮外，每轮发送 6 或 7 张图片。API 用量与主循环统计一致，共 1429642 tokens；API 调用合计约 `518.382 s`。主循环耗时 `1144.479 s`，Host 从初始化到关闭约 `1219.221 s`；Host 包含初始化的计时使其先触发预算。Host/MCP 清理成功，Slurm 作业 `5860` 已释放，没有修改系统或 GPU 配置。
+- 复盘发现：Host 同时提供原始 link pose 与校准 TCP，而 main 的 metadata 摘要将 `tcp_state` 中的 `xyz`、`approach`、`jaw` 数值压缩成 `{type: list, count: 3}`，原始 link pose 却完整显示。初始右臂两种参考点距离约 `0.145 m`；工具实际使用校准 TCP。该问题可能影响模型定位，尚不能证明其对本次失败的因果贡献；未将失败直接归因于模型能力。已在 PLAN 中列为优先核对项，本轮未修改运行代码。
+- 产物：[分析与逐轮轨迹](outputs/robodojo-gpt-task20-20261019-182658/attempt/analysis.json)、[原始 summary](outputs/robodojo-gpt-task20-20261019-182658/attempt/summary.json)、[TCP 投影证据](outputs/robodojo-gpt-task20-20261019-182658/attempt/tcp-projection-evidence.json)、[最后一次实际移动后的画面](outputs/robodojo-gpt-task20-20261019-182658/attempt/host/calls/000034/after-000-rgb.png)。上级目录保存 `run.sh`、只读分析脚本和服务日志；本机产物不随提交上传。
+- 检查：核对模型请求、Host 回执、抓取前后图像、预算停止原因、API 用量及 Slurm 释放情况。只更新实验记录与计划，未重复运行代码测试。
+
 ## 2026-10-19：原始倒球指令自主试跑
 
 - 完成：基于 `48be579`，沿用 `icodeeasy / gpt-5.6-sol`、`pour_balls_into_vase`、seed 0 和 `robodojo_dual_x5_pour_balls_into_vase_repair_v112`。不启用 smoke 引导，原始任务为 “Pour all the balls from the cup into the vase.”；最多 10 个 planner 回合、300 秒运行预算，API 超时 60 秒、最多请求 1 次，无人工中途指导。
