@@ -2,12 +2,23 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：Astra high 同任务试跑
+
+- 完成：基于 `ac15e50`，使用 icodeeasy / `gpt-6-astra`、显式 `reasoning_effort=high`，运行同一倒球任务、seed 0、v112 preset；沿用公共 workflow、修正版任务说明、1200 秒预算、80 轮／82 个 Host 请求和 API 60 秒／1 次请求。未降低推理强度、未自动重跑，没有中途人工动作指导。
+- 轨迹：32 个有效工具决策，包括状态读取 1 次、测点 10 次、移动 17 次、夹爪控制 4 次。第 10 轮以 `0.6` 闭合，第 11 轮试抬，第 14 轮向内升高搬运；图像确认杯子离桌。第 19 轮调整为约 30° 倾斜姿态，第 21 轮搬运推进 159 个物理步后触发右指接触几何边界停止。Host 将驱动目标置于实测位置；模型随后将夹爪命令调至 `0.82`，之后图像显示杯子回到桌上。模型重新测量杯沿、打开至 `1.0`、调整位置，再以 `0.0` 闭合并试抬 5 cm。末帧球仍在杯中，未到达花瓶上方完成倾倒。
+- 结果：`task_success=false`，官方状态仍为 `running`。17 次移动中 9 次到达目标，6 次候选碰撞、1 次 IK 无有效解在预检阶段拒绝，1 次执行中接触停止。第 33 次 API 请求在 `60.335 s` 后超时；后端生成 `ask_human` 失败反馈，使主循环结束，不是模型主动求助，也不是预算耗尽或官方 terminal failure。清理阶段另有 1 次 Host `finish_episode`，不计作模型工具决策。
+- 统计：176 个原生动作、1759 个物理步；主循环 `1018.653 s`，Host 含初始化与关闭共 `1103.798 s`。33 次 API 共 `574.909 s`，32 次成功响应报告 1324683 tokens；超时请求消耗未知。另有启动前的 1 次服务探测，见下节，不计入任务统计。
+- 验证：全部 33 份实际请求均为 `gpt-6-astra/high`、`max_completion_tokens=8192` 且不带 `temperature`；32 份成功响应均报告模型名 `gpt-6-astra`。逐份核对完整公共指导、任务说明、图片数量、TCP 和前轮公开回执均正确送达；本次没有 `read_skill`，通用指导在启动时注入。服务未提供可用于核实内部推理强度的明细，参数送达与模型名回报不能证明其内部计算量。
+- 收尾：Host/MCP 清理成功；单 GPU Slurm 作业 `5863` 随客户端退出取消释放，batch 退出码 0。没有修改系统或 GPU 设置。177 份原生观测生成三视角视频，解码验证为 226 帧、9.04 秒，其中仿真时间 `7.036 s`、末帧停留 2 秒；不包含 API 与规划等待。代码修改已通过 392 项相关测试，本次收尾仅检查实验产物和文档。
+- 对照边界：前一轮 `gpt-5.6-sol` 完成 46 次决策、32 次移动中的 10 次到达目标；本轮 Astra/high 完成 32 次工具决策、17 次移动中的 9 次到达目标，但发生接触停止和重新抓取，且被 API 超时提前截短。两次都未倒球成功，不能据单次轨迹或拒绝率认定哪个模型更好。与原生 Codex 即使模型名和 high 相同，模型服务、上下文与停止策略仍有差异。
+- 产物：[summary](outputs/robodojo-astra-high20-20261019-201538/attempt/summary.json)、[逐轮分析](outputs/robodojo-astra-high20-20261019-201538/attempt/analysis.json)、[真实输入核验](outputs/robodojo-astra-high20-20261019-201538/attempt/verification.json)、[视频](outputs/robodojo-astra-high20-20261019-201538/attempt.mp4)、[末帧腕部图像](outputs/robodojo-astra-high20-20261019-201538/attempt/host/calls/000032/after-002-rgb.png)。上级目录保留启动、分析、核验脚本与服务日志，产物不随提交上传。
+
 ## 2026-10-19：增加显式推理强度并验证 Astra 服务
 
 - 完成：RoboDojo 入口新增 `--reasoning-effort`，传入 planner 后端并写入运行摘要；不修改共享 `.env` 或其他任务的默认模型。显式配置时发送 Chat Completions 的 `reasoning_effort` 和 `max_completion_tokens`，非 `none` 时不发送 `temperature`；未配置时保留原请求行为。OpenETA 仍解析模型输出的 XML 决策，未切换为 API 原生 function calling。
 - 接口依据：[OpenAI GPT-6 指南](https://developers.openai.com/api/docs/guides/latest-model)、[Chat Completions 参数](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create)。保持现有文本／图像输入和工具执行路径，不借此次切换重写 harness。
 - 验证：392 项相关回归测试通过，覆盖 `high` 参数实际进入请求、推理模式不发送冲突采样字段，以及未配置时的原行为。通过现有 icodeeasy 服务做 1 次无仿真探测，显式请求 `gpt-6-astra/high`，返回模型名 `gpt-6-astra` 和预期 READY；耗时 `21.523 s`、报告 4423 tokens。服务未报告推理 token 明细，不据此推断其内部计算量。
-- 产物：[API 探测](outputs/robodojo-astra-high20-20261019-201538/api-probe.json)。正式任务结果另行记录。
+- 产物：[API 探测](outputs/robodojo-astra-high20-20261019-201538/api-probe.json)。正式任务结果见上节。
 
 ## 2026-10-19：对齐公共指导后的 20 分钟预算试跑
 
