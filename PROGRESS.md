@@ -2,6 +2,17 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：原始倒球指令自主试跑
+
+- 完成：基于 `48be579`，沿用 `icodeeasy / gpt-5.6-sol`、`pour_balls_into_vase`、seed 0 和 `robodojo_dual_x5_pour_balls_into_vase_repair_v112`。不启用 smoke 引导，原始任务为 “Pour all the balls from the cup into the vase.”；最多 10 个 planner 回合、300 秒运行预算，API 超时 60 秒、最多请求 1 次，无人工中途指导。
+- 轨迹：观察 → 头部相机标记杯壁 → 水平接近因候选 IK 碰撞被拒绝（零物理步）→ 改用抬高途经点和向下姿态，成功到达杯子上方 → 腕部相机标记杯沿 → 调整夹爪朝向并成功接近杯沿。未调用闭合夹爪工具，未执行倒球；所有模型工具参数通过校验。
+- 结果：`task_success=false`，官方状态仍为 `running`；主循环因 `episode_timeout` 截断，并非仿真判定任务成功或失败。共 6 次 GPT API 调用、5 个计入 episode 的完整回合；第 6 次移动跨过主循环截止时间，之后返回 `reached_target=true`，但没有再发给模型进行下一轮决策。最终 Host 记录 216 个原生动作、2160 个物理步。
+- 耗时：主循环在 `300.254 s` 返回超时结果，Host 从初始化到关闭约 `428.192 s`；初始化约 75 秒，超时后的收尾约 53 秒。两次实际移动分别耗时 `106.820 s`、`122.344 s`，其中规划约 `11.105 s`、`4.705 s`；6 次 API 合计约 `75.343 s`。运动执行及检查是本轮主要耗时。
+- 收尾：在途动作返回后，Host 和 MCP 连接正常关闭，`cleanup.ok=true`；Slurm 作业 `5859` 随后释放，未修改系统或 GPU 配置。本轮只运行一次任务，没有因未完成而自动加预算或重跑。
+- 发现：主循环超时仅停止后续轮次，不能立即取消已发出的移动，关闭请求会等待工具锁；Host 的预算包含初始化，主循环预算从其 reset 开始，计时起点不同。此外，主循环摘要仅统计 5 轮、127819 tokens，实际 6 次 API 返回共 164187 tokens；完整 API 记录和 Host 回执均已保存。待处理项已列入 PLAN。
+- 产物：[分析与逐轮轨迹](outputs/robodojo-gpt-task-20261019-181704/attempt/analysis.json)、[原始 summary](outputs/robodojo-gpt-task-20261019-181704/attempt/summary.json)、[最后一帧](outputs/robodojo-gpt-task-20261019-181704/attempt/host/calls/000006/after-000-rgb.png)。上级目录保存 `run.sh`、只读分析脚本和服务日志；本机产物不随提交上传。
+- 验证：核对 6 次模型调用、7 份 Host 调用记录（含收尾）、动作前后图像、官方结果、API 用量及 Slurm 释放情况。本轮未修改运行代码，未重复运行单元测试；上一阶段相关测试 340 项通过。
+
 ## 2026-10-19：GPT API + 实时仿真短链路验证
 
 - 完成：main 的 OpenETA harness 使用 `icodeeasy / gpt-5.6-sol`，通过 RoboDojo Host 驱动实时仿真；场景为 `pour_balls_into_vase`、seed 0、preset `robodojo_dual_x5_pour_balls_into_vase_repair_v112`。本次只检查链路，不执行倒球任务。
