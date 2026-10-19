@@ -2,6 +2,13 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：增加显式推理强度并验证 Astra 服务
+
+- 完成：RoboDojo 入口新增 `--reasoning-effort`，传入 planner 后端并写入运行摘要；不修改共享 `.env` 或其他任务的默认模型。显式配置时发送 Chat Completions 的 `reasoning_effort` 和 `max_completion_tokens`，非 `none` 时不发送 `temperature`；未配置时保留原请求行为。OpenETA 仍解析模型输出的 XML 决策，未切换为 API 原生 function calling。
+- 接口依据：[OpenAI GPT-6 指南](https://developers.openai.com/api/docs/guides/latest-model)、[Chat Completions 参数](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create)。保持现有文本／图像输入和工具执行路径，不借此次切换重写 harness。
+- 验证：392 项相关回归测试通过，覆盖 `high` 参数实际进入请求、推理模式不发送冲突采样字段，以及未配置时的原行为。通过现有 icodeeasy 服务做 1 次无仿真探测，显式请求 `gpt-6-astra/high`，返回模型名 `gpt-6-astra` 和预期 READY；耗时 `21.523 s`、报告 4423 tokens。服务未报告推理 token 明细，不据此推断其内部计算量。
+- 产物：[API 探测](outputs/robodojo-astra-high20-20261019-201538/api-probe.json)。正式任务结果另行记录。
+
 ## 2026-10-19：对齐公共指导后的 20 分钟预算试跑
 
 - 完成：基于 `37bb853`，沿用倒球任务、seed 0、v112 preset、icodeeasy / `gpt-5.6-sol`、1200 秒预算、80 轮／82 个 Host 请求上限、API 60 秒／1 次请求。新增公共 workflow 与 preset 任务说明，保持其余运行设置；没有复制 Codex 的历史动作或提供中途人工指导。与上轮的差别是指导／任务说明，不是同模型的 harness 对照。

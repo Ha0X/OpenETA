@@ -59,8 +59,9 @@ retry a rejected motion. The test ends after at most three planner turns.
 """
 
 
-def build_backend(provider):
+def build_backend(provider, *, reasoning_effort=None):
     config = OpenAICompatiblePlannerBackendConfig.from_provider_config(provider)
+    config.reasoning_effort = reasoning_effort
     # Match the planner's allowance for original views and labelled overlays.
     config.max_vision_images = 8
     return OpenAICompatiblePlannerBackend(config)
@@ -144,6 +145,8 @@ def parser():
     p.add_argument("--task-file", type=Path, required=True)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--model", help="Override the existing OpenETA provider's model")
+    p.add_argument("--reasoning-effort", choices=("none", "minimal", "low", "medium", "high", "xhigh", "max"),
+                   help="Explicit API reasoning effort; supported levels depend on the model")
     p.add_argument("--smoke-test", action="store_true",
                    help="Observe, request a 2 cm upward move, then report; at most 3 turns / 180 s")
     p.add_argument("--max-turns", type=int, default=80)
@@ -216,6 +219,7 @@ def main(argv=None):
     run_metadata = {
         "source": "RoboDojoOpenEtaRun", "require_official_reward": True,
         "model": provider.model, "provider": provider.provider,
+        "reasoning_effort": args.reasoning_effort,
         "config_id": args.config_id, "env_id": args.env_id, "seed": args.seed,
         "smoke_test": args.smoke_test,
         "config_sha256": args.config_sha256,
@@ -238,7 +242,7 @@ def main(argv=None):
         )
         bridge = RoboDojoTools(connection, output=output / "artifacts")
         runtime = build_runtime(
-            bridge, build_backend(provider), memory_root=output / "memory",
+            bridge, build_backend(provider, reasoning_effort=args.reasoning_effort), memory_root=output / "memory",
             context_window_tokens=provider.context_window_tokens,
             smoke_test=args.smoke_test,
             task_guidance=task_guidance,

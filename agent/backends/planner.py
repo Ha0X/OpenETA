@@ -345,6 +345,8 @@ class OpenAICompatiblePlannerBackendConfig:
     max_attempts: int = 3
     retry_backoff_s: float = 0.5
     temperature: float = 0.0
+    # None preserves provider defaults and the legacy sampling request.
+    reasoning_effort: str | None = None
     # Isolated model clients usually return short JSON, but reasoning-capable
     # providers may count hidden reasoning against this same completion budget.
     max_tokens: int = REASONING_SUBAGENT_MAX_OUTPUT_TOKENS
@@ -422,6 +424,7 @@ class OpenAICompatiblePlannerBackendConfig:
             "max_attempts": self.max_attempts,
             "retry_backoff_s": self.retry_backoff_s,
             "temperature": self.temperature,
+            "reasoning_effort": self.reasoning_effort,
             "max_tokens": self.max_tokens,
             "context_window_tokens": self.context_window_tokens,
             "use_json_response_format": self.use_json_response_format,
@@ -523,6 +526,12 @@ class OpenAICompatiblePlannerBackend(PlannerBackend):
             "temperature": self.config.temperature,
             "max_tokens": self.config.max_tokens,
         }
+        if self.config.reasoning_effort is not None:
+            body["reasoning_effort"] = self.config.reasoning_effort
+            body["max_completion_tokens"] = body.pop("max_tokens")
+            if self.config.reasoning_effort != "none":
+                # Reasoning-enabled GPT requests do not accept temperature.
+                body.pop("temperature")
         isolated_role = request.metadata.get("isolated_context") is True
         if self.config.use_json_response_format and isolated_role:
             body["response_format"] = {"type": "json_object"}

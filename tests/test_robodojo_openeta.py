@@ -12,7 +12,7 @@ import sys
 from PIL import Image
 import pytest
 
-from agent.backends.planner import StaticPlannerBackend
+from agent.backends.planner import PlannerBackendRequest, StaticPlannerBackend
 from agent.backends.provider_config import PlannerProviderConfig
 from agent.runtime.episode import OpenEtaEpisodeRunner
 from agent.runtime.planner import build_tool_context
@@ -452,3 +452,28 @@ def test_api_backend_converts_provider_and_attaches_all_camera_views(tmp_path, m
     assert len(images) == 3
     assert backend.config.max_vision_images == 8
     assert backend.config.max_attempts == 1
+
+
+@pytest.mark.parametrize("effort", [None, "none", "high"])
+def test_explicit_reasoning_effort_reaches_api_without_sampling_conflict(effort):
+    backend = build_backend(PlannerProviderConfig(
+        model="gpt-6-astra", api_base="https://example.test", api_key="test", max_attempts=1,
+    ), reasoning_effort=effort)
+    bodies = []
+
+    def transport(url, body, headers, timeout_s):
+        bodies.append(body)
+        return {"choices": [{"message": {"content": "<decision><kind>tool_call</kind><name>observe</name><parameters/></decision>"}}]}
+
+    backend.transport = transport
+    backend.decide(PlannerBackendRequest(tool_context={"task": "test"}))
+    body = bodies[0]
+    assert body["model"] == "gpt-6-astra"
+    if effort is None:
+        assert "reasoning_effort" not in body
+        assert body["max_tokens"] == 8192 and body["temperature"] == 0.0
+    else:
+        assert body["reasoning_effort"] == effort
+        assert body["max_completion_tokens"] == 8192 and "max_tokens" not in body
+        assert ("temperature" in body) == (effort == "none")
+    assert backend.config.redacted()["reasoning_effort"] == effort
