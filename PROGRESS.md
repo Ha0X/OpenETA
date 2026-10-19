@@ -2,11 +2,22 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：pick-place 推荐试跑与技能正文保留问题
+
+- 完成：基于 `c154ad2`，启用 `--recommend-pick-place`，运行倒球任务、seed 0、v112 preset、icodeeasy / `gpt-6-astra/high`；保持 1200 秒、80 轮／82 Host 请求、API 60 秒／1 次请求。只增加可选阅读推荐及远程／本地技能来源说明，没有强制工具调用、预加载正文或中途人工指导。
+- 推荐与读取：模型第 1 轮读取状态，第 2 轮主动调用 `robodojo_read_skill(skill_id="pick-place")`。返回 pick-place（5136 字符）与 physical-contact 合同（4140 字符），哈希与本地 Codex 第 2 次读取一致；完整正文逐项核验已进入第 3 次真实 provider 请求。全部 30 份请求均含推荐文字、Astra/high 配置和完整当前公开回执；30 个响应均报告 `gpt-6-astra`。
+- 新发现：第 4 次请求的历史工具结果中，文档 `reference`、`sha256`、`text` 均变为 `<omitted>`。读取后的完整两份正文只存在于第 3 次请求，直到结束没有再次完整送入；“Choose a grasp for the intended next action” 这段抓取／搬运指导也只在第 3 次请求出现。当前回执中的正文保留有效，但下一工具调用覆盖 last_action_effect 后，`conversation._conversation_tool_output_projection` 的深度限制丢掉了历史文档；本地 SkillRegistry／skill_notes 又未保存远程正文。原始文件仍在输出目录，不能因此认定模型后续能读取它。未在运行中修改逻辑。
+- 轨迹：首次低位水平接近被拒后，模型选择垂直向下抓取，第 6 轮通过抬高途经点到杯子上方。第 11 轮完全闭合触发接触边界停止，随后打开到 `0.87`、收紧到 `0.84` 并试抬 3 cm；重新测量后又打开、下降、闭合，第 20 轮试抬 4 cm。第 23 轮向内升高搬运成功，图像确认杯子离桌并靠近花瓶；随后调整端点及 45° 倾斜姿态，均未继续推进。末帧球仍在杯中，没有实际倾倒。
+- 结果：`task_success=false`，官方状态仍为 `running`。30 个工具决策包括状态 1、技能读取 1、测点 8、移动 14、夹爪 5、结束 1；14 次移动中 7 次达到目标、4 次候选碰撞、3 次 IK 无有效解。另有上述 1 次夹爪接触停止。第 30 轮模型主动请求结束并报告未完成，到达 Host 时已超出预算，主循环 `stop_reason=environment`；API 无超时或重试。
+- 统计与收尾：128 个原生动作、1272 个物理步。主循环 `1158.223 s`，Host 含初始化和关闭 `1232.206 s`；30 次 API 合计 `753.421 s`、1141410 tokens。Host/MCP 清理成功，Slurm 单 GPU 作业 `5870` 释放，batch 退出码 0；无系统或 GPU 设置修改。三视角视频以 25 fps 编码并解码验证：129 份原生观测、178 帧、7.12 秒，包含 `5.088 s` 仿真及约 2 秒末帧停留，省略思考与规划等待。
+- 结论边界：本轮推荐后确实读取了指导，但没有改善到完成任务，也不能据此判断技能无效。正文未持续进入上下文是已确认的保留问题，应先修复并做跨多轮检查，再决定新的实时实验；不能只根据读取次数评价“用了技能”。此前即刻正文送达测试并未覆盖持续保留，本次没有把两者混为一项通过结论。
+- 产物：[summary](outputs/robodojo-pickplace20-20261019-214650/attempt/summary.json)、[逐轮分析](outputs/robodojo-pickplace20-20261019-214650/attempt/analysis.json)、[请求与技能保留核验](outputs/robodojo-pickplace20-20261019-214650/attempt/verification.json)、[视频](outputs/robodojo-pickplace20-20261019-214650/attempt.mp4)、[最后腕部画面](outputs/robodojo-pickplace20-20261019-214650/attempt/host/calls/000029/after-002-rgb.png)。上级目录保存启动、分析和核验脚本；实验产物不随提交上传。
+
 ## 2026-10-19：增加可选的 pick-place 阅读推荐
 
 - 完成：RoboDojo 单任务入口新增 `--recommend-pick-place`，默认关闭；启用时建议初次观察后读取远程 `pick-place`，再考虑刚体抓取和搬运。说明本地技能推荐字段与 Host 远程文档是不同来源。推荐不强制调用、不自动预加载正文、不添加轨迹或抓取坐标；不更改技能注册表、动作历史或控制器行为。
 - 记录：推荐开关写入运行摘要，具体文字保存到 `environment-instructions.txt` 并进入真实 provider 系统消息。任务、通用 workflow 和 preset 哈希沿用原配置。
-- 验证：RoboDojo 入口、提示词归属和对话历史相关测试 44 项通过；覆盖开关开启／关闭的实际请求，以及开启后模型仍可选择 observe 而不被自动改成读取技能。实时效果待本次单任务试跑记录。
+- 验证：RoboDojo 入口、提示词归属和对话历史相关测试 44 项通过；覆盖开关开启／关闭的实际请求，以及开启后模型仍可选择 observe 而不被自动改成读取技能。实时结果及后续正文保留问题见上节。
 
 ## 2026-10-19：核对 OpenETA 未读取 RoboDojo 技能的原因
 
