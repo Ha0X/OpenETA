@@ -2,6 +2,19 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：本地 Codex 与 OpenETA Astra/high 轨迹及输入对照
+
+- 范围：对照本地 `robodojo-codex-one-20261019` 与 `robodojo-astra-high20-20261019-201538`，不是对照仓库约 119 分钟的历史成功案例。两次均为 v112、seed 0、Astra/high 和 1200 秒预算；Codex 上限为 80 个 Host 请求，main 为 80 轮／82 个 Host 请求；Codex 为 ChatGPT 原生认证，main 为 icodeeasy Chat Completions XML 决策。只读分析，无新模型请求或 GPU 仿真。
+- 相同项：初始公开 TCP、碰撞策略、执行能力和布局合同逐项一致；main 注入的公共 workflow 与任务补充说明均在本地 Codex 启动 prompt 中。32 个 main 工具决策的名称映射和参数与 Host request 完全一致。初始 RGB 文件哈希不同，不宣称仿真逐像素或物体状态完全一致。
+- 最早的重要动作分叉：首次低位水平接近均被预检拒绝；Codex 第 9 次调用改为 45° 斜向接近（approach `[0,0.7071,-0.7071]`），第 11 次以 `0.65` 闭合；main 第 5 轮改为垂直向下（`[0,0,-1]`），第 10 轮以 `0.6` 闭合。两者都抬起了杯子，但抓取位置、姿态和夹持关系不同，后续不能把相同 TCP 指令视为同一持杯运动。
+- 搬运差距在预算结束前已出现：Codex 第 14 次请求沿升高途经点搬到 `[-0.065,-0.1,1.01] m`，到达目标，Host elapsed 约 419 秒；main 第 14 轮在 `[0.120,-0.167,0.960] m`，Host elapsed 约 452 秒，之后继续遇到姿态自碰撞。main 到第 19 轮才改成约 30° 倾斜抓持，第 21→22 轮发生接触停止与落杯。不能只用后续超时解释这段进展差距。
+- 指导读取不同：Codex 第 2 次调用 `read_skill(pick-place)`，读到抓取应考虑下一步搬运、接触区域、物体相对 TCP 偏移及物理接触合同；main 同样收到公共 workflow（含技能索引），但全程未读取这两份正文。该指导没有指定 45° 抓法，不能把姿态差异直接归因于技能读取。
+- main 历史输入的具体弱点：`PlannerContextConfig` 默认只传最近 4 组动作对话，即使 token 总预算仍有余量；旧对话摘要只列工具名和执行状态，旧目标姿态、具体停止原因没有在该摘要中保留。第 14 轮的历史里，曾被碰撞拒绝的 `move_to` 仍显示 `executed`，transition ledger 显示 `PASS`，这些表示调用／验证层状态，不表示达到运动目标。最新完整回执仍保留，模型也正确识别了最近的碰撞；不能称其始终看不到失败。
+- main 不回传上一轮显式短理由：32 个相邻请求检查均未找到上一轮 `parsed_decision.reasoning` 原文；`conversation.add_action` 只投影 kind/name/parameters，运行中的 `agent_working_state` 为空。这是公开短行动说明的跨轮连续性问题，不是在检查或要求隐藏思维链。原始 model_calls 仍保存短理由。Codex 事件中有阶段性计划说明，但没有完整 provider 请求可审计，不据此声称已核实 Codex 内部全部历史保留方式。
+- 额外上下文噪声：main 的 `decision_state.active_bundles` 出现 `grasp_pose_estimate: awaiting_target_selection`，但运行只注册 RoboDojo 的 9 个工具，该通用工具并不可调用。没有观察到模型实际调用它；应作为可清理项，不当作本次失败的既定原因。
+- 建议待确认：优先保留公开短行动理由，并让历史摘要保留目标／实测结果／停止原因，明确区分调用执行与运动到达；按当前工具集过滤无效 bundle。可另行比较通用技能读取的影响。暂不更改工具控制语义、硬编码 Codex 的 45° 姿态或复制历史动作。一次轨迹对照只能定位可疑点，不能证明修改后的收益，也不能用历史窗口解释全部早期姿态分叉。
+- 验证产物：[可重跑只读脚本](outputs/robodojo-local-harness-comparison-20261019/compare.py)、[结构化比较](outputs/robodojo-local-harness-comparison-20261019/comparison.json)、[Codex 第 14 次搬运画面](../OpenETA-robodojo/outputs/robodojo-codex-one-20261019/attempt/host/calls/000014/after-000-rgb.png)、[main 第 14 轮画面](outputs/robodojo-astra-high20-20261019-201538/attempt/host/calls/000014/after-000-rgb.png)。源位置：`agent/runtime/conversation.py` 的 `add_action`／`_summarize_dropped_items`，`agent/runtime/planner.py` 的 `DEFAULT_RECENT_CONVERSATION_ACTION_GROUPS`／`_build_budgeted_tool_context`／`active_bundles`。
+
 ## 2026-10-19：定位 Astra 运行的搬运与夹持恢复卡点
 
 - 只读复盘上一轮真实请求、公开回执、第 14／21／22／31 轮图像，并核对参考控制器源码；没有新 API 请求、GPU 仿真或运行代码修改。
