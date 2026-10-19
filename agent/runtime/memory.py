@@ -9780,6 +9780,8 @@ def summarize_observation(observation: EnvObservation) -> JsonDict:
             "gripper_state": observation.robot.gripper_state,
             "base_pose": observation.robot.base_pose,
             "metadata": _compact_metadata(observation.robot.metadata),
+            **({"arms": {role: arm.to_dict() for role, arm in observation.robot.arms.items()}}
+               if observation.robot.arms else {}),
         },
         "objects": [_compact_value(obj) for obj in observation.objects[:8]],
         "object_count": len(observation.objects),

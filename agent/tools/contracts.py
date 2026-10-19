@@ -908,6 +908,9 @@ def build_default_tool_contract_catalog(
     from agent.tools.default_contracts import build_default_contract_overrides
 
     for contract in build_default_contract_overrides(specs).values():
+        if any(spec.name == contract.name and getattr(spec, "request_schema", None) is not None
+               for spec in specs):
+            continue
         catalog.register(contract, replace=True)
     return catalog
 

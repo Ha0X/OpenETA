@@ -123,6 +123,7 @@ class PlannerContextConfig:
     approx_chars_per_token: int = 4
     approx_tokens_per_image: int = 2048
     token_estimator_model: str | None = None
+    max_current_images: int = 2
     visual_history: VisualHistoryConfig = field(
         default_factory=lambda: VisualHistoryConfig(enabled=False)
     )
@@ -158,6 +159,7 @@ class ToolCallingPlanner(BasePlanner):
         *,
         max_validation_retries: int = 1,
         system_prompt: str = "",
+        environment_instructions: str = "",
         context_config: PlannerContextConfig | None = None,
         tool_contract_catalog: ToolContractCatalog | None = None,
         tool_contract_policy: ToolContractRuntimePolicy | None = None,
@@ -171,6 +173,8 @@ class ToolCallingPlanner(BasePlanner):
         self.tool_contract_policy = tool_contract_policy or ToolContractRuntimePolicy()
         self.tool_contract_policy.ensure_valid(self.tool_contract_catalog)
         base_prompt = system_prompt or _agent_owned_tool_planner_system_prompt()
+        if environment_instructions:
+            base_prompt += "\n\n" + environment_instructions
         self.system_prompt, self.prompt_metadata = compose_main_planner_prompt(base_prompt)
         self.rollout_recorder: RolloutRecorder | None = None
 
@@ -2268,11 +2272,21 @@ def _validate_official_reward_completion(
     *,
     tool_context: JsonDict,
 ) -> list[str]:
-    if decision.action_type.lower().strip() != "response" or decision.action != "task_complete":
+    if decision.action_type.lower().strip() != "response":
+        return []
+    explicit_done = bool(
+        decision.parameters.get("task_complete")
+        or decision.parameters.get("done")
+        or decision.parameters.get("success") is True
+    )
+    if decision.action != "task_complete" and not explicit_done:
         return []
     memory = tool_context.get("memory")
     metadata = memory.get("metadata") if isinstance(memory, dict) else None
-    if not isinstance(metadata, dict) or metadata.get("source") != "ParallelEpisodeHarness":
+    if not isinstance(metadata, dict) or not (
+        metadata.get("source") == "ParallelEpisodeHarness"
+        or metadata.get("require_official_reward") is True
+    ):
         return []
     if metadata.get("require_official_reward") is False:
         return []
@@ -2290,8 +2304,8 @@ def _validate_official_reward_completion(
     ):
         return []
     return [
-        "LIBERO batch completion requires an official positive reward from the same "
-        "episode. Continue with settle/retreat/observe instead of declaring task_complete."
+        "Benchmark completion requires an official positive reward from the same "
+        "episode. Inspect the environment feedback instead of declaring task_complete."
     ]
 
 
@@ -2850,7 +2864,7 @@ def _build_tool_context_payload(
             artifact["path"]
             for artifact in camera_artifacts
             if artifact["kind"] == "rgb" and _is_primary_planner_camera(artifact)
-        ][:2]
+        ][:config.max_current_images]
         vision_evidence = _current_vision_evidence(
             observation,
             image_paths=vision_image_paths,
@@ -4386,7 +4400,7 @@ def _current_camera_artifacts(
         role = str(raw.get("role") or "")
         if role:
             artifact["role"] = role
-        for artifact_field in ("packet_id", "width", "height", "format", "index"):
+        for artifact_field in ("packet_id", "width", "height", "format", "index", "label"):
             value = raw.get(artifact_field)
             if value is not None:
                 artifact[artifact_field] = value
@@ -4442,6 +4456,8 @@ def _current_vision_evidence(
             item["observation_step"] = step_idx
         if timestamp_s is not None:
             item["timestamp_s"] = timestamp_s
+        if artifact.get("label"):
+            item["description"] = artifact["label"]
         evidence.append(item)
     return evidence
 

@@ -217,8 +217,8 @@ def _format_for_field(payload: JsonDict, field: str) -> str:
     fmt = str(explicit or "png").lower().lstrip(".")
     if fmt in {"jpg", "jpeg"}:
         return "jpg"
-    if fmt == "png":
-        return "png"
+    if fmt in {"png", "webp"}:
+        return fmt
     return "bin"
 
 
