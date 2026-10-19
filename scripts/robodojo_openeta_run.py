@@ -7,11 +7,14 @@ Example (requires an already-running RoboDojo simulator MCP service)::
       --env-id ENV_ID --task-file TASK_FILE --output outputs/robodojo-openeta-one
 
 Model credentials use the existing OpenETA provider configuration. The sibling
-worktree supplies only its checked task Host; no Codex login or CLI is used.
+worktree supplies its checked task Host and public workflow/task guidance; no
+Codex login or CLI is used. The selected guidance and its hashes are saved with
+each run, and the Host is pinned to the same resolved preset.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -63,13 +66,60 @@ def build_backend(provider):
     return OpenAICompatiblePlannerBackend(config)
 
 
+def load_reference_guidance(*, root: Path, python: str, config_id: str, env_id: str):
+    """Read the same public workflow and preset rules used by the reference launcher.
+
+    Resolve with the reference interpreter to avoid importing its tools package
+    over main's modules. This subprocess starts neither a model nor a simulator.
+    """
+    code = """
+import json, sys
+from tools.harness_config import ConfigRegistry
+from tools.task_rule_supplements import task_rule_supplement
+config = ConfigRegistry().resolve(sys.argv[1])
+benchmark = config.value['components']['benchmark']
+prompt, record = task_rule_supplement(benchmark, sys.argv[2])
+print(json.dumps({'config_sha256': config.sha256, 'task_rule_prompt': prompt,
+                  'task_rule_supplement': record,
+                  'completion_feedback': benchmark.get('completion_feedback')}))
+"""
+    guidance = json.loads(subprocess.check_output(
+        [python, "-c", code, config_id, env_id], cwd=root, text=True, timeout=30,
+    ))
+    path = root / "plugins/openeta/skills/openeta-robodojo/SKILL.md"
+    source = path.read_text(encoding="utf-8")
+    body = source.split("---", 2)[2].strip()
+    guidance.update(workflow=body, workflow_source=str(path),
+                    workflow_sha256=hashlib.sha256(source.encode()).hexdigest())
+    return guidance
+
+
+def reference_instructions(guidance, *, max_turns: int, max_tool_calls: int, timeout: float):
+    text = "\n\n" + guidance["workflow"] + guidance["task_rule_prompt"]
+    if guidance["completion_feedback"]:
+        text += (
+            "\nThis run enables robodojo_check_task_completion. It returns semantic "
+            "official-condition feedback derived from privileged simulator state. "
+            "This is an oracle-assisted evaluation condition. It does not move the "
+            "robot or award success; finish success=true only with official success evidence."
+        )
+    text += (
+        f"\nRun-specific limits override defaults mentioned in the workflow: "
+        f"{max_turns} planner turns, {max_tool_calls} Host requests, {timeout:g} seconds. "
+        "Check returned status for remaining budget. Native tool names in the workflow "
+        "map to the advertised robodojo_ tools; observe keeps its name. "
+        "Use only advertised tools. No historical episode or demonstration is supplied.\n"
+    )
+    return text
+
+
 def build_runtime(bridge, backend, *, memory_root: Path, context_window_tokens=None,
-                  smoke_test: bool = False):
+                  smoke_test: bool = False, task_guidance: str = ""):
     catalog = build_default_tool_contract_catalog(bridge.registry.list())
     return OpenEtaAgentRuntime(
         planner=ToolCallingPlanner(
             backend, tool_contract_catalog=catalog,
-            environment_instructions=ENVIRONMENT_INSTRUCTIONS + (
+            environment_instructions=ENVIRONMENT_INSTRUCTIONS + task_guidance + (
                 SMOKE_INSTRUCTIONS if smoke_test else ""
             ),
             max_validation_retries=0 if smoke_test else 1,
@@ -145,7 +195,21 @@ def main(argv=None):
     command, host_args = host_command(args, root=root, output=output, task=task)
     if not Path(command).is_file():
         p.error("Host Python does not exist")
+    guidance = load_reference_guidance(
+        root=root, python=command, config_id=args.config_id, env_id=args.env_id,
+    )
+    if args.config_sha256 and args.config_sha256 != guidance["config_sha256"]:
+        p.error("Guidance preset does not match --config-sha256")
+    args.config_sha256 = guidance["config_sha256"]
+    command, host_args = host_command(args, root=root, output=output, task=task)
+    task_guidance = reference_instructions(
+        guidance, max_turns=args.max_turns, max_tool_calls=args.max_tool_calls, timeout=args.timeout,
+    )
     output.mkdir(parents=True, exist_ok=False)
+    (output / "guidance.json").write_text(json.dumps(guidance, indent=2) + "\n")
+    (output / "environment-instructions.txt").write_text(
+        ENVIRONMENT_INSTRUCTIONS + task_guidance + (SMOKE_INSTRUCTIONS if args.smoke_test else ""),
+    )
     host_revision = subprocess.check_output(
         ["git", "-C", str(root), "rev-parse", "HEAD"], text=True,
     ).strip()
@@ -154,6 +218,10 @@ def main(argv=None):
         "model": provider.model, "provider": provider.provider,
         "config_id": args.config_id, "env_id": args.env_id, "seed": args.seed,
         "smoke_test": args.smoke_test,
+        "config_sha256": args.config_sha256,
+        "workflow_sha256": guidance["workflow_sha256"],
+        "task_rule_supplement": guidance["task_rule_supplement"],
+        "completion_feedback": guidance["completion_feedback"],
         "reference_worktree": str(root), "reference_revision": host_revision,
         "main_revision": subprocess.check_output(
             ["git", "-C", str(Path(__file__).resolve().parents[1]), "rev-parse", "HEAD"],
@@ -173,6 +241,7 @@ def main(argv=None):
             bridge, build_backend(provider), memory_root=output / "memory",
             context_window_tokens=provider.context_window_tokens,
             smoke_test=args.smoke_test,
+            task_guidance=task_guidance,
         )
         runner = OpenEtaEpisodeRunner(runtime=runtime, environment=RoboDojoEpisodeEnvironment(bridge))
         result = runner.run(

@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import base64
 from copy import deepcopy
+import hashlib
 import io
 import json
 from pathlib import Path
+import subprocess
 import sys
 
 from PIL import Image
@@ -17,7 +19,10 @@ from agent.runtime.planner import build_tool_context
 from agent.tools.robodojo import (
     REMOTE_TOOLS, RoboDojoEpisodeEnvironment, RoboDojoHostConnection, RoboDojoTools,
 )
-from scripts.robodojo_openeta_run import build_backend, build_runtime, host_command, parser
+from scripts.robodojo_openeta_run import (
+    build_backend, build_runtime, host_command, load_reference_guidance, parser,
+    reference_instructions,
+)
 
 
 def obj(properties=None, required=()):
@@ -364,6 +369,56 @@ def test_smoke_instructions_keep_checks_and_disable_validation_retries(tmp_path)
     assert "max_duration_s=0.5" in runtime.planner.system_prompt
     assert "Embodied Closed-Loop Operating Contract" in runtime.planner.system_prompt
     assert runtime.planner.max_validation_retries == 0
+
+
+def test_reference_workflow_and_rules_reach_provider_without_codex(tmp_path):
+    root = tmp_path / "reference"
+    (root / "tools").mkdir(parents=True)
+    (root / "tools/__init__.py").write_text("")
+    (root / "tools/harness_config.py").write_text('''
+class ConfigRegistry:
+    def resolve(self, config_id):
+        assert config_id == "preset_v1"
+        return type("Config", (), {"sha256": "bound-hash", "value": {
+            "components": {"benchmark": {"completion_feedback": "native_coarse"}}
+        }})()
+''')
+    (root / "tools/task_rule_supplements.py").write_text('''
+def task_rule_supplement(benchmark, env_id):
+    if env_id != "matching-env":
+        raise ValueError("Task rule does not match environment")
+    return "\\nRestore the cup upright.", {"id": "public_rule_v1"}
+''')
+    skill = root / "plugins/openeta/skills/openeta-robodojo/SKILL.md"
+    skill.parent.mkdir(parents=True)
+    source = "---\nname: test\n---\nUse waypoints and read_skill as needed.\n"
+    skill.write_text(source)
+    guidance = load_reference_guidance(root=root, python=sys.executable,
+                                       config_id="preset_v1", env_id="matching-env")
+    assert guidance["workflow_sha256"] == hashlib.sha256(source.encode()).hexdigest()
+    assert guidance["config_sha256"] == "bound-hash"
+    instructions = reference_instructions(guidance, max_turns=80, max_tool_calls=82, timeout=1200)
+    backend = build_backend(PlannerProviderConfig(model="test", api_base="https://example.test", api_key="test"))
+    bodies = []
+
+    def transport(url, body, headers, timeout_s):
+        bodies.append(body)
+        return {"choices": [{"message": {"content": "<decision><kind>tool_call</kind><name>observe</name><parameters/></decision>"}}]}
+
+    backend.transport = transport
+    bridge = RoboDojoTools(FakeHost(), output=tmp_path / "artifacts")
+    runtime = build_runtime(bridge, backend, memory_root=tmp_path / "memory", task_guidance=instructions)
+    runner = OpenEtaEpisodeRunner(runtime=runtime, environment=RoboDojoEpisodeEnvironment(bridge))
+    runner.run(task="pour balls", max_turns=1, timeout_s=30)
+    sent = bodies[0]["messages"][0]["content"]
+    assert guidance["workflow"] in sent
+    assert "Restore the cup upright." in sent
+    assert "82 Host requests, 1200 seconds" in sent
+    assert "oracle-assisted" in sent and "robodojo_ tools" in sent
+    assert "name: test" not in sent
+    with pytest.raises(subprocess.CalledProcessError):
+        load_reference_guidance(root=root, python=sys.executable,
+                                config_id="preset_v1", env_id="wrong-env")
 
 
 def test_api_backend_converts_provider_and_attaches_all_camera_views(tmp_path, monkeypatch):

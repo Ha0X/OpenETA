@@ -2,6 +2,13 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：对齐 RoboDojo 公共操作指导与任务说明
+
+- 完成：main 入口从参考工作区读取 `plugins/openeta/skills/openeta-robodojo/SKILL.md` 的正文，并通过该工作区的 preset 解析器读取公共任务补充说明及完成反馈配置。复用完整的坐标、朝向、途经点、双臂协调、接触恢复和预算指导，不复制历史试跑的坐标、动作或图像；不启动 Codex CLI。
+- 完成：将指导加入 planner 环境说明，保留 main 的 XML 决策与执行循环；补充原生工具名到 `robodojo_` 名称的映射，用本轮真实预算覆盖指导中的默认值，并明确官方条件反馈的 oracle-assisted 口径。倒球 preset 的说明包含杯子恢复直立和双臂返回要求，属于任务指令修正版，不与原始短指令直接等同。
+- 完成：每次运行保存 `guidance.json`、`environment-instructions.txt`，摘要记录指导 SHA-256、preset SHA-256 和任务补充说明；Host 使用同一 preset 哈希，显式哈希不符时在启动前拒绝。
+- 验证：373 项相关测试通过，包括公共指导与规则进入实际 provider 请求、预算说明及环境不匹配拒绝。只读核对当前参考正文和任务补充说明与先前 Codex 实验的 `prompt.txt` 一致。实时效果另行记录，模型仍为 `gpt-5.6-sol`，不能据此宣称与使用 `gpt-6-astra/high` 的 Codex 构成公平比较。
+
 ## 2026-10-19：适配修复后的同配置实时复跑
 
 - 完成：经用户授权，基于 `776fa57` 重跑 `pour_balls_into_vase`、seed 0、`robodojo_dual_x5_pour_balls_into_vase_repair_v112`，模型为 icodeeasy / `gpt-5.6-sol`。沿用原始任务、1200 秒预算、最多 80 轮／82 个 Host 请求、API 超时 60 秒且只请求 1 次；未启用 smoke，没有人工动作引导。
