@@ -2,6 +2,16 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：GPT API + 实时仿真短链路验证
+
+- 完成：main 的 OpenETA harness 使用 `icodeeasy / gpt-5.6-sol`，通过 RoboDojo Host 驱动实时仿真；场景为 `pour_balls_into_vase`、seed 0、preset `robodojo_dual_x5_pour_balls_into_vase_repair_v112`。本次只检查链路，不执行倒球任务。
+- 完成：入口新增 `--smoke-test`，最多 3 个 planner 回合、180 秒运行预算、单次 API 请求 60 秒且不重试。模型依次调用 `observe`、右臂向上移动 2 cm（`max_duration_s=0.5`）、`talk` 反馈。修复 Host Python 符号链接导致虚拟环境失效、provider 到 backend 配置缺少转换，以及机器 MIME 数据库缺少 WebP 导致图片未发送的问题；图片上限与 planner 对齐为 8 张。
+- 验证：最终运行的 3 次 GPT 调用分别附带 0、6、6 张图片，动作前后均包含三路原图与标注图。右臂实测升高 `0.018763 m`，控制器返回 `reached_target=true`，执行 2 个原生动作、20 个物理步（仿真时间 `0.08 s`）；模型读取反馈并报告运动发生，没有宣称任务成功。
+- 验证：模型与工具循环耗时 `50.526 s`，Host 从场景初始化到关闭约 `131 s`，清理成功。Slurm 作业 `5858` 验证后释放；前期排障作业 `5856`、`5857` 也已释放。未修改系统或 GPU 配置。相关回归测试 340 项通过。
+- 排障记录：第一次模型入口因配置类型错误退出；随后重用已关闭的单 worker 服务失败。修复配置后的短运行已完成动作与文本反馈，但 WebP 未发送，因此再用修正版重跑并核实图片输入。最终验收以 `attempt-4` 为准。
+- 产物：[验证结果](outputs/robodojo-gpt-smoke-20261019-174627/attempt-4/verification.json)、[运行 summary](outputs/robodojo-gpt-smoke-20261019-174627/attempt-4/summary.json)。同目录的 `memory/sessions/` 保存模型请求、响应和执行轨迹，`host/` 保存动作凭据及观测；上级目录保存排障尝试、服务日志和只读验收脚本 `verify.py`。本机产物不随提交上传。
+- 提交：`0ac3d71`（入口修复与短检查模式）。结果为链路通过、`task_success=false`；完整任务表现及真实预算耗尽路径仍未验证。
+
 ## 2026-10-19：接通 RoboDojo Host 与 main 运行循环（离线验证）
 
 - 完成：新增 [RoboDojo 工具适配](agent/tools/robodojo.py) 和 [单任务入口](scripts/robodojo_openeta_run.py)。main 使用自身模型后端、planner、执行 pipeline、episode runner 和持久记录；参考工作区提供任务 Host，通过持久 MCP 会话复用其运动检查、双臂协调和连续夹爪接口，不启动 Codex CLI。
