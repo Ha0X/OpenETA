@@ -16,7 +16,7 @@ import json
 from pathlib import Path
 import subprocess
 
-from agent.backends.planner import OpenAICompatiblePlannerBackend
+from agent.backends.planner import OpenAICompatiblePlannerBackend, OpenAICompatiblePlannerBackendConfig
 from agent.backends.provider_config import load_planner_provider_config
 from agent.runtime.episode import OpenEtaEpisodeRunner
 from agent.runtime.memory_store import JsonMemoryStore
@@ -42,13 +42,34 @@ image pixels. robodojo_check_task_completion provides feedback; only the officia
 outcome can establish task success. Do not infer success from a completed call.
 """
 
+SMOKE_INSTRUCTIONS = """
+This is a short live connectivity test, not a benchmark attempt. Do not perform
+the pouring task. First call observe. After inspecting the images, request only
+the right arm to translate upward 0.02 metres in the world frame, preserving
+orientation and gripper intent; set max_duration_s=0.5. Then inspect the returned
+images and measured motion feedback and use response::talk to report whether
+the movement occurred. Do not claim benchmark success, manipulate objects, or
+retry a rejected motion. The test ends after at most three planner turns.
+"""
 
-def build_runtime(bridge, backend, *, memory_root: Path, context_window_tokens=None):
+
+def build_backend(provider):
+    config = OpenAICompatiblePlannerBackendConfig.from_provider_config(provider)
+    # Match the planner's allowance for original views and labelled overlays.
+    config.max_vision_images = 8
+    return OpenAICompatiblePlannerBackend(config)
+
+
+def build_runtime(bridge, backend, *, memory_root: Path, context_window_tokens=None,
+                  smoke_test: bool = False):
     catalog = build_default_tool_contract_catalog(bridge.registry.list())
     return OpenEtaAgentRuntime(
         planner=ToolCallingPlanner(
             backend, tool_contract_catalog=catalog,
-            environment_instructions=ENVIRONMENT_INSTRUCTIONS,
+            environment_instructions=ENVIRONMENT_INSTRUCTIONS + (
+                SMOKE_INSTRUCTIONS if smoke_test else ""
+            ),
+            max_validation_retries=0 if smoke_test else 1,
             context_config=PlannerContextConfig(
                 max_current_images=8, context_window_tokens=context_window_tokens,
             ),
@@ -70,6 +91,8 @@ def parser():
     p.add_argument("--task-file", type=Path, required=True)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--model", help="Override the existing OpenETA provider's model")
+    p.add_argument("--smoke-test", action="store_true",
+                   help="Observe, request a 2 cm upward move, then report; at most 3 turns / 180 s")
     p.add_argument("--max-turns", type=int, default=80)
     p.add_argument("--max-tool-calls", type=int, default=80)
     p.add_argument("--timeout", type=float, default=1200)
@@ -79,7 +102,9 @@ def parser():
 
 
 def host_command(args, *, root: Path, output: Path, task: str):
-    command = str((args.host_python or root / ".venv/bin/python").resolve())
+    # Preserve the venv entry point: resolving its symlink selects the base
+    # interpreter and loses the Host's installed dependencies.
+    command = str((args.host_python or root / ".venv/bin/python").absolute())
     argv = [
         "-m", "tools.codex_mcp_server", "--harness-config", args.config_id,
         "--sim-url", args.sim_url, "--env-id", args.env_id, "--task", task,
@@ -106,6 +131,12 @@ def main(argv=None):
     provider = load_planner_provider_config()
     if args.model:
         provider.model = args.model
+    if args.smoke_test:
+        args.max_turns = min(args.max_turns, 3)
+        args.max_tool_calls = min(args.max_tool_calls, 8)
+        args.timeout = min(args.timeout, 180)
+        provider.timeout_s = min(provider.timeout_s, 60)
+        provider.max_attempts = 1
     if provider.missing_fields():
         p.error("Missing OpenETA provider fields: " + ", ".join(provider.missing_fields()))
     command, host_args = host_command(args, root=root, output=output, task=task)
@@ -119,6 +150,7 @@ def main(argv=None):
         "source": "RoboDojoOpenEtaRun", "require_official_reward": True,
         "model": provider.model, "provider": provider.provider,
         "config_id": args.config_id, "env_id": args.env_id, "seed": args.seed,
+        "smoke_test": args.smoke_test,
         "reference_worktree": str(root), "reference_revision": host_revision,
         "main_revision": subprocess.check_output(
             ["git", "-C", str(Path(__file__).resolve().parents[1]), "rev-parse", "HEAD"],
@@ -135,8 +167,9 @@ def main(argv=None):
         )
         bridge = RoboDojoTools(connection, output=output / "artifacts")
         runtime = build_runtime(
-            bridge, OpenAICompatiblePlannerBackend(provider), memory_root=output / "memory",
+            bridge, build_backend(provider), memory_root=output / "memory",
             context_window_tokens=provider.context_window_tokens,
+            smoke_test=args.smoke_test,
         )
         runner = OpenEtaEpisodeRunner(runtime=runtime, environment=RoboDojoEpisodeEnvironment(bridge))
         result = runner.run(

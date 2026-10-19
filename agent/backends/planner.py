@@ -1169,7 +1169,11 @@ def _planner_user_content(
                 }
             )
             continue
-        mime_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+        # Minimal compute-node MIME databases may not register WebP.
+        mime_type = (
+            "image/webp" if path.suffix.lower() == ".webp"
+            else mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+        )
         if not mime_type.startswith("image/"):
             attachments.append(
                 {

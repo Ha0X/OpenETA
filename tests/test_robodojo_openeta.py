@@ -11,12 +11,13 @@ from PIL import Image
 import pytest
 
 from agent.backends.planner import StaticPlannerBackend
+from agent.backends.provider_config import PlannerProviderConfig
 from agent.runtime.episode import OpenEtaEpisodeRunner
 from agent.runtime.planner import build_tool_context
 from agent.tools.robodojo import (
     REMOTE_TOOLS, RoboDojoEpisodeEnvironment, RoboDojoHostConnection, RoboDojoTools,
 )
-from scripts.robodojo_openeta_run import build_runtime, host_command, parser
+from scripts.robodojo_openeta_run import build_backend, build_runtime, host_command, parser
 
 
 def obj(properties=None, required=()):
@@ -264,6 +265,9 @@ server.run(transport="stdio")
 
 
 def test_entry_point_starts_only_task_host(tmp_path):
+    python_entry = tmp_path / ".venv/bin/python"
+    python_entry.parent.mkdir(parents=True)
+    python_entry.symlink_to(sys.executable)
     args = parser().parse_args([
         "--robodojo-root", str(tmp_path), "--sim-url", "http://node:123/mcp",
         "--config-id", "preset", "--env-id", "env", "--task-file", "task.txt",
@@ -271,6 +275,51 @@ def test_entry_point_starts_only_task_host(tmp_path):
     ])
     command, argv = host_command(args, root=tmp_path, output=tmp_path / "run", task="pick cup")
     assert command.endswith(".venv/bin/python")
+    assert Path(command) == python_entry
+    assert Path(command).resolve() != Path(command)
     assert argv[:2] == ["-m", "tools.codex_mcp_server"]
     assert "--expected-controller" in argv and "robodojo_checked" in argv
     assert "--model" not in argv and "--api-key" not in argv
+
+
+def test_smoke_instructions_keep_checks_and_disable_validation_retries(tmp_path):
+    bridge = RoboDojoTools(FakeHost(), output=tmp_path / "artifacts")
+    runtime = build_runtime(bridge, CapturingBackend([]), memory_root=tmp_path / "memory",
+                            smoke_test=True)
+    assert "short live connectivity test" in runtime.planner.system_prompt
+    assert "max_duration_s=0.5" in runtime.planner.system_prompt
+    assert "Embodied Closed-Loop Operating Contract" in runtime.planner.system_prompt
+    assert runtime.planner.max_validation_retries == 0
+
+
+def test_api_backend_converts_provider_and_attaches_all_camera_views(tmp_path, monkeypatch):
+    monkeypatch.setattr("agent.backends.planner.mimetypes.guess_type", lambda path: (None, None))
+    provider = PlannerProviderConfig(model="test-model", api_base="https://example.test",
+                                     api_key="test-key", timeout_s=60, max_attempts=1)
+    backend = build_backend(provider)
+    requests = []
+
+    def transport(url, body, headers, timeout_s):
+        assert timeout_s == 60
+        requests.append(body)
+        payload = (
+            "<decision><kind>tool_call</kind><name>observe</name><parameters/></decision>"
+            if len(requests) == 1 else
+            "<decision><kind>response</kind><name>talk</name>"
+            "<parameters><message>Observed</message></parameters></decision>"
+        )
+        return {"choices": [{"finish_reason": "stop", "message": {
+            "content": payload,
+        }}], "usage": {"total_tokens": 10}}
+
+    backend.transport = transport
+    bridge = RoboDojoTools(FakeHost(), output=tmp_path / "artifacts")
+    runtime = build_runtime(bridge, backend, memory_root=tmp_path / "memory", smoke_test=True)
+    runner = OpenEtaEpisodeRunner(runtime=runtime, environment=RoboDojoEpisodeEnvironment(bridge))
+    runner.run(task="test", max_turns=2, timeout_s=30)
+    assert len(requests) == 2
+    images = [part for part in requests[1]["messages"][-1]["content"]
+              if part["type"] == "image_url"]
+    assert len(images) == 3
+    assert backend.config.max_vision_images == 8
+    assert backend.config.max_attempts == 1
