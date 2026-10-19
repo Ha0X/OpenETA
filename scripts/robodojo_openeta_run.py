@@ -34,6 +34,9 @@ robodojo_episode_status to obtain the current images and robot state. Use only
 the advertised tools. Packaged guidance uses native names: map move_to to
 robodojo_move_to, gripper_control to robodojo_gripper_control, and likewise for
 the other robodojo_ tools; observe keeps its name. Both arms are exposed by role.
+Use the measured tcp_state for control: xyz is in world metres, approach is TCP
++Z and jaw is TCP +X, both expressed in world axes. robot.arms.end_effector_pose
+is the raw link pose, not this calibrated control TCP. Do not substitute it.
 The movement tool owns IK and collision checks internally. Its continuous
 openness command is distinct from the measured opening. Read optional packaged
 guidance with robodojo_read_skill. Labelled derived images are overlays or crops

@@ -245,7 +245,11 @@ class RoboDojoTools:
                 "cameras": bundle.payload["cameras"][:len(originals)],
                 "metadata": {"native_action_index": index, "observation_source": "public_host_mcp",
                              "observation_clock": public.get("observation_clock", {}),
-                             "tcp_state": public.get("tcp_state", {})},
+                             "tcp_state": public.get("tcp_state", {}),
+                             "pose_semantics": {
+                                 "tcp_state": "Measured control TCP; xyz in world metres, approach=+Z, jaw=+X in world axes.",
+                                 "robot_arms_end_effector_pose": "Raw link pose; not the calibrated TCP used by move_to. Do not substitute it for tcp_state.",
+                             }},
             }
             snapshot = build_observation_snapshot({"observation": observation}, image_artifacts=artifacts)
             self._snapshot, self._snapshot_action_index = deepcopy(snapshot), index
@@ -276,7 +280,8 @@ class RoboDojoTools:
         )
         if snapshot:
             receipt["observation_snapshot"] = snapshot
-        outputs = {**public, "response_path": response_artifact.path}
+        outputs = {**public, "schema_version": "openeta.robodojo_public_result.v1",
+                   "response_path": response_artifact.path}
         return make_tool_result(
             context, success=not bool(error),
             content=json.dumps({"status": status, "error": error}, ensure_ascii=False),

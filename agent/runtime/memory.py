@@ -9558,7 +9558,11 @@ def _compact_tool_result_details(details: JsonDict) -> JsonDict:
                 max_items=16,
             )
         if useful_outputs:
-            compact["outputs"] = useful_outputs
+            compact["outputs"] = (
+                project_robodojo_outputs(outputs)
+                if outputs.get("schema_version") == "openeta.robodojo_public_result.v1"
+                else useful_outputs
+            )
     state_delta = details.get("state_delta")
     if isinstance(state_delta, dict) and state_delta:
         compact["state_delta"] = _compact_value(
@@ -9618,6 +9622,10 @@ def _compact_metadata(metadata: JsonDict) -> JsonDict:
             compact[key] = _compact_previous_action(value)
         elif key in {"observation", "raw_payload"}:
             compact[key] = _compact_value(value, max_depth=1)
+        elif key == "tcp_state":
+            # Role -> xyz/approach/jaw -> numeric vector. These values are
+            # control evidence, not large opaque metadata to reduce to shapes.
+            compact[key] = _compact_value(value, max_depth=3)
         else:
             compact[key] = _compact_value(value)
     return compact
@@ -9647,14 +9655,32 @@ def _compact_named_item(item: JsonDict) -> JsonDict:
     }
 
 
-def _compact_value(value: Any, *, max_depth: int = 2, max_items: int = 8) -> Any:
+def project_robodojo_outputs(outputs: JsonDict) -> JsonDict:
+    """Keep public control evidence and skill text through memory and planning.
+
+    Raw robot state and image transport are already represented by the observation.
+    Generic shallow compaction loses stop/reached_target and skill document text.
+    """
+    return _compact_value(
+        {key: outputs[key] for key in (
+            "schema_version", "status", "error", "action_index", "tcp_state",
+            "receipt", "motion_feedback", "evidence", "observation_clock",
+            "execution_capabilities", "collision_policy", "layout_contract", "active_support_holds",
+            "response_path",
+        ) if key in outputs},
+        max_depth=12, max_items=64, max_string_chars=24_000,
+    )
+
+
+def _compact_value(value: Any, *, max_depth: int = 2, max_items: int = 8,
+                   max_string_chars: int = 300) -> Any:
     if max_depth <= 0:
         if isinstance(value, dict):
             return {"type": "dict", "keys": sorted(str(key) for key in value)[:max_items]}
         if isinstance(value, list):
             return {"type": "list", "count": len(value)}
     if isinstance(value, str):
-        return value if len(value) <= 300 else value[:300] + "...[truncated]"
+        return value if len(value) <= max_string_chars else value[:max_string_chars] + "...[truncated]"
     if value is None or isinstance(value, (bool, int, float)):
         return value
     if isinstance(value, dict):
@@ -9670,11 +9696,13 @@ def _compact_value(value: Any, *, max_depth: int = 2, max_items: int = 8) -> Any
                     value[key],
                     max_depth=max_depth - 1,
                     max_items=max_items,
+                    max_string_chars=max_string_chars,
                 )
         return compact
     if isinstance(value, (list, tuple)):
         compact_list = [
-            _compact_value(item, max_depth=max_depth - 1, max_items=max_items)
+            _compact_value(item, max_depth=max_depth - 1, max_items=max_items,
+                           max_string_chars=max_string_chars)
             for item in list(value)[:max_items]
         ]
         if len(value) > max_items:

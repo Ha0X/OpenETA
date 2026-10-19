@@ -23,6 +23,7 @@ from agent.backends.code_policy import (
 )
 from agent.runtime.memory import (
     AgentMemory,
+    project_robodojo_outputs,
     summarize_observation,
 )
 from agent.runtime.planner_prompts import compose_main_planner_prompt
@@ -3958,6 +3959,9 @@ def _project_recovery_feedback_event(event: JsonDict) -> JsonDict:
 def _project_latest_tool_outputs(tool: str, outputs: JsonDict) -> object:
     """Bound the latest result by semantic fields, not arbitrary raw size."""
 
+    if outputs.get("schema_version") == "openeta.robodojo_public_result.v1":
+        return project_robodojo_outputs(outputs)
+
     if tool == "prepare_attachment_probe":
         return _bounded_decision_value(
             {
@@ -4906,6 +4910,19 @@ def _observation_summary(
 ) -> JsonDict:
     summary = summarize_observation(observation)
     summary.pop("task", None)
+    if observation.robot.arms:
+        summary["gripper_evidence"] = {
+            "by_role": {role: arm.gripper_state for role, arm in observation.robot.arms.items()},
+            "attachment_status": "unknown_without_co_motion_evidence",
+            "semantics": (
+                "Each arm retains the backend's command and measurement fields. "
+                "commanded_openness is a continuous command, not a measurement. "
+                "aperture.width_m is measured opening in metres, not an open fraction. "
+                "Closure or an obstructed opening does not establish attachment; "
+                "verify post-lift co-motion/source vacancy."
+            ),
+        }
+        return summary
     measured = observation.robot.gripper_state
     measured_aperture: JsonDict = {}
     if isinstance(measured, dict):

@@ -165,6 +165,80 @@ def test_only_official_outcome_establishes_success(tmp_path):
     assert bridge.close()["ok"]
 
 
+def test_model_input_preserves_control_frames_skill_text_and_motion_feedback(tmp_path):
+    host = FakeHost()
+    call = host.call_tool
+    tcp = {role: {"xyz": [x, -.2073, .9215], "approach": [0, 1, 0], "jaw": [-1, 0, 0]}
+           for role, x in (("left", -.3), ("right", .3))}
+    gripper = {"commanded_openness": .2, "measurement_available": True,
+               "aperture": {"width_m": .027, "width_limits_m": [.001, .089]}}
+    skill_text = "WORKFLOW_START\n" + "Check measured co-motion before transport.\n" * 140 + "WORKFLOW_END"
+
+    def public_result(name, arguments, **kwargs):
+        result = call(name, arguments, **kwargs)
+        public = json.loads(result["content"][0]["text"])
+        public["tcp_state"] = deepcopy(tcp)
+        public["robot"]["arms"]["right"].update(
+            end_effector_pose={"xyz": [.3, -.3523, .9215]}, gripper_state=gripper,
+        )
+        # Real Host responses exceed the generic 8 KB output threshold.
+        public["robot"]["metadata"] = {"diagnostics": "x" * 9000}
+        if name == "read_skill":
+            public["receipt"] = {"skill_id": "pick-place", "documents": [
+                {"reference": "pick-place.md", "text": skill_text},
+            ]}
+        elif name == "move_to":
+            public["receipt"] = {
+                **{f"diagnostic_{i}": i for i in range(20)},
+                "reached_target": False, "native_actions": 1, "physics_steps": 10,
+                "final_tcp_error": {"right": {"position_m": .012}},
+                "stop": {"reason": "physical_contact_penetration_limit", "contacts": [
+                    {"participants": [{"kind": "robot", "role": "right", "part": "finger"},
+                                      {"kind": "object", "part": "surface"}]},
+                ]},
+            }
+            public["motion_feedback"] = {"guidance": ["Contact is not grasp confirmation."]}
+        result["content"][0]["text"] = json.dumps(public)
+        return result
+
+    host.call_tool = public_result
+    _, backend, _, _, _ = run_fixture(tmp_path, host, [
+        decision("observe"), decision("robodojo_read_skill"),
+        decision("robodojo_move_to", role="right", target={"xyz": [.2, 0, .8]}),
+        {"kind": "response", "name": "talk", "parameters": {"message": "done checking"}},
+    ])
+    contexts = [r.tool_context for r in backend.requests]
+    observation = contexts[1]["current_observation"]["summary"]
+    assert observation["metadata"]["tcp_state"] == tcp
+    assert observation["robot"]["arms"]["right"]["end_effector_pose"]["xyz"] == [.3, -.3523, .9215]
+    assert "Raw link pose" in observation["metadata"]["pose_semantics"]["robot_arms_end_effector_pose"]
+    assert observation["gripper_evidence"]["by_role"]["right"] == gripper
+    assert "binary latch" not in observation["gripper_evidence"]["semantics"]
+    skill = contexts[2]["decision_state"]["last_action_effect"]["outputs"]
+    assert skill["receipt"]["documents"][0]["text"] == skill_text
+    motion = contexts[3]["decision_state"]["last_action_effect"]["outputs"]
+    assert motion["receipt"]["reached_target"] is False
+    assert motion["receipt"]["physics_steps"] == 10
+    assert motion["receipt"]["stop"]["contacts"][0]["participants"][0]["role"] == "right"
+    assert motion["receipt"]["final_tcp_error"]["right"]["position_m"] == .012
+    assert motion["motion_feedback"]["guidance"] == ["Contact is not grasp confirmation."]
+    assert motion["tcp_state"] == tcp
+
+    # Check the actual provider request, not just persisted runtime artifacts.
+    api = build_backend(PlannerProviderConfig(model="test", api_base="https://example.test", api_key="test"))
+    bodies = []
+
+    def transport(url, body, headers, timeout_s):
+        bodies.append(body)
+        return {"choices": [{"message": {"content": "<decision><kind>response</kind><name>talk</name><parameters/></decision>"}}]}
+
+    api.transport = transport
+    api.decide(backend.requests[2])
+    sent = json.dumps(bodies[0])
+    assert "WORKFLOW_START" in sent and "WORKFLOW_END" in sent
+    assert "-0.2073" in sent and "-0.3523" in sent
+
+
 def test_timeout_stops_episode_without_retry_or_success(tmp_path):
     host = FakeHost(timeout_on_move=True)
     bridge, _, _, _, result = run_fixture(tmp_path, host, [
