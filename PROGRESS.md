@@ -2,6 +2,14 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：核对 OpenETA 未读取 RoboDojo 技能的原因
+
+- 33 份真实 provider 请求都包含 `robodojo_read_skill` 的工具说明与 schema，`pick-place` 在枚举中；逐份 schema 校验均接受 `{"skill_id":"pick-place"}`。公共 workflow 明确给出技能索引和读取方式，没有禁用或拒绝该工具的证据。
+- 入口 `build_runtime` 使用空的 `SkillRegistry()`；RoboDojo 的远程文档读取接在 ToolRegistry，未接入 main 基于 SkillRegistry 的技能筛选／推荐机制。实际 33 轮 `relevant_skills`、`selected_skills`、`inspection_recommended`、`inspection_required` 均为空。这些字段反映本地注册表，不等于远端没有技能；与提示词里的远端技能索引构成两套未统一的发现路径。
+- 主入口和公共 workflow 都将技能读取设为按需选择。模型第 1 轮读取状态，第 2 轮直接测量杯子，全程没有发出 `robodojo_read_skill` 请求；没有“发了调用却被 harness 拦掉”的情况。记录没有说明它为什么跳过读取，不能把空推荐字段认定为模型选择的已证明原因。Codex 使用同一公共 workflow 时主动读取，不能认为 Codex 那次被该 workflow 强制读取。
+- 验证：既有 `test_model_input_preserves_control_frames_skill_text_and_motion_feedback` 离线测试通过，覆盖读取后技能全文进入下一轮模型上下文；另校验全部 33 份真实工具 schema。没有新模型请求、GPU 仿真或运行代码修改。
+- 当前优先级：用户认为短理由回传不关键，暂不为此改代码。更直接的候选项是统一远程技能的发现／推荐信息，再通过单独实验检验是否改善技能使用；读取技能是否改善任务表现尚未验证。
+
 ## 2026-10-19：本地 Codex 与 OpenETA Astra/high 轨迹及输入对照
 
 - 范围：对照本地 `robodojo-codex-one-20261019` 与 `robodojo-astra-high20-20261019-201538`，不是对照仓库约 119 分钟的历史成功案例。两次均为 v112、seed 0、Astra/high 和 1200 秒预算；Codex 上限为 80 个 Host 请求，main 为 80 轮／82 个 Host 请求；Codex 为 ChatGPT 原生认证，main 为 icodeeasy Chat Completions XML 决策。只读分析，无新模型请求或 GPU 仿真。
