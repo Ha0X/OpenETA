@@ -265,8 +265,9 @@ class OpenEtaAgentRuntime:
             "reject_sam3_detections": self._reject_sam3_detections_tool,
             "python_exec": PythonExecRuntime().handler,
         }
+        registered = {spec.name for spec in self.tools.list()}
         for name, handler in handlers.items():
-            if not self.tools.can_execute(name):
+            if name in registered and not self.tools.can_execute(name):
                 self.tools.bind_handler(name, handler)
 
     def _save_memory_tool(self, context: ToolExecutionContext) -> ToolResult:

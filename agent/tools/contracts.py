@@ -861,7 +861,7 @@ def inferred_tool_contract(spec: ToolSpecLike) -> ToolContract:
         safe_by_default=spec.safe_by_default,
         batchable=spec.allows_batched_observation,
         requires_observation_after_call=spec.requires_observation_after_call,
-        request_schema={
+        request_schema=getattr(spec, "request_schema", None) or {
             "type": "object",
             "properties": properties,
             # Phase 1 is descriptive only.  Tightening this flag before every

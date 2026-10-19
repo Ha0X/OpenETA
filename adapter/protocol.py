@@ -375,6 +375,7 @@ class RobotState:
     gripper_state: JsonDict = field(default_factory=dict)
     base_pose: JsonDict | None = None
     metadata: JsonDict = field(default_factory=dict)
+    arms: dict[str, RobotState] = field(default_factory=dict)
 
     def to_dict(self) -> JsonDict:
         """Convert to a plain JSON-serialisable dict."""
@@ -391,6 +392,8 @@ class RobotState:
             d["base_pose"] = self.base_pose
         if self.metadata:
             d["metadata"] = self.metadata
+        if self.arms:
+            d["arms"] = {role: state.to_dict() for role, state in self.arms.items()}
         return d
 
     @classmethod
@@ -465,6 +468,11 @@ class RobotState:
             gripper_state=gs,
             base_pose=bp,
             metadata=meta,
+            arms={
+                str(role): cls.from_dict(state)
+                for role, state in d.get("arms", {}).items()
+                if isinstance(state, dict)
+            },
         )
 
 

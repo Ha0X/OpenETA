@@ -461,6 +461,12 @@ def _looks_like_observation(payload: JsonDict) -> bool:
 
 def _compact_robot_state(robot: JsonDict) -> JsonDict:
     compact: JsonDict = {}
+    if isinstance(robot.get("arms"), dict):
+        compact["arms"] = {
+            role: _compact_robot_state(state)
+            for role, state in robot["arms"].items()
+            if isinstance(state, dict)
+        }
     end_effector = robot.get("end_effector_pose")
     if isinstance(end_effector, dict):
         pose = _compact_pose(end_effector)

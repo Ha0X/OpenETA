@@ -41,6 +41,9 @@ class ToolSpec:
     safe_by_default: bool = False
     effect: ToolEffect | str = ToolEffect.READ_ONLY
     batchable: bool | None = None
+    # Optional canonical schema for backend-specific tools, including nested
+    # targets and mutually exclusive single-/multi-effector requests.
+    request_schema: JsonDict | None = None
 
     def __post_init__(self) -> None:
         if isinstance(self.effect, str):
@@ -267,6 +270,18 @@ class ToolRegistry:
     def can_execute(self, name: str) -> bool:
         return name in self._handlers
 
+    def validate_parameters(self, name: str, parameters: JsonDict) -> list[str]:
+        """Validate an explicit schema without changing legacy tool contracts."""
+        spec = self.get(name)
+        if spec.request_schema is None:
+            return []
+        from agent.tools.contracts import check_tool_request_conformance, inferred_tool_contract
+
+        return [
+            violation.message
+            for violation in check_tool_request_conformance(inferred_tool_contract(spec), parameters)
+        ]
+
     def add_listener(self, listener: ToolEventListener) -> None:
         """Register a best-effort callback for tool execution events."""
 
@@ -363,6 +378,19 @@ class ToolRegistry:
             observation=observation,
             metadata=combined_metadata,
         )
+        parameter_errors = self.validate_parameters(name, parameters)
+        if parameter_errors:
+            result = make_tool_result(
+                context,
+                success=False,
+                content="; ".join(parameter_errors),
+                diagnostics=[{"code": "invalid_tool_parameters", "errors": parameter_errors}],
+            )
+            self._emit_tool_result(
+                name, parameters, result, spec=spec,
+                metadata=_public_execution_metadata(combined_metadata),
+            )
+            return result
         if spec.effect == ToolEffect.WORLD_MUTATING and self._execution_gate is not None:
             try:
                 authorization = self._execution_gate(context)

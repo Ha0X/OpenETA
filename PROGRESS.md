@@ -2,6 +2,12 @@
 
 记录实际完成内容、验证结果及相关提交或产物。按阶段归档，不原样复制计划，不要求记录决策理由。
 
+## 2026-10-19：补齐后端工具 schema 与双臂观测
+
+- 完成：ToolSpec 可声明嵌套请求 schema，模型可看到原始结构，planner 和实际派发前均校验；RobotState 与观测摘要保留按角色区分的机械臂状态；运行时支持只注册当前后端所需的工具。
+- 验证：后端工具 schema、观测产物、planner 工具注册、工具合同及工具反馈环境共 175 项测试通过。原有移动凭据和二值夹爪接口保留。
+- 提交：见 Git 提交 `feat: support backend tool schemas and multi-arm observations`。尚未验证真实 RoboDojo 接入。
+
 ## 2026-10-19：已有 RoboDojo 试跑基线
 
 - 完成：在相邻 `OpenETA-robodojo` 工作区准备仿真环境，并通过原分支的 Codex harness 试跑 `pour_balls_into_vase`，模型为 `gpt-6-astra`。

@@ -966,6 +966,7 @@ def _validate_planner_decision(
                         f"Tool requested by planner is not executable: {decision.action}."
                     )
                 else:
+                    errors.extend(tools.validate_parameters(decision.action, decision.parameters))
                     policy = tool_contract_policy or ToolContractRuntimePolicy()
                     if policy.request_is_authoritative(decision.action):
                         catalog = tool_contract_catalog or _default_tool_contract_catalog()
@@ -1017,6 +1018,9 @@ def _validate_tool_batch(parameters: JsonDict, tools: ToolRegistry) -> list[str]
         else:
             if not tools.can_execute(name):
                 errors.append(f"tool_batch call {idx} requested unbound tool: {name}.")
+            parameters = call.get("parameters", {})
+            if isinstance(parameters, dict):
+                errors.extend(tools.validate_parameters(name, parameters))
     return errors
 
 
