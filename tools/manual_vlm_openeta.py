@@ -17,6 +17,14 @@ from tools.manual_vlm_protocol import EncodedResponse, JsonObject
 
 
 _DEFAULT_VALUE_PATTERN = re.compile(r"\bdefaults?\s+to\s+([^.;]+)", re.IGNORECASE)
+_BENCHMARK_INSTRUCTION_MARKER = re.compile(
+    r"\b(?:the\s+)?benchmark instruction is:\s*",
+    re.IGNORECASE,
+)
+_BENCHMARK_INSTRUCTION_SUFFIX = re.compile(
+    r"\.\s+(?:create that simulator environment|use only|stop only)\b",
+    re.IGNORECASE,
+)
 
 
 def _message_texts(body: JsonObject) -> list[str]:
@@ -308,6 +316,7 @@ def _request_label_from_schema(schema: str, *, response_mode: str) -> tuple[str,
             "Reference localization",
         ),
         "openeta.grasp_pose_advisor_request.v1": ("grasp_advisor", "Grasp advisor"),
+        "openeta.grasp_selection_advice.v1": ("grasp_selection_advice", "Grasp advisor"),
     }
     if schema in labels:
         return labels[schema]
@@ -319,6 +328,47 @@ def _request_label_from_schema(schema: str, *, response_mode: str) -> tuple[str,
     return "planner", "Planner"
 
 
+def _task_display_title(task: object) -> str:
+    """Project a concise console title without altering the planner objective."""
+
+    value = " ".join(str(task or "").split())
+    marker = _BENCHMARK_INSTRUCTION_MARKER.search(value)
+    if marker is None:
+        return value
+    instruction = value[marker.end() :]
+    suffix = _BENCHMARK_INSTRUCTION_SUFFIX.search(instruction)
+    if suffix is not None:
+        instruction = instruction[: suffix.start()]
+    return instruction.strip().rstrip(".") or value
+
+
+def _advisor_request_lineage(context: JsonObject) -> JsonObject:
+    """Display correlation only; never infer identity from candidate/history data."""
+    if (context.get("schema_version"), context.get("role")) not in (
+        ("openeta.grasp_selection_advice.v1", "read_only_grasp_pose_advisor"),
+        ("openeta.supervision.v1", "guidance_agent"),
+        ("openeta.supervision.v1", "independent_action_reviewer"),
+        ("openeta.visual_delta_request.v1", "visual_differencing"),
+    ):
+        return {}
+    lineage = context.get("request_lineage")
+    if not isinstance(lineage, dict):
+        return {}
+    fields = ("parent_session_id", "child_session_id")
+    if any(
+        not isinstance(lineage.get(key), str)
+        or not lineage[key].strip()
+        or len(lineage[key]) > 256
+        or any(ord(char) < 32 or ord(char) == 127 for char in lineage[key])
+        for key in fields
+    ):
+        return {}
+    parent, child = (lineage[key].strip() for key in fields)
+    if parent == child:
+        return {}
+    return {"parent_session_id": parent, "child_session_id": child}
+
+
 def classify_request(body: JsonObject) -> JsonObject:
     payload = _planner_wire_payload(body)
     context = payload.get("tool_context")
@@ -327,6 +377,11 @@ def classify_request(body: JsonObject) -> JsonObject:
     schema = str(context.get("schema_version") or stable.get("agent_context_schema_version") or "")
     response_mode = detect_response_mode(body)
     request_type, label = _request_label_from_schema(schema, response_mode=response_mode)
+    if schema == "openeta.supervision.v1":
+        request_type, label = {
+            "guidance_agent": ("guidance_agent", "Guidance agent"),
+            "independent_action_reviewer": ("action_reviewer", "Action reviewer"),
+        }.get(str(context.get("role") or ""), (request_type, label))
     objective = context.get("objective")
     objective = objective if isinstance(objective, dict) else {}
     errors = payload.get("validation_errors")
@@ -334,6 +389,7 @@ def classify_request(body: JsonObject) -> JsonObject:
     attempt = payload.get("attempt")
     if not isinstance(attempt, int) or isinstance(attempt, bool):
         attempt = 1
+    task = objective.get("task") or context.get("task") or ""
     return {
         "type": request_type,
         "label": label,
@@ -341,7 +397,18 @@ def classify_request(body: JsonObject) -> JsonObject:
         "response_mode": response_mode,
         "attempt": attempt,
         "validation_error_count": len(errors),
-        "task": str(objective.get("task") or context.get("task") or ""),
+        "task": _task_display_title(task),
+        **_advisor_request_lineage(context),
+        **(
+            {"pending_wait_reason": {
+                "guidance_agent": "等待人工 guidance 响应",
+                "action_reviewer": "等待人工 action reviewer 响应",
+                "visual_differencing": "等待人工 visual-delta 响应",
+            }.get(request_type, "等待人工 advisor 响应")}
+            if request_type in {"grasp_advisor", "grasp_selection_advice", "guidance_agent",
+                                "action_reviewer", "visual_differencing"}
+            else {}
+        ),
     }
 
 
@@ -533,6 +600,7 @@ def build_operator_summary(body: JsonObject, *, request_id: str) -> JsonObject:
         "classification": classification,
         "instruction": str(payload.get("instruction") or ""),
         "task": str(objective.get("task") or active_task.get("task") or context.get("task") or ""),
+        "task_title": classification["task"],
         "environment": {"env_id": active_task.get("env_id"), "handle": active_task.get("handle")},
         "attempt": classification["attempt"],
         "validation_errors": errors,
@@ -627,6 +695,11 @@ class OpenETAProtocolAdapter:
             value = headers.get(header, "").strip()
             if value:
                 return value, f"header:{header}"
+        payload = _planner_wire_payload(body)
+        context = payload.get("tool_context")
+        lineage = _advisor_request_lineage(context if isinstance(context, dict) else {})
+        if lineage:
+            return lineage["child_session_id"], "wire:request_lineage"
         priority = ("active_agent_session_id", "agent_session_id", "session_id")
         for field in priority:
             for value in _wire_json_values(body):
@@ -719,7 +792,7 @@ class OpenETAProtocolAdapter:
         return {
             "view": {
                 "eyebrow": classification["label"],
-                "title": operator["task"] or classification["label"],
+                "title": operator["task_title"] or classification["label"],
                 "badges": [
                     f"attempt {operator['attempt']}",
                     str(operator["environment"].get("env_id") or ""),

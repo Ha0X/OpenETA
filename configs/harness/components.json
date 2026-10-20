@@ -1,0 +1,2283 @@
+{
+  "schema_version": 1,
+  "components": {
+    "benchmark": {
+      "libero_v1": {
+        "id": "libero_v1",
+        "kind": "benchmark",
+        "version": 1,
+        "backend": "libero",
+        "env_pattern": "openeta/libero_libero_(?:spatial|object|goal|10)_task[0-9]-v0",
+        "outcome": "libero_official_terminal_v1"
+      },
+      "robodojo_v1": {
+        "id": "robodojo_v1",
+        "kind": "benchmark",
+        "version": 1,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_(?:single|dual)_x5_[a-z][a-z0-9_]*-v0",
+        "outcome": "robodojo_official_pending"
+      },
+      "robodojo_official_v1": {
+        "id": "robodojo_official_v1",
+        "kind": "benchmark",
+        "version": 1,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_single_x5_general_pickup-v0",
+        "outcome": "robodojo_official_terminal_v1"
+      },
+      "robodojo_dual_official_v1": {
+        "id": "robodojo_dual_official_v1",
+        "kind": "benchmark",
+        "version": 1,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_general_pickup-v0",
+        "outcome": "robodojo_official_terminal_v1"
+      },
+      "robodojo_dual_cooperation_v1": {
+        "id": "robodojo_dual_cooperation_v1",
+        "kind": "benchmark",
+        "version": 1,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_(?:sweep_blocks|pour_balls_into_vase)-v0",
+        "outcome": "robodojo_official_terminal_v1"
+      },
+      "robodojo_rigid32_acceptance_v1": {
+        "id": "robodojo_rigid32_acceptance_v1",
+        "kind": "benchmark",
+        "version": 1,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_(?:align_blocks|arrange_largest_number|build_tower|classify_objects|classify_objects_by_language|cover_blocks|deposit_coin|fasten_screws|fill_pen_holder|general_pickup|hang_mugs|insert_key|insert_tubes|organize_table|pack_objects_into_box|play_Xylophone|play_stacking_toy|plug_in_charger|pour_balls_into_vase|push_T|put_bottles_into_dustbin|solve_equation|sort_nesting_dolls_by_size|stack_blocks|stack_blocks_by_language|stack_bowls|store_tools_in_toolbox|swap_T|sweep_blocks)-v0",
+        "outcome": "robodojo_official_terminal_v1"
+      },
+      "robodojo_cloth_acceptance_v1": {
+        "id": "robodojo_cloth_acceptance_v1",
+        "kind": "benchmark",
+        "version": 1,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_fold_clothes-v0",
+        "outcome": "robodojo_official_terminal_v1"
+      },
+      "robodojo_align_blocks_400_v1": {
+        "id": "robodojo_align_blocks_400_v1",
+        "kind": "benchmark",
+        "version": 1,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_align_blocks-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "episode_budget_override": "align_blocks_400_v1"
+      },
+      "robodojo_capabilities_diagnostic_v71": {
+        "id": "robodojo_capabilities_diagnostic_v71",
+        "kind": "benchmark",
+        "version": 1,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_(?:general_pickup|press_by_number|make_toast)-v0",
+        "outcome": "robodojo_official_terminal_v1"
+      },
+      "robodojo_gpu_diagnostic_v73": {
+        "id": "robodojo_gpu_diagnostic_v73",
+        "kind": "benchmark",
+        "version": 73,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_general_pickup-v0",
+        "outcome": "robodojo_official_terminal_v1"
+      },
+      "robodojo_build_tower_v75": {
+        "id": "robodojo_build_tower_v75",
+        "kind": "benchmark",
+        "version": 75,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_build_tower-v0",
+        "outcome": "robodojo_official_terminal_v1"
+      },
+      "robodojo_build_tower_2000_v76": {
+        "id": "robodojo_build_tower_2000_v76",
+        "kind": "benchmark",
+        "version": 76,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_build_tower-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "episode_budget_override": "build_tower_2000_v1"
+      },
+      "robodojo_build_tower_4000_v77": {
+        "id": "robodojo_build_tower_4000_v77",
+        "kind": "benchmark",
+        "version": 77,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_build_tower-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "episode_budget_override": "build_tower_4000_v1"
+      },
+      "robodojo_build_tower_oracle_v78": {
+        "id": "robodojo_build_tower_oracle_v78",
+        "kind": "benchmark",
+        "version": 78,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_build_tower-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "episode_budget_override": "build_tower_4000_v1",
+        "completion_feedback": "build_tower_semantic_v1"
+      },
+      "robodojo_build_tower_oracle_recording_v79": {
+        "id": "robodojo_build_tower_oracle_recording_v79",
+        "kind": "benchmark",
+        "version": 79,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_build_tower-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "episode_budget_override": "build_tower_4000_v1",
+        "completion_feedback": "build_tower_semantic_v1"
+      },
+      "robodojo_build_tower_coarse_v80": {
+        "id": "robodojo_build_tower_coarse_v80",
+        "kind": "benchmark",
+        "version": 79,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_build_tower-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "episode_budget_override": "build_tower_4000_v1",
+        "completion_feedback": "robodojo_native_coarse_v1"
+      },
+      "robodojo_conveyor_image_v85": {
+        "id": "robodojo_conveyor_image_v85",
+        "kind": "benchmark",
+        "version": 85,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_pick_from_conveyor_by_image-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1"
+      },
+      "robodojo_make_kong_auxiliary_v99": {
+        "id": "robodojo_make_kong_auxiliary_v99",
+        "kind": "benchmark",
+        "version": 99,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_make_kong-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1"
+      },
+      "robodojo_imitate_sorting_sequence_auxiliary_v99": {
+        "id": "robodojo_imitate_sorting_sequence_auxiliary_v99",
+        "kind": "benchmark",
+        "version": 99,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_imitate_sorting_sequence-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1"
+      },
+      "robodojo_play_tic_tac_toe_auxiliary_v99": {
+        "id": "robodojo_play_tic_tac_toe_auxiliary_v99",
+        "kind": "benchmark",
+        "version": 99,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_play_tic_tac_toe-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1"
+      },
+      "robodojo_play_tic_tac_toe_auxiliary_v101": {
+        "id": "robodojo_play_tic_tac_toe_auxiliary_v101",
+        "kind": "benchmark",
+        "version": 101,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_play_tic_tac_toe-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "play_tic_tac_toe_native_adapter_v101"
+      },
+      "robodojo_imitate_sorting_sequence_auxiliary_v101": {
+        "id": "robodojo_imitate_sorting_sequence_auxiliary_v101",
+        "kind": "benchmark",
+        "version": 101,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_imitate_sorting_sequence-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "imitate_sorting_sequence_native_adapter_v101"
+      },
+      "robodojo_make_kong_auxiliary_v103": {
+        "id": "robodojo_make_kong_auxiliary_v103",
+        "kind": "benchmark",
+        "version": 103,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_make_kong-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "task_rule_supplement": "mahjong_kong_replacement_v1"
+      },
+      "robodojo_play_tic_tac_toe_auxiliary_v104": {
+        "id": "robodojo_play_tic_tac_toe_auxiliary_v104",
+        "kind": "benchmark",
+        "version": 104,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_play_tic_tac_toe-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "play_tic_tac_toe_1300_v104"
+      },
+      "robodojo_make_kong_auxiliary_v105": {
+        "id": "robodojo_make_kong_auxiliary_v105",
+        "kind": "benchmark",
+        "version": 105,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_make_kong-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "task_rule_supplement": "mahjong_kong_replacement_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_play_tic_tac_toe_auxiliary_v105": {
+        "id": "robodojo_play_tic_tac_toe_auxiliary_v105",
+        "kind": "benchmark",
+        "version": 105,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_play_tic_tac_toe-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_imitate_sorting_sequence_auxiliary_v105": {
+        "id": "robodojo_imitate_sorting_sequence_auxiliary_v105",
+        "kind": "benchmark",
+        "version": 105,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_imitate_sorting_sequence-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_egg_settle_v107": {
+        "id": "robodojo_egg_settle_v107",
+        "kind": "benchmark",
+        "version": 107,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_fill_egg_holder-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "initialization_profile": "egg_precheck_settle_300_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_align_blocks_batch_v108": {
+        "id": "robodojo_align_blocks_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_align_blocks-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_arrange_largest_number_batch_v108": {
+        "id": "robodojo_arrange_largest_number_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_arrange_largest_number-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_build_tower_batch_v108": {
+        "id": "robodojo_build_tower_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_build_tower-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_classify_objects_batch_v108": {
+        "id": "robodojo_classify_objects_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_classify_objects-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_classify_objects_by_language_batch_v108": {
+        "id": "robodojo_classify_objects_by_language_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_classify_objects_by_language-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_cover_blocks_batch_v108": {
+        "id": "robodojo_cover_blocks_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_cover_blocks-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_deposit_coin_batch_v108": {
+        "id": "robodojo_deposit_coin_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_deposit_coin-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_fasten_screws_batch_v108": {
+        "id": "robodojo_fasten_screws_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_fasten_screws-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_fill_egg_holder_batch_v108": {
+        "id": "robodojo_fill_egg_holder_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_fill_egg_holder-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "initialization_profile": "egg_precheck_settle_300_v1"
+      },
+      "robodojo_fill_pen_holder_batch_v108": {
+        "id": "robodojo_fill_pen_holder_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_fill_pen_holder-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_fold_clothes_batch_v108": {
+        "id": "robodojo_fold_clothes_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_fold_clothes-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_general_pickup_batch_v108": {
+        "id": "robodojo_general_pickup_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_general_pickup-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_hang_mugs_batch_v108": {
+        "id": "robodojo_hang_mugs_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_hang_mugs-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_imitate_sorting_sequence_batch_v108": {
+        "id": "robodojo_imitate_sorting_sequence_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_imitate_sorting_sequence-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_insert_key_batch_v108": {
+        "id": "robodojo_insert_key_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_insert_key-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_insert_tubes_batch_v108": {
+        "id": "robodojo_insert_tubes_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_insert_tubes-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_make_kong_batch_v108": {
+        "id": "robodojo_make_kong_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_make_kong-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "mahjong_kong_replacement_v1"
+      },
+      "robodojo_make_toast_batch_v108": {
+        "id": "robodojo_make_toast_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_make_toast-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_match_and_pick_from_conveyor_batch_v108": {
+        "id": "robodojo_match_and_pick_from_conveyor_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_match_and_pick_from_conveyor-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_organize_table_batch_v108": {
+        "id": "robodojo_organize_table_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_organize_table-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_pack_objects_into_box_batch_v108": {
+        "id": "robodojo_pack_objects_into_box_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_pack_objects_into_box-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_pick_from_conveyor_by_image_batch_v108": {
+        "id": "robodojo_pick_from_conveyor_by_image_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_pick_from_conveyor_by_image-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_play_xylophone_batch_v108": {
+        "id": "robodojo_play_xylophone_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_play_Xylophone-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_play_stacking_toy_batch_v108": {
+        "id": "robodojo_play_stacking_toy_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_play_stacking_toy-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_play_tic_tac_toe_batch_v108": {
+        "id": "robodojo_play_tic_tac_toe_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_play_tic_tac_toe-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_plug_in_charger_batch_v108": {
+        "id": "robodojo_plug_in_charger_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_plug_in_charger-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_pour_balls_into_vase_batch_v108": {
+        "id": "robodojo_pour_balls_into_vase_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_pour_balls_into_vase-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_pour_by_language_batch_v108": {
+        "id": "robodojo_pour_by_language_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_pour_by_language-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_pour_liquid_into_cup_batch_v108": {
+        "id": "robodojo_pour_liquid_into_cup_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_pour_liquid_into_cup-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_press_by_number_batch_v108": {
+        "id": "robodojo_press_by_number_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_press_by_number-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_push_t_batch_v108": {
+        "id": "robodojo_push_t_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_push_T-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_put_bottles_into_dustbin_batch_v108": {
+        "id": "robodojo_put_bottles_into_dustbin_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_put_bottles_into_dustbin-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_solve_equation_batch_v108": {
+        "id": "robodojo_solve_equation_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_solve_equation-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_sort_nesting_dolls_by_size_batch_v108": {
+        "id": "robodojo_sort_nesting_dolls_by_size_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_sort_nesting_dolls_by_size-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_stack_blocks_batch_v108": {
+        "id": "robodojo_stack_blocks_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_stack_blocks-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_stack_blocks_by_language_batch_v108": {
+        "id": "robodojo_stack_blocks_by_language_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_stack_blocks_by_language-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_stack_bowls_batch_v108": {
+        "id": "robodojo_stack_bowls_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_stack_bowls-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_store_laptop_and_headphones_batch_v108": {
+        "id": "robodojo_store_laptop_and_headphones_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_store_laptop_and_headphones-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_store_tools_in_toolbox_batch_v108": {
+        "id": "robodojo_store_tools_in_toolbox_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_store_tools_in_toolbox-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_swap_t_batch_v108": {
+        "id": "robodojo_swap_t_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_swap_T-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_swap_blocks_batch_v108": {
+        "id": "robodojo_swap_blocks_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_swap_blocks-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_sweep_blocks_batch_v108": {
+        "id": "robodojo_sweep_blocks_batch_v108",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_sweep_blocks-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105"
+      },
+      "robodojo_press_by_number_instruction_corrected_v109": {
+        "id": "robodojo_press_by_number_instruction_corrected_v109",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_press_by_number-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "press_by_number_instruction_correction_v109"
+      },
+      "robodojo_organize_table_instruction_corrected_v109": {
+        "id": "robodojo_organize_table_instruction_corrected_v109",
+        "kind": "benchmark",
+        "version": 108,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_organize_table-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "organize_table_instruction_correction_v109"
+      },
+      "robodojo_organize_table_instruction_corrected_v110": {
+        "id": "robodojo_organize_table_instruction_corrected_v110",
+        "kind": "benchmark",
+        "version": 110,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_organize_table-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "organize_table_instruction_correction_v110"
+      },
+      "robodojo_arrange_largest_number_instruction_corrected_v111": {
+        "id": "robodojo_arrange_largest_number_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_arrange_largest_number-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "arrange_largest_number_instruction_correction_v111"
+      },
+      "robodojo_fasten_screws_instruction_corrected_v111": {
+        "id": "robodojo_fasten_screws_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_fasten_screws-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "fasten_screws_instruction_correction_v111"
+      },
+      "robodojo_fill_egg_holder_instruction_corrected_v111": {
+        "id": "robodojo_fill_egg_holder_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_fill_egg_holder-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "initialization_profile": "egg_precheck_settle_300_v1",
+        "task_rule_supplement": "fill_egg_holder_instruction_correction_v111"
+      },
+      "robodojo_fill_pen_holder_instruction_corrected_v111": {
+        "id": "robodojo_fill_pen_holder_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_fill_pen_holder-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "fill_pen_holder_instruction_correction_v111"
+      },
+      "robodojo_fold_clothes_instruction_corrected_v111": {
+        "id": "robodojo_fold_clothes_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_fold_clothes-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "fold_clothes_instruction_correction_v111"
+      },
+      "robodojo_insert_key_instruction_corrected_v111": {
+        "id": "robodojo_insert_key_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_insert_key-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "insert_key_instruction_correction_v111"
+      },
+      "robodojo_make_kong_instruction_corrected_v111": {
+        "id": "robodojo_make_kong_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_make_kong-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "make_kong_instruction_correction_v111"
+      },
+      "robodojo_make_toast_instruction_corrected_v111": {
+        "id": "robodojo_make_toast_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_make_toast-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "make_toast_instruction_correction_v111"
+      },
+      "robodojo_play_stacking_toy_instruction_corrected_v111": {
+        "id": "robodojo_play_stacking_toy_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_play_stacking_toy-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "play_stacking_toy_instruction_correction_v111"
+      },
+      "robodojo_pour_balls_into_vase_instruction_corrected_v111": {
+        "id": "robodojo_pour_balls_into_vase_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_pour_balls_into_vase-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "pour_balls_into_vase_instruction_correction_v111"
+      },
+      "robodojo_pour_by_language_instruction_corrected_v111": {
+        "id": "robodojo_pour_by_language_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_pour_by_language-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "pour_by_language_instruction_correction_v111"
+      },
+      "robodojo_pour_liquid_into_cup_instruction_corrected_v111": {
+        "id": "robodojo_pour_liquid_into_cup_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_pour_liquid_into_cup-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "pour_liquid_into_cup_instruction_correction_v111"
+      },
+      "robodojo_put_bottles_into_dustbin_instruction_corrected_v111": {
+        "id": "robodojo_put_bottles_into_dustbin_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_put_bottles_into_dustbin-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "put_bottles_into_dustbin_instruction_correction_v111"
+      },
+      "robodojo_store_laptop_and_headphones_instruction_corrected_v111": {
+        "id": "robodojo_store_laptop_and_headphones_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_store_laptop_and_headphones-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "store_laptop_and_headphones_instruction_correction_v111"
+      },
+      "robodojo_store_tools_in_toolbox_instruction_corrected_v111": {
+        "id": "robodojo_store_tools_in_toolbox_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_store_tools_in_toolbox-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "store_tools_in_toolbox_instruction_correction_v111"
+      },
+      "robodojo_swap_blocks_instruction_corrected_v111": {
+        "id": "robodojo_swap_blocks_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_swap_blocks-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "swap_blocks_instruction_correction_v111"
+      },
+      "robodojo_sweep_blocks_instruction_corrected_v111": {
+        "id": "robodojo_sweep_blocks_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_sweep_blocks-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "sweep_blocks_instruction_correction_v111"
+      },
+      "robodojo_organize_table_instruction_corrected_v111": {
+        "id": "robodojo_organize_table_instruction_corrected_v111",
+        "kind": "benchmark",
+        "version": 111,
+        "backend": "robodojo",
+        "env_pattern": "openeta/robodojo_dual_x5_organize_table-v0",
+        "outcome": "robodojo_official_terminal_v1",
+        "completion_feedback": "robodojo_native_coarse_v1",
+        "episode_budget_override": "robodojo_unlimited_actions_v105",
+        "task_rule_supplement": "organize_table_instruction_correction_v110"
+      }
+    },
+    "embodiment": {
+      "panda_parallel_v1": {
+        "id": "panda_parallel_v1",
+        "kind": "embodiment",
+        "version": 1,
+        "base": "fixed",
+        "model": "panda",
+        "variant": "single",
+        "groups": {
+          "arm": {
+            "joint_names": [
+              "robot0_joint1",
+              "robot0_joint2",
+              "robot0_joint3",
+              "robot0_joint4",
+              "robot0_joint5",
+              "robot0_joint6",
+              "robot0_joint7"
+            ],
+            "kind": "manipulator"
+          }
+        },
+        "effectors": {
+          "primary": {
+            "group": "arm",
+            "kind": "parallel_gripper",
+            "calibration": "libero_panda_measured_v1",
+            "reported_position_frame": "grip_site",
+            "reported_orientation_frame": "right_hand",
+            "tcp_rotation_from_reported": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                -1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "max_aperture_m": 0.08,
+            "affected_by_groups": [
+              "arm"
+            ]
+          }
+        },
+        "camera_policy": "libero_legacy_aliases"
+      },
+      "dual_x5_parallel_v1": {
+        "id": "dual_x5_parallel_v1",
+        "kind": "embodiment",
+        "version": 1,
+        "base": "fixed",
+        "model": "x5",
+        "variant": "dual_x5",
+        "groups": {
+          "left_arm": {
+            "joint_names": null,
+            "kind": "manipulator"
+          },
+          "right_arm": {
+            "joint_names": null,
+            "kind": "manipulator"
+          }
+        },
+        "effectors": {
+          "left": {
+            "group": "left_arm",
+            "kind": "parallel_gripper",
+            "calibration": null,
+            "reported_position_frame": null,
+            "reported_orientation_frame": null,
+            "tcp_rotation_from_reported": null,
+            "max_aperture_m": null,
+            "affected_by_groups": [
+              "left_arm"
+            ]
+          },
+          "right": {
+            "group": "right_arm",
+            "kind": "parallel_gripper",
+            "calibration": null,
+            "reported_position_frame": null,
+            "reported_orientation_frame": null,
+            "tcp_rotation_from_reported": null,
+            "max_aperture_m": null,
+            "affected_by_groups": [
+              "right_arm"
+            ]
+          }
+        },
+        "camera_policy": "native_calibrated_directory"
+      },
+      "single_x5_left_parallel_v1": {
+        "id": "single_x5_left_parallel_v1",
+        "kind": "embodiment",
+        "version": 1,
+        "base": "fixed",
+        "model": "x5",
+        "variant": "single_x5",
+        "groups": {
+          "arm": {
+            "kind": "manipulator",
+            "joint_names": [
+              "joint1",
+              "joint2",
+              "joint3",
+              "joint4",
+              "joint5",
+              "joint6"
+            ]
+          }
+        },
+        "effectors": {
+          "primary": {
+            "group": "arm",
+            "kind": "parallel_gripper",
+            "calibration": "openeta.x5_parallel_link6_tcp.v1",
+            "reported_position_frame": "link6",
+            "reported_orientation_frame": "link6",
+            "tcp_rotation_from_reported": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "tcp_translation_from_reported": [
+              0.145,
+              0.0,
+              0.0
+            ],
+            "max_aperture_m": null,
+            "affected_by_groups": [
+              "arm"
+            ]
+          }
+        },
+        "camera_policy": "native_calibrated_directory"
+      },
+      "dual_x5_calibrated_v1": {
+        "id": "dual_x5_calibrated_v1",
+        "kind": "embodiment",
+        "version": 1,
+        "base": "fixed",
+        "model": "x5",
+        "variant": "dual_x5",
+        "groups": {
+          "left_arm": {
+            "kind": "manipulator",
+            "joint_names": [
+              "joint1",
+              "joint2",
+              "joint3",
+              "joint4",
+              "joint5",
+              "joint6"
+            ],
+            "articulation": "left"
+          },
+          "right_arm": {
+            "kind": "manipulator",
+            "joint_names": [
+              "joint1",
+              "joint2",
+              "joint3",
+              "joint4",
+              "joint5",
+              "joint6"
+            ],
+            "articulation": "right"
+          }
+        },
+        "effectors": {
+          "left": {
+            "group": "left_arm",
+            "kind": "parallel_gripper",
+            "calibration": "openeta.x5_parallel_link6_tcp.v1",
+            "reported_position_frame": "link6",
+            "reported_orientation_frame": "link6",
+            "tcp_rotation_from_reported": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "tcp_translation_from_reported": [
+              0.145,
+              0.0,
+              0.0
+            ],
+            "max_aperture_m": null,
+            "affected_by_groups": [
+              "left_arm"
+            ]
+          },
+          "right": {
+            "group": "right_arm",
+            "kind": "parallel_gripper",
+            "calibration": "openeta.x5_parallel_link6_tcp.v1",
+            "reported_position_frame": "link6",
+            "reported_orientation_frame": "link6",
+            "tcp_rotation_from_reported": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "tcp_translation_from_reported": [
+              0.145,
+              0.0,
+              0.0
+            ],
+            "max_aperture_m": null,
+            "affected_by_groups": [
+              "right_arm"
+            ]
+          }
+        },
+        "camera_policy": "native_calibrated_directory"
+      },
+      "dual_x5_native_franka_v99": {
+        "id": "dual_x5_native_franka_v99",
+        "kind": "embodiment",
+        "version": 99,
+        "base": "fixed",
+        "model": "x5",
+        "variant": "dual_x5",
+        "groups": {
+          "left_arm": {
+            "kind": "manipulator",
+            "joint_names": [
+              "joint1",
+              "joint2",
+              "joint3",
+              "joint4",
+              "joint5",
+              "joint6"
+            ],
+            "articulation": "left"
+          },
+          "right_arm": {
+            "kind": "manipulator",
+            "joint_names": [
+              "joint1",
+              "joint2",
+              "joint3",
+              "joint4",
+              "joint5",
+              "joint6"
+            ],
+            "articulation": "right"
+          }
+        },
+        "effectors": {
+          "left": {
+            "group": "left_arm",
+            "kind": "parallel_gripper",
+            "calibration": "openeta.x5_parallel_link6_tcp.v1",
+            "reported_position_frame": "link6",
+            "reported_orientation_frame": "link6",
+            "tcp_rotation_from_reported": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "tcp_translation_from_reported": [
+              0.145,
+              0.0,
+              0.0
+            ],
+            "max_aperture_m": null,
+            "affected_by_groups": [
+              "left_arm"
+            ]
+          },
+          "right": {
+            "group": "right_arm",
+            "kind": "parallel_gripper",
+            "calibration": "openeta.x5_parallel_link6_tcp.v1",
+            "reported_position_frame": "link6",
+            "reported_orientation_frame": "link6",
+            "tcp_rotation_from_reported": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "tcp_translation_from_reported": [
+              0.145,
+              0.0,
+              0.0
+            ],
+            "max_aperture_m": null,
+            "affected_by_groups": [
+              "right_arm"
+            ]
+          }
+        },
+        "camera_policy": "native_calibrated_directory",
+        "native_layout": "dual_x5_and_franka_competition",
+        "support_actors": {
+          "support_arm0": {
+            "model": "franka",
+            "control_mode": "task_managed",
+            "agent_controllable": false
+          }
+        }
+      }
+    },
+    "execution": {
+      "libero_mink_v1": {
+        "id": "libero_mink_v1",
+        "kind": "execution",
+        "version": 1,
+        "controller_id": "mink.robosuite_joint_velocity",
+        "controller_option": "mink_joint_velocity",
+        "backend": "libero",
+        "embodiments": [
+          "panda_parallel_v1"
+        ],
+        "scope": [
+          "arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": true,
+        "missing_capabilities": []
+      },
+      "robodojo_dual_ik_v1": {
+        "id": "robodojo_dual_ik_v1",
+        "kind": "execution",
+        "version": 1,
+        "controller_id": "robodojo.eval_env_ik",
+        "controller_option": null,
+        "backend": "robodojo",
+        "embodiments": [
+          "dual_x5_parallel_v1"
+        ],
+        "scope": [
+          "left_arm",
+          "right_arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": false,
+        "missing_capabilities": [
+          "x5_tcp_calibration",
+          "x5_world_self_interarm_collision",
+          "official_outcome_codec",
+          "dual_atomic_host",
+          "x5_measured_gripper_feedback"
+        ]
+      },
+      "robodojo_checked_single_v1": {
+        "id": "robodojo_checked_single_v1",
+        "kind": "execution",
+        "version": 1,
+        "controller_id": "robodojo.checked_joint_ik.v1",
+        "controller_option": "robodojo_checked",
+        "backend": "robodojo",
+        "embodiments": [
+          "single_x5_left_parallel_v1"
+        ],
+        "scope": [
+          "arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": true,
+        "missing_capabilities": []
+      },
+      "robodojo_checked_dual_v1": {
+        "id": "robodojo_checked_dual_v1",
+        "kind": "execution",
+        "version": 1,
+        "controller_id": "robodojo.checked_joint_ik.v1",
+        "controller_option": "robodojo_checked",
+        "backend": "robodojo",
+        "embodiments": [
+          "dual_x5_calibrated_v1"
+        ],
+        "scope": [
+          "left_arm",
+          "right_arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": true,
+        "missing_capabilities": []
+      },
+      "robodojo_checked_cloth_v1": {
+        "id": "robodojo_checked_cloth_v1",
+        "kind": "execution",
+        "version": 1,
+        "controller_id": "robodojo.checked_joint_ik.v1",
+        "controller_option": "robodojo_checked",
+        "backend": "robodojo",
+        "embodiments": [
+          "dual_x5_calibrated_v1"
+        ],
+        "scope": [
+          "left_arm",
+          "right_arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": true,
+        "missing_capabilities": [],
+        "deformable_mode": "cloth_short_horizon_v1"
+      },
+      "robodojo_physical_contact_single_v1": {
+        "id": "robodojo_physical_contact_single_v1",
+        "kind": "execution",
+        "version": 1,
+        "controller_id": "robodojo.checked_joint_ik.v1",
+        "controller_option": "robodojo_checked",
+        "backend": "robodojo",
+        "embodiments": [
+          "single_x5_left_parallel_v1"
+        ],
+        "scope": [
+          "arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": true,
+        "missing_capabilities": [],
+        "contact_policy": "physical_contact_v1"
+      },
+      "robodojo_physical_contact_dual_v1": {
+        "id": "robodojo_physical_contact_dual_v1",
+        "kind": "execution",
+        "version": 1,
+        "controller_id": "robodojo.checked_joint_ik.v1",
+        "controller_option": "robodojo_checked",
+        "backend": "robodojo",
+        "embodiments": [
+          "dual_x5_calibrated_v1"
+        ],
+        "scope": [
+          "left_arm",
+          "right_arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": true,
+        "missing_capabilities": [],
+        "contact_policy": "physical_contact_v1"
+      },
+      "robodojo_gpu_contact_dual_v73": {
+        "id": "robodojo_gpu_contact_dual_v73",
+        "kind": "execution",
+        "version": 73,
+        "controller_id": "robodojo.checked_joint_ik.v1",
+        "controller_option": "robodojo_checked",
+        "backend": "robodojo",
+        "embodiments": [
+          "dual_x5_calibrated_v1"
+        ],
+        "scope": [
+          "left_arm",
+          "right_arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": true,
+        "missing_capabilities": [],
+        "contact_policy": "physical_contact_v1",
+        "simulation_profile": "gpu_tensor_v1"
+      },
+      "robodojo_visual_cloth_v74": {
+        "id": "robodojo_visual_cloth_v74",
+        "kind": "execution",
+        "version": 74,
+        "controller_id": "robodojo.checked_joint_ik.v1",
+        "controller_option": "robodojo_checked",
+        "backend": "robodojo",
+        "embodiments": [
+          "dual_x5_calibrated_v1"
+        ],
+        "scope": [
+          "left_arm",
+          "right_arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": true,
+        "missing_capabilities": [],
+        "deformable_mode": "cloth_visual_short_horizon_v2",
+        "contact_policy": "physical_contact_v1"
+      },
+      "robodojo_visual_cloth_friction_2x_v74": {
+        "id": "robodojo_visual_cloth_friction_2x_v74",
+        "kind": "execution",
+        "version": 74,
+        "controller_id": "robodojo.checked_joint_ik.v1",
+        "controller_option": "robodojo_checked",
+        "backend": "robodojo",
+        "embodiments": [
+          "dual_x5_calibrated_v1"
+        ],
+        "scope": [
+          "left_arm",
+          "right_arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": true,
+        "missing_capabilities": [],
+        "deformable_mode": "cloth_visual_short_horizon_v2",
+        "contact_policy": "physical_contact_v1",
+        "physics_profile": "cloth_friction_2x_v1"
+      },
+      "robodojo_native_auxiliary_v99": {
+        "id": "robodojo_native_auxiliary_v99",
+        "kind": "execution",
+        "version": 99,
+        "controller_id": "robodojo.checked_joint_ik.v1",
+        "controller_option": "robodojo_checked",
+        "backend": "robodojo",
+        "embodiments": [
+          "dual_x5_native_franka_v99"
+        ],
+        "scope": [
+          "left_arm",
+          "right_arm"
+        ],
+        "required_capabilities": {
+          "supports_position": true,
+          "supports_orientation": true
+        },
+        "implemented": true,
+        "missing_capabilities": [],
+        "contact_policy": "physical_contact_v1",
+        "support_policy": "native_auxiliary_ownership_v1"
+      }
+    },
+    "interface": {
+      "libero_atomic_v1": {
+        "id": "libero_atomic_v1",
+        "kind": "interface",
+        "version": 1,
+        "factory": "legacy_libero_atomic",
+        "tool_profile": "atomic",
+        "effectors": [
+          "parallel_gripper"
+        ],
+        "supports_multiple_effectors": false,
+        "baseline_commit": "9d9b5a877f8498d081f761c69f63d1765827343c",
+        "source_sha256": {
+          "tools/codex_atomic.py": "86f8ae0bbf2265685512bdf9d048ad75afc22aef272ea6882cb4dc03b02420d1",
+          "tools/codex_atomic_geometry.py": "4c7b72383a1ea6ca0a7046cb64256a5c6db81d075be807981c643edc3a8fd4c7",
+          "tools/codex_orientation.py": "ce6a19bc07a74963173e4f628e0eef850d49bb641a5f6587102672b9c9bf168b",
+          "sim/controllers/mink_goal.py": "a71f07d97228e8d6c7d16037697155007bae6df66861eaabc700f71da69a3253",
+          "sim/controllers/cartesian_segment.py": "5b735cb46d89c5ae6e4607be2e4bda5a313b8a7d9f6d228824393e6cb980d6ab",
+          "sim/controllers/recovery_solver.py": "7fad7a2b9e52d73dcb028a4c1a7e754f7078ae838b8fb16ad2150ffd18d7dd6d",
+          "plugins/openeta/skills/openeta-atomic/SKILL.md": "ada630926246e503228e9833ada24c0a649f481a6031fe3be500d6a2a560decb"
+        }
+      },
+      "atomic_dual_v1": {
+        "id": "atomic_dual_v1",
+        "kind": "interface",
+        "version": 1,
+        "factory": "robodojo_dual_atomic_pending",
+        "tool_profile": "atomic",
+        "effectors": [
+          "parallel_gripper"
+        ],
+        "supports_multiple_effectors": true,
+        "baseline_commit": null,
+        "source_sha256": {}
+      },
+      "robodojo_atomic_v1": {
+        "id": "robodojo_atomic_v1",
+        "kind": "interface",
+        "version": 1,
+        "factory": "configured_robodojo_atomic",
+        "tool_profile": "atomic",
+        "effectors": [
+          "parallel_gripper"
+        ],
+        "supports_multiple_effectors": false,
+        "baseline_commit": "9d9b5a877f8498d081f761c69f63d1765827343c",
+        "source_sha256": {
+          "plugins/openeta/skills/openeta-robodojo/SKILL.md": "e06c3d724f2a1627ecc2103d6236d6a4630e73b30dc96c3d2173990b667390e3",
+          "sim/envs/robodojo/arm_continuity.py": "9aa447db3eb1df4b197d689cd001db78004eef8f60d7614853baae00efbeb95d",
+          "sim/envs/robodojo/asset_repairs.py": "7e0597371242ead759f91a570d158d11237ea7ef298f005efea8057e07de9747",
+          "sim/envs/robodojo/attached_geometry.py": "33a79a201fd9dcb19657971d263d7c767a3b63b9ce4e33620ab91d9f3e3617c8",
+          "sim/envs/robodojo/boundary_recovery.py": "a6691b60335b76b7adaf293182eb866a94080fcb79655ff024125f94c9007e99",
+          "sim/envs/robodojo/calibration.py": "edf9520842144b3a02bd03a264e450cbebea2c8cea69c3d6b878b488985aca91",
+          "sim/envs/robodojo/cameras.py": "8d32eb93469bceabcd49c208a4deac86febe097cf758504623d13f2b2752d12f",
+          "sim/envs/robodojo/checked_control.py": "7d60c51372a51cab68c52be4493ca37fae3c2a6bdb185dd5600fd3e1b62c09f9",
+          "sim/envs/robodojo/clearance_recovery.py": "4ed5b1633d4a3fb6c709710db72b478f8d33baeb7cd0e810736f519098c75a7c",
+          "sim/envs/robodojo/closure_diagnostics.py": "f7467329e35c71603721dfe30a6132c95372a8ad9181a14b8ca4fb0cdd5e345c",
+          "sim/envs/robodojo/cloth_execution.py": "77c11c99a72c18c6ae86172e81458aa060bee77415aa1c5112aff77488cc319b",
+          "sim/envs/robodojo/cloth_recovery.py": "278695b74beb12b03c094153192e8e110d1925282dd117267e7e1a405408741e",
+          "sim/envs/robodojo/collision_bounds.py": "ce231437d0947fdc4cb7b4ffaf95fd4faee7dcd8c146e6058370c1350cd40c28",
+          "sim/envs/robodojo/collision_geometry.py": "8617f0b32462e1c803de7dd893ea348106205d6122945bfc3117ba96990877cf",
+          "sim/envs/robodojo/contact_bounds.py": "9c0247a8221f34d8564a5e01dec45c5475af66e8e8969207e037d8c6781ad268",
+          "sim/envs/robodojo/coordinated_motion.py": "55026dfd616ac2a8e7de38f739b3512ca4015d97a22f66b7913f5c38b4e099ce",
+          "sim/envs/robodojo/coordination.py": "f6e41e986c25f8c8730275360a9b5ef2d6f0bbedb53afe7f674605e86efc0097",
+          "sim/envs/robodojo/deformable_collision.py": "d804c8c471ff70f12a1f0b8ceacbe3fe388a2af83b839a633de8b250b4384b66",
+          "sim/envs/robodojo/deformable_surface.py": "2f6f175dad1de43d9c2c789101d2c586b786eb695e677a848102dfdc5ebd058f",
+          "sim/envs/robodojo/episode_recording.py": "1a85231ffae3a8d9881faa19fac299d62b08ce641ad52a995a43508bbc5922c3",
+          "sim/envs/robodojo/gripper_continuity.py": "fda3fd9220a621c4f2668ab8d98cf7b79b7113c6d7e82afb4ae88a6846be8c88",
+          "sim/envs/robodojo/holding_motion.py": "d22a97840e57c7a43be6bd1815ae34187052613e10073159c04db4ac5de94b73",
+          "sim/envs/robodojo/ik_candidates.py": "88e422dfa6176aec84d5f64f21331758cd9e300ac33ce8e9864d3433eb6afa49",
+          "sim/envs/robodojo/joint_planning.py": "73dead1e4b76f2436d93d693462359297fe009c3d567b060bf7c4e106ad38dc1",
+          "sim/envs/robodojo/layout.py": "9ee10aebf37ee74ceb558de413b92ab7ddd0d5b6fbf9333f5235e7bd08ca37b1",
+          "sim/envs/robodojo/measurements.py": "2a6b7ea5699603395cd0558091f7d7bd8c653c37c843978a7995db2c57a7711f",
+          "sim/envs/robodojo/motion_budget.py": "8cbb1db57f7a15598f37b60d74105e2230531eaadf95be25c45c274c19e15e62",
+          "sim/envs/robodojo/motion_corridor.py": "f00565587991411bef33c8cd85e8998b5f83142b2f2f16ae8a71462d6a376120",
+          "sim/envs/robodojo/motion_planning.py": "e5a6794722fbf71984800b2e648ee71e2f77ae3619fdb0f587552a750edee0a0",
+          "sim/envs/robodojo/motion_rate.py": "a082b06834d99e55e14b3160592767b35cc183adcf9a95196d8c435512b6389b",
+          "sim/envs/robodojo/mount_geometry.py": "f81013d7e59c43af6c98f04fc7199919b7ad095d4157b8ff8fe8e5b0d1dbd83a",
+          "sim/envs/robodojo/native_cloth.py": "6a63c396da33562550097fb7ea76b3d49255041f70ef9bdf0410f555cd6c416f",
+          "sim/envs/robodojo/native_convex.py": "899f9cd0611d508e57118ba6877e2d8c429287a23b7e256fa5ce2f5fb5eee4fd",
+          "sim/envs/robodojo/native_reward.py": "1410329ca37a7c67a587bdc53354af05267531c023ea5fd99b992c6470339c01",
+          "sim/envs/robodojo/native_scene.py": "65cb2a97fa93fd5ea5ab0e7c1f7eb8a83c97da68da65c9f1082f639c227e1a32",
+          "sim/envs/robodojo/outcome.py": "117e1a5fb8ebe60f41065fb3ceb647d9ffb2e9dbf94f10b2afc004fa1a378b0e",
+          "sim/envs/robodojo/physical_bindings.py": "02c5b90463a8783bc124bded868de6c3f3b73a58098681ab70e47f7d89f049cb",
+          "sim/envs/robodojo/primitive_geometry.py": "d8d62ac37ecf5821e6e4ee275a6663a282f9950d888d89751b9d2ecfced9c96c",
+          "sim/envs/robodojo/public_errors.py": "7072e4b5bb453d5a647b947a29792bc97eab6055f78abdde7fdc298e4daa8483",
+          "sim/envs/robodojo/retired_geometry.py": "75c20692e6f7d3676ad9e7d18bd9323ee9bc9da67cdd361a086abebce9591bb3",
+          "sim/envs/robodojo/scene_geometry.py": "f44eb31cbe2dbfc84d6d8c2b07e6b6f6b329f9d4d93d93a32113370133cc43f2",
+          "sim/envs/robodojo/separating_recovery.py": "d93b1b3ebf1a4230a45c3d95c0d44419de1c076b0a1ee10b2450612b9c8da92a",
+          "sim/envs/robodojo/spatial_replanning.py": "837aa524baae1093ea1ddcf5201f8ab403e9f1780b2d614b533b140669f60f0f",
+          "sim/envs/robodojo/stability_diagnostics.py": "fb03a0e3ef88afc7fdc19040a6ffcc660326987c7be5a5924d926ee31d103825",
+          "sim/envs/robodojo/support_contact.py": "15afe25649c7706125b510f4202bec28ac3574d7cce0a3da24674f5122c131be",
+          "sim/envs/robodojo/support_hold.py": "169d00a32097a8ef8723001bb897f2a894f81fb19a97d747fe4ea0776ceaad36",
+          "sim/envs/robodojo/support_separation.py": "869ded971cfb2fde429f1072f0cf28042bd606f2b106c4aa88ba2770feb1dcba",
+          "sim/envs/robodojo/task_contract.py": "842ffa0e0fa37eb0a37776cb233f1598fecd36246a96fb3bf226cb3c925b1406",
+          "sim/envs/robodojo/tool_contact.py": "3bda0d42a33a4fef0e9c21a900149353a5c7e803c797829172aea41fd7b019a3",
+          "sim/envs/robodojo/unified_env.py": "c737af58b3d4cce8f85dbb0da838bff3790d0b90596fb31388d34f5dd3ec888c",
+          "sim/envs/robodojo/upstream_compat.py": "bb066c2f288c243950076b82eb3c9f813e0b5e7ed5083a08c1c5c6f0781aa665",
+          "sim/envs/robodojo/worker_bridge.py": "1e9c23241b21f507ed3cdab7115bb1e0d8b379cddf5c3f9d95a40e0e6e4eba64",
+          "sim/envs/robodojo/workpiece_references.py": "332c39414420dc7f9dbe224ef87b5527e724d08bc883705ca28d53f6f21af265",
+          "sim/envs/robodojo/x5_calibration.py": "c27ad5ac12bacc934ac630e8acef42d5067f562f87ce1838a4c6b9bb95fbcafa",
+          "tools/codex_robodojo_host.py": "4e33398f3b5908e69989470623a367566019d0b21649c8b6704e5553c41309a6",
+          "tools/harness_config.py": "3268e3e37d2fcfe5f43d677a10153b2a36a6b039375afb49e03de658068f6b06",
+          "tools/harness_evidence.py": "9e38c3bcd3c0eb5b951cb8c157aa2c59c26cd1d88aa5df264539e6316c41c82d",
+          "tools/harness_robodojo.py": "203a59bef9c7f6da2a449710acb55fa3d031bcaebfe5df98a3d0061bac930ca5",
+          "tools/harness_state.py": "3276f6f8f32f88c8d0023b98543be45288d88fc8964f439c29458e2654184dd2",
+          "tools/harness_transport.py": "8529046654251e42d9058500419c84a4933e1b9673d6b47ff1c0ac32e76a99fe",
+          "sim/envs/robodojo/push_contact.py": "010d9645b75e3e91ca94a4529dcd3c80cb9a2ad1018e0711803d48f1a573f9dc",
+          "sim/envs/robodojo/episode_protocol.py": "80ca0c059ca3a0a5b0ade31764549e9901c846f9c1c6ef9040c1244fb410cdb6",
+          "tools/robodojo_skill_library.py": "91ad764d47e27a11f34e089397383a9b17534aabb86609a8de3333fda8c30d94",
+          "plugins/openeta/skills/openeta-robodojo/references/align-insert.md": "c709edcfd0ae65cd252ea22d059a90e7ccca4a5f603e6d160f8bbb538d07cef6",
+          "plugins/openeta/skills/openeta-robodojo/references/articulated-interaction.md": "88c7f4256c7cc604525281f46573042da3b90e9866fe89b694dd52448dc6b736",
+          "plugins/openeta/skills/openeta-robodojo/references/pick-place.md": "ed6c99bc3b870250ecb969e1300e8bef661d6bd1fc77368b7c6c3c719c5cfdf7",
+          "plugins/openeta/skills/openeta-robodojo/references/push-slide.md": "c75428689ab644fd2ac4ac16ed635caf3a3902f3dbd0c7629913276832d62c0b",
+          "plugins/openeta/skills/openeta-robodojo/references/stack-support.md": "364507c4073a3b6c6ba4601498d5bc3d1400f79a5573afefd93ec300fc2fbca1",
+          "plugins/openeta/skills/openeta-robodojo/references/tool-use.md": "e688e22eaf31d5879a046af406ddb8efae4d1ad2c8f610664118ca8d30db11c5",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth.md": "075255e22c61fce123a37aeb992f96ba2ec52c655cecb6b3768b88a4120a972a",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/grasp.md": "f495e0430f85cc04e1f97e4b7dddd1d9f277237f97692d94b7f2c7ac36389f75",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/push.md": "6145f30bce8a78bd7794146614b5d2f272d1a17caff7cdd1ec3ee6d82086182b",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/support.md": "96ba1723aca1574159e06b5857d7d8ca667c5939bbe159123e5368678088c995",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/tool.md": "5ff8f9eb8ae9b491d1f2c9b72fd00aae3eb5c2017d142dbe48efeb69f90e8c35",
+          "sim/envs/robodojo/physical_contact.py": "87d270219a59e48069c61c778cdad6b7cd89c0247fca43ea377063a7f2f31629",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/physical-contact.md": "dcb87be8dfb9a18783b6a72f23dc5d297c6bbaa4a3705db0d5d4f6bd8f8aeecf",
+          "sim/envs/robodojo/bounded_wait.py": "2d02797641cfdd6d82a998d2e9891c9f64312dd3fed75226327b76ffd479a72b",
+          "sim/envs/robodojo/articulation_bindings.py": "f5080cb3f3f207e208ee4febdc2cae13c6edada07515a3ac6bb98048a67a4d7e",
+          "sim/envs/robodojo/observation_clock.py": "2fb371915893b08b56a136fbab2ce4a18e05fbd9c24cf31af3034273f14b01ca",
+          "sim/envs/robodojo/motion_precision.py": "879a6cba5180c89fea1435996bd11f352b37edae97f966ff1307dd92fc6c1e66",
+          "plugins/openeta/skills/openeta-robodojo/references/cloth-edge-grasp.md": "f4770efb50707fc0c17949b7ace32b950ed8b23f1488b30cd7d2311716b03612",
+          "sim/envs/robodojo/cloth_material_profile.py": "70bdf13a7a560eabf8190e7760ce211fe8e3d149722fdb1e6f97912b1a1ff27e",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth-visual.md": "b80d78eb24702c1962f29c21a925fc4015f05264c9a73660b43886c1ddef49f9",
+          "tools/robodojo_visual_aids.py": "4d0d8d4116a3032f33710ab55e8b8f5bf978dbc7f79b2acac417999b01f851d2",
+          "sim/envs/robodojo/completion_feedback.py": "fd2ce3a548eb517a2a033eb8a2ca2aadefb17cdd964477e24e4718f958389f88",
+          "sim/envs/robodojo/completion_feedback_generic.py": "224df158e914a69c90acb354a7bc34b3f0c1134d758909b650a41bdcf1f75f1d",
+          "sim/envs/robodojo/completion_task_registry.py": "83234358de57c61106edf884db322a60f261cb6bca5d3d0744cfd7444b13661e",
+          "sim/envs/robodojo/native_surface.py": "190a26eff09c4e1fea00af80f210d8be6075493e848da117ac00e03f6721e1fa",
+          "sim/envs/robodojo/voxel_geometry.py": "c46f162c781129436fe775d192873381b0d036356c5dee8ab0a8a859d1d9f256",
+          "sim/envs/robodojo/native_fluid.py": "83762a7632edfcf89a3551e710b62687193d75c41eb89f122810529c0c19dd26",
+          "sim/envs/robodojo/fluid_execution.py": "84925d29b18a0235bebe5a29238f1b397f70e1b0b9d53603bfff63eae926fef4",
+          "sim/envs/robodojo/execution_horizon.py": "85b3be000a18a9d2fedad04fc0bdee5f6098d2d364e802797f7aae14a66114f4",
+          "plugins/openeta/skills/openeta-robodojo/references/moving-target.md": "c2cd7009e2a05b721773a31a39563e7e93737978391ab4872e5ebd141eb37af8",
+          "tools/harness_experience.py": "77eee64a29b00f89f1998d22ceec4cef485413e1fad0c91fe3c05c5e3c47122a",
+          "sim/envs/robodojo/gripper_aperture.py": "a3fdb83f395d3ecbf79b31f6eb5f9332ddaab2708cb911c6a52dce3f44743d65",
+          "sim/envs/robodojo/robot_ownership.py": "61073eb67ca37fa5f12c55c43789198071e5d622fdc6ecfc971df36b8bfef770",
+          "sim/envs/robodojo/support_execution.py": "0e94a7afe6d953c0e297975c6a984cb832981544667bad253ea508c9f17bf6a6",
+          "sim/envs/robodojo/support_phase.py": "dba41008ea14b32393788e584698cff3776383d5739753dbb0334c7736e59c94",
+          "sim/envs/robodojo/support_geometry.py": "8f88fd97087354b5ff765fdec172f411ea23e1c5b3428928e30fc77d20bbe742",
+          "sim/envs/robodojo/collision_state.py": "72a95813c851bb1072e60164578876b84b06735c608b04a02ddb63a6936c32de",
+          "tools/task_rule_supplements.py": "eda182c4288639e2d1ddf60a4370e66d18c46969214aa693799c8ed236608cd4",
+          "sim/envs/robodojo/initialization_profile.py": "41f943a6ae57db7a44fc6a1edd5bd98343dd7194efb8fc4e809d3b69a6be12d5",
+          "sim/envs/robodojo/completion_task_requirements.py": "259d17ae9a9fcba09c35c4405e175bed827e2f3daa33ad6eb0dac4cc48b6fc34"
+        }
+      },
+      "robodojo_dual_atomic_v1": {
+        "id": "robodojo_dual_atomic_v1",
+        "kind": "interface",
+        "version": 1,
+        "factory": "configured_robodojo_atomic",
+        "tool_profile": "atomic",
+        "effectors": [
+          "parallel_gripper"
+        ],
+        "supports_multiple_effectors": true,
+        "baseline_commit": "9d9b5a877f8498d081f761c69f63d1765827343c",
+        "source_sha256": {
+          "plugins/openeta/skills/openeta-robodojo/SKILL.md": "e06c3d724f2a1627ecc2103d6236d6a4630e73b30dc96c3d2173990b667390e3",
+          "sim/envs/robodojo/arm_continuity.py": "9aa447db3eb1df4b197d689cd001db78004eef8f60d7614853baae00efbeb95d",
+          "sim/envs/robodojo/asset_repairs.py": "7e0597371242ead759f91a570d158d11237ea7ef298f005efea8057e07de9747",
+          "sim/envs/robodojo/attached_geometry.py": "33a79a201fd9dcb19657971d263d7c767a3b63b9ce4e33620ab91d9f3e3617c8",
+          "sim/envs/robodojo/boundary_recovery.py": "a6691b60335b76b7adaf293182eb866a94080fcb79655ff024125f94c9007e99",
+          "sim/envs/robodojo/calibration.py": "edf9520842144b3a02bd03a264e450cbebea2c8cea69c3d6b878b488985aca91",
+          "sim/envs/robodojo/cameras.py": "8d32eb93469bceabcd49c208a4deac86febe097cf758504623d13f2b2752d12f",
+          "sim/envs/robodojo/checked_control.py": "7d60c51372a51cab68c52be4493ca37fae3c2a6bdb185dd5600fd3e1b62c09f9",
+          "sim/envs/robodojo/clearance_recovery.py": "4ed5b1633d4a3fb6c709710db72b478f8d33baeb7cd0e810736f519098c75a7c",
+          "sim/envs/robodojo/closure_diagnostics.py": "f7467329e35c71603721dfe30a6132c95372a8ad9181a14b8ca4fb0cdd5e345c",
+          "sim/envs/robodojo/cloth_execution.py": "77c11c99a72c18c6ae86172e81458aa060bee77415aa1c5112aff77488cc319b",
+          "sim/envs/robodojo/cloth_recovery.py": "278695b74beb12b03c094153192e8e110d1925282dd117267e7e1a405408741e",
+          "sim/envs/robodojo/collision_bounds.py": "ce231437d0947fdc4cb7b4ffaf95fd4faee7dcd8c146e6058370c1350cd40c28",
+          "sim/envs/robodojo/collision_geometry.py": "8617f0b32462e1c803de7dd893ea348106205d6122945bfc3117ba96990877cf",
+          "sim/envs/robodojo/contact_bounds.py": "9c0247a8221f34d8564a5e01dec45c5475af66e8e8969207e037d8c6781ad268",
+          "sim/envs/robodojo/coordinated_motion.py": "55026dfd616ac2a8e7de38f739b3512ca4015d97a22f66b7913f5c38b4e099ce",
+          "sim/envs/robodojo/coordination.py": "f6e41e986c25f8c8730275360a9b5ef2d6f0bbedb53afe7f674605e86efc0097",
+          "sim/envs/robodojo/deformable_collision.py": "d804c8c471ff70f12a1f0b8ceacbe3fe388a2af83b839a633de8b250b4384b66",
+          "sim/envs/robodojo/deformable_surface.py": "2f6f175dad1de43d9c2c789101d2c586b786eb695e677a848102dfdc5ebd058f",
+          "sim/envs/robodojo/episode_recording.py": "1a85231ffae3a8d9881faa19fac299d62b08ce641ad52a995a43508bbc5922c3",
+          "sim/envs/robodojo/gripper_continuity.py": "fda3fd9220a621c4f2668ab8d98cf7b79b7113c6d7e82afb4ae88a6846be8c88",
+          "sim/envs/robodojo/holding_motion.py": "d22a97840e57c7a43be6bd1815ae34187052613e10073159c04db4ac5de94b73",
+          "sim/envs/robodojo/ik_candidates.py": "88e422dfa6176aec84d5f64f21331758cd9e300ac33ce8e9864d3433eb6afa49",
+          "sim/envs/robodojo/joint_planning.py": "73dead1e4b76f2436d93d693462359297fe009c3d567b060bf7c4e106ad38dc1",
+          "sim/envs/robodojo/layout.py": "9ee10aebf37ee74ceb558de413b92ab7ddd0d5b6fbf9333f5235e7bd08ca37b1",
+          "sim/envs/robodojo/measurements.py": "2a6b7ea5699603395cd0558091f7d7bd8c653c37c843978a7995db2c57a7711f",
+          "sim/envs/robodojo/motion_budget.py": "8cbb1db57f7a15598f37b60d74105e2230531eaadf95be25c45c274c19e15e62",
+          "sim/envs/robodojo/motion_corridor.py": "f00565587991411bef33c8cd85e8998b5f83142b2f2f16ae8a71462d6a376120",
+          "sim/envs/robodojo/motion_planning.py": "e5a6794722fbf71984800b2e648ee71e2f77ae3619fdb0f587552a750edee0a0",
+          "sim/envs/robodojo/motion_rate.py": "a082b06834d99e55e14b3160592767b35cc183adcf9a95196d8c435512b6389b",
+          "sim/envs/robodojo/mount_geometry.py": "f81013d7e59c43af6c98f04fc7199919b7ad095d4157b8ff8fe8e5b0d1dbd83a",
+          "sim/envs/robodojo/native_cloth.py": "6a63c396da33562550097fb7ea76b3d49255041f70ef9bdf0410f555cd6c416f",
+          "sim/envs/robodojo/native_convex.py": "899f9cd0611d508e57118ba6877e2d8c429287a23b7e256fa5ce2f5fb5eee4fd",
+          "sim/envs/robodojo/native_reward.py": "1410329ca37a7c67a587bdc53354af05267531c023ea5fd99b992c6470339c01",
+          "sim/envs/robodojo/native_scene.py": "65cb2a97fa93fd5ea5ab0e7c1f7eb8a83c97da68da65c9f1082f639c227e1a32",
+          "sim/envs/robodojo/outcome.py": "117e1a5fb8ebe60f41065fb3ceb647d9ffb2e9dbf94f10b2afc004fa1a378b0e",
+          "sim/envs/robodojo/physical_bindings.py": "02c5b90463a8783bc124bded868de6c3f3b73a58098681ab70e47f7d89f049cb",
+          "sim/envs/robodojo/primitive_geometry.py": "d8d62ac37ecf5821e6e4ee275a6663a282f9950d888d89751b9d2ecfced9c96c",
+          "sim/envs/robodojo/public_errors.py": "7072e4b5bb453d5a647b947a29792bc97eab6055f78abdde7fdc298e4daa8483",
+          "sim/envs/robodojo/retired_geometry.py": "75c20692e6f7d3676ad9e7d18bd9323ee9bc9da67cdd361a086abebce9591bb3",
+          "sim/envs/robodojo/scene_geometry.py": "f44eb31cbe2dbfc84d6d8c2b07e6b6f6b329f9d4d93d93a32113370133cc43f2",
+          "sim/envs/robodojo/separating_recovery.py": "d93b1b3ebf1a4230a45c3d95c0d44419de1c076b0a1ee10b2450612b9c8da92a",
+          "sim/envs/robodojo/spatial_replanning.py": "837aa524baae1093ea1ddcf5201f8ab403e9f1780b2d614b533b140669f60f0f",
+          "sim/envs/robodojo/stability_diagnostics.py": "fb03a0e3ef88afc7fdc19040a6ffcc660326987c7be5a5924d926ee31d103825",
+          "sim/envs/robodojo/support_contact.py": "15afe25649c7706125b510f4202bec28ac3574d7cce0a3da24674f5122c131be",
+          "sim/envs/robodojo/support_hold.py": "169d00a32097a8ef8723001bb897f2a894f81fb19a97d747fe4ea0776ceaad36",
+          "sim/envs/robodojo/support_separation.py": "869ded971cfb2fde429f1072f0cf28042bd606f2b106c4aa88ba2770feb1dcba",
+          "sim/envs/robodojo/task_contract.py": "842ffa0e0fa37eb0a37776cb233f1598fecd36246a96fb3bf226cb3c925b1406",
+          "sim/envs/robodojo/tool_contact.py": "3bda0d42a33a4fef0e9c21a900149353a5c7e803c797829172aea41fd7b019a3",
+          "sim/envs/robodojo/unified_env.py": "c737af58b3d4cce8f85dbb0da838bff3790d0b90596fb31388d34f5dd3ec888c",
+          "sim/envs/robodojo/upstream_compat.py": "bb066c2f288c243950076b82eb3c9f813e0b5e7ed5083a08c1c5c6f0781aa665",
+          "sim/envs/robodojo/worker_bridge.py": "1e9c23241b21f507ed3cdab7115bb1e0d8b379cddf5c3f9d95a40e0e6e4eba64",
+          "sim/envs/robodojo/workpiece_references.py": "332c39414420dc7f9dbe224ef87b5527e724d08bc883705ca28d53f6f21af265",
+          "sim/envs/robodojo/x5_calibration.py": "c27ad5ac12bacc934ac630e8acef42d5067f562f87ce1838a4c6b9bb95fbcafa",
+          "tools/codex_robodojo_host.py": "4e33398f3b5908e69989470623a367566019d0b21649c8b6704e5553c41309a6",
+          "tools/harness_config.py": "3268e3e37d2fcfe5f43d677a10153b2a36a6b039375afb49e03de658068f6b06",
+          "tools/harness_evidence.py": "9e38c3bcd3c0eb5b951cb8c157aa2c59c26cd1d88aa5df264539e6316c41c82d",
+          "tools/harness_robodojo.py": "203a59bef9c7f6da2a449710acb55fa3d031bcaebfe5df98a3d0061bac930ca5",
+          "tools/harness_state.py": "3276f6f8f32f88c8d0023b98543be45288d88fc8964f439c29458e2654184dd2",
+          "tools/harness_transport.py": "8529046654251e42d9058500419c84a4933e1b9673d6b47ff1c0ac32e76a99fe",
+          "sim/envs/robodojo/push_contact.py": "010d9645b75e3e91ca94a4529dcd3c80cb9a2ad1018e0711803d48f1a573f9dc",
+          "sim/envs/robodojo/episode_protocol.py": "80ca0c059ca3a0a5b0ade31764549e9901c846f9c1c6ef9040c1244fb410cdb6",
+          "tools/robodojo_skill_library.py": "91ad764d47e27a11f34e089397383a9b17534aabb86609a8de3333fda8c30d94",
+          "plugins/openeta/skills/openeta-robodojo/references/align-insert.md": "c709edcfd0ae65cd252ea22d059a90e7ccca4a5f603e6d160f8bbb538d07cef6",
+          "plugins/openeta/skills/openeta-robodojo/references/articulated-interaction.md": "88c7f4256c7cc604525281f46573042da3b90e9866fe89b694dd52448dc6b736",
+          "plugins/openeta/skills/openeta-robodojo/references/pick-place.md": "ed6c99bc3b870250ecb969e1300e8bef661d6bd1fc77368b7c6c3c719c5cfdf7",
+          "plugins/openeta/skills/openeta-robodojo/references/push-slide.md": "c75428689ab644fd2ac4ac16ed635caf3a3902f3dbd0c7629913276832d62c0b",
+          "plugins/openeta/skills/openeta-robodojo/references/stack-support.md": "364507c4073a3b6c6ba4601498d5bc3d1400f79a5573afefd93ec300fc2fbca1",
+          "plugins/openeta/skills/openeta-robodojo/references/tool-use.md": "e688e22eaf31d5879a046af406ddb8efae4d1ad2c8f610664118ca8d30db11c5",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth.md": "075255e22c61fce123a37aeb992f96ba2ec52c655cecb6b3768b88a4120a972a",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/grasp.md": "f495e0430f85cc04e1f97e4b7dddd1d9f277237f97692d94b7f2c7ac36389f75",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/push.md": "6145f30bce8a78bd7794146614b5d2f272d1a17caff7cdd1ec3ee6d82086182b",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/support.md": "96ba1723aca1574159e06b5857d7d8ca667c5939bbe159123e5368678088c995",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/tool.md": "5ff8f9eb8ae9b491d1f2c9b72fd00aae3eb5c2017d142dbe48efeb69f90e8c35",
+          "sim/envs/robodojo/physical_contact.py": "87d270219a59e48069c61c778cdad6b7cd89c0247fca43ea377063a7f2f31629",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/physical-contact.md": "dcb87be8dfb9a18783b6a72f23dc5d297c6bbaa4a3705db0d5d4f6bd8f8aeecf",
+          "sim/envs/robodojo/bounded_wait.py": "2d02797641cfdd6d82a998d2e9891c9f64312dd3fed75226327b76ffd479a72b",
+          "sim/envs/robodojo/articulation_bindings.py": "f5080cb3f3f207e208ee4febdc2cae13c6edada07515a3ac6bb98048a67a4d7e",
+          "sim/envs/robodojo/observation_clock.py": "2fb371915893b08b56a136fbab2ce4a18e05fbd9c24cf31af3034273f14b01ca",
+          "sim/envs/robodojo/motion_precision.py": "879a6cba5180c89fea1435996bd11f352b37edae97f966ff1307dd92fc6c1e66",
+          "plugins/openeta/skills/openeta-robodojo/references/cloth-edge-grasp.md": "f4770efb50707fc0c17949b7ace32b950ed8b23f1488b30cd7d2311716b03612",
+          "sim/envs/robodojo/cloth_material_profile.py": "70bdf13a7a560eabf8190e7760ce211fe8e3d149722fdb1e6f97912b1a1ff27e",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth-visual.md": "b80d78eb24702c1962f29c21a925fc4015f05264c9a73660b43886c1ddef49f9",
+          "tools/robodojo_visual_aids.py": "4d0d8d4116a3032f33710ab55e8b8f5bf978dbc7f79b2acac417999b01f851d2",
+          "sim/envs/robodojo/completion_feedback.py": "fd2ce3a548eb517a2a033eb8a2ca2aadefb17cdd964477e24e4718f958389f88",
+          "sim/envs/robodojo/completion_feedback_generic.py": "224df158e914a69c90acb354a7bc34b3f0c1134d758909b650a41bdcf1f75f1d",
+          "sim/envs/robodojo/completion_task_registry.py": "83234358de57c61106edf884db322a60f261cb6bca5d3d0744cfd7444b13661e",
+          "sim/envs/robodojo/native_surface.py": "190a26eff09c4e1fea00af80f210d8be6075493e848da117ac00e03f6721e1fa",
+          "sim/envs/robodojo/voxel_geometry.py": "c46f162c781129436fe775d192873381b0d036356c5dee8ab0a8a859d1d9f256",
+          "sim/envs/robodojo/native_fluid.py": "83762a7632edfcf89a3551e710b62687193d75c41eb89f122810529c0c19dd26",
+          "sim/envs/robodojo/fluid_execution.py": "84925d29b18a0235bebe5a29238f1b397f70e1b0b9d53603bfff63eae926fef4",
+          "sim/envs/robodojo/execution_horizon.py": "85b3be000a18a9d2fedad04fc0bdee5f6098d2d364e802797f7aae14a66114f4",
+          "plugins/openeta/skills/openeta-robodojo/references/moving-target.md": "c2cd7009e2a05b721773a31a39563e7e93737978391ab4872e5ebd141eb37af8",
+          "tools/harness_experience.py": "77eee64a29b00f89f1998d22ceec4cef485413e1fad0c91fe3c05c5e3c47122a",
+          "sim/envs/robodojo/gripper_aperture.py": "a3fdb83f395d3ecbf79b31f6eb5f9332ddaab2708cb911c6a52dce3f44743d65",
+          "sim/envs/robodojo/robot_ownership.py": "61073eb67ca37fa5f12c55c43789198071e5d622fdc6ecfc971df36b8bfef770",
+          "sim/envs/robodojo/support_execution.py": "0e94a7afe6d953c0e297975c6a984cb832981544667bad253ea508c9f17bf6a6",
+          "sim/envs/robodojo/support_phase.py": "dba41008ea14b32393788e584698cff3776383d5739753dbb0334c7736e59c94",
+          "sim/envs/robodojo/support_geometry.py": "8f88fd97087354b5ff765fdec172f411ea23e1c5b3428928e30fc77d20bbe742",
+          "sim/envs/robodojo/collision_state.py": "72a95813c851bb1072e60164578876b84b06735c608b04a02ddb63a6936c32de",
+          "tools/task_rule_supplements.py": "eda182c4288639e2d1ddf60a4370e66d18c46969214aa693799c8ed236608cd4",
+          "sim/envs/robodojo/initialization_profile.py": "41f943a6ae57db7a44fc6a1edd5bd98343dd7194efb8fc4e809d3b69a6be12d5",
+          "sim/envs/robodojo/completion_task_requirements.py": "259d17ae9a9fcba09c35c4405e175bed827e2f3daa33ad6eb0dac4cc48b6fc34"
+        }
+      },
+      "robodojo_gpu_atomic_v73": {
+        "id": "robodojo_gpu_atomic_v73",
+        "kind": "interface",
+        "version": 73,
+        "factory": "configured_robodojo_atomic",
+        "tool_profile": "atomic",
+        "effectors": [
+          "parallel_gripper"
+        ],
+        "supports_multiple_effectors": true,
+        "baseline_commit": "9d9b5a877f8498d081f761c69f63d1765827343c",
+        "source_sha256": {
+          "plugins/openeta/skills/openeta-robodojo/SKILL.md": "e06c3d724f2a1627ecc2103d6236d6a4630e73b30dc96c3d2173990b667390e3",
+          "sim/envs/robodojo/arm_continuity.py": "9aa447db3eb1df4b197d689cd001db78004eef8f60d7614853baae00efbeb95d",
+          "sim/envs/robodojo/asset_repairs.py": "7e0597371242ead759f91a570d158d11237ea7ef298f005efea8057e07de9747",
+          "sim/envs/robodojo/attached_geometry.py": "33a79a201fd9dcb19657971d263d7c767a3b63b9ce4e33620ab91d9f3e3617c8",
+          "sim/envs/robodojo/boundary_recovery.py": "a6691b60335b76b7adaf293182eb866a94080fcb79655ff024125f94c9007e99",
+          "sim/envs/robodojo/calibration.py": "edf9520842144b3a02bd03a264e450cbebea2c8cea69c3d6b878b488985aca91",
+          "sim/envs/robodojo/cameras.py": "8d32eb93469bceabcd49c208a4deac86febe097cf758504623d13f2b2752d12f",
+          "sim/envs/robodojo/checked_control.py": "7d60c51372a51cab68c52be4493ca37fae3c2a6bdb185dd5600fd3e1b62c09f9",
+          "sim/envs/robodojo/clearance_recovery.py": "4ed5b1633d4a3fb6c709710db72b478f8d33baeb7cd0e810736f519098c75a7c",
+          "sim/envs/robodojo/closure_diagnostics.py": "f7467329e35c71603721dfe30a6132c95372a8ad9181a14b8ca4fb0cdd5e345c",
+          "sim/envs/robodojo/cloth_execution.py": "77c11c99a72c18c6ae86172e81458aa060bee77415aa1c5112aff77488cc319b",
+          "sim/envs/robodojo/cloth_recovery.py": "278695b74beb12b03c094153192e8e110d1925282dd117267e7e1a405408741e",
+          "sim/envs/robodojo/collision_bounds.py": "ce231437d0947fdc4cb7b4ffaf95fd4faee7dcd8c146e6058370c1350cd40c28",
+          "sim/envs/robodojo/collision_geometry.py": "8617f0b32462e1c803de7dd893ea348106205d6122945bfc3117ba96990877cf",
+          "sim/envs/robodojo/contact_bounds.py": "9c0247a8221f34d8564a5e01dec45c5475af66e8e8969207e037d8c6781ad268",
+          "sim/envs/robodojo/coordinated_motion.py": "55026dfd616ac2a8e7de38f739b3512ca4015d97a22f66b7913f5c38b4e099ce",
+          "sim/envs/robodojo/coordination.py": "f6e41e986c25f8c8730275360a9b5ef2d6f0bbedb53afe7f674605e86efc0097",
+          "sim/envs/robodojo/deformable_collision.py": "d804c8c471ff70f12a1f0b8ceacbe3fe388a2af83b839a633de8b250b4384b66",
+          "sim/envs/robodojo/deformable_surface.py": "2f6f175dad1de43d9c2c789101d2c586b786eb695e677a848102dfdc5ebd058f",
+          "sim/envs/robodojo/episode_recording.py": "1a85231ffae3a8d9881faa19fac299d62b08ce641ad52a995a43508bbc5922c3",
+          "sim/envs/robodojo/gripper_continuity.py": "fda3fd9220a621c4f2668ab8d98cf7b79b7113c6d7e82afb4ae88a6846be8c88",
+          "sim/envs/robodojo/holding_motion.py": "d22a97840e57c7a43be6bd1815ae34187052613e10073159c04db4ac5de94b73",
+          "sim/envs/robodojo/ik_candidates.py": "88e422dfa6176aec84d5f64f21331758cd9e300ac33ce8e9864d3433eb6afa49",
+          "sim/envs/robodojo/joint_planning.py": "73dead1e4b76f2436d93d693462359297fe009c3d567b060bf7c4e106ad38dc1",
+          "sim/envs/robodojo/layout.py": "9ee10aebf37ee74ceb558de413b92ab7ddd0d5b6fbf9333f5235e7bd08ca37b1",
+          "sim/envs/robodojo/measurements.py": "2a6b7ea5699603395cd0558091f7d7bd8c653c37c843978a7995db2c57a7711f",
+          "sim/envs/robodojo/motion_budget.py": "8cbb1db57f7a15598f37b60d74105e2230531eaadf95be25c45c274c19e15e62",
+          "sim/envs/robodojo/motion_corridor.py": "f00565587991411bef33c8cd85e8998b5f83142b2f2f16ae8a71462d6a376120",
+          "sim/envs/robodojo/motion_planning.py": "e5a6794722fbf71984800b2e648ee71e2f77ae3619fdb0f587552a750edee0a0",
+          "sim/envs/robodojo/motion_rate.py": "a082b06834d99e55e14b3160592767b35cc183adcf9a95196d8c435512b6389b",
+          "sim/envs/robodojo/mount_geometry.py": "f81013d7e59c43af6c98f04fc7199919b7ad095d4157b8ff8fe8e5b0d1dbd83a",
+          "sim/envs/robodojo/native_cloth.py": "6a63c396da33562550097fb7ea76b3d49255041f70ef9bdf0410f555cd6c416f",
+          "sim/envs/robodojo/native_convex.py": "899f9cd0611d508e57118ba6877e2d8c429287a23b7e256fa5ce2f5fb5eee4fd",
+          "sim/envs/robodojo/native_reward.py": "1410329ca37a7c67a587bdc53354af05267531c023ea5fd99b992c6470339c01",
+          "sim/envs/robodojo/native_scene.py": "65cb2a97fa93fd5ea5ab0e7c1f7eb8a83c97da68da65c9f1082f639c227e1a32",
+          "sim/envs/robodojo/outcome.py": "117e1a5fb8ebe60f41065fb3ceb647d9ffb2e9dbf94f10b2afc004fa1a378b0e",
+          "sim/envs/robodojo/physical_bindings.py": "02c5b90463a8783bc124bded868de6c3f3b73a58098681ab70e47f7d89f049cb",
+          "sim/envs/robodojo/primitive_geometry.py": "d8d62ac37ecf5821e6e4ee275a6663a282f9950d888d89751b9d2ecfced9c96c",
+          "sim/envs/robodojo/public_errors.py": "7072e4b5bb453d5a647b947a29792bc97eab6055f78abdde7fdc298e4daa8483",
+          "sim/envs/robodojo/retired_geometry.py": "75c20692e6f7d3676ad9e7d18bd9323ee9bc9da67cdd361a086abebce9591bb3",
+          "sim/envs/robodojo/scene_geometry.py": "f44eb31cbe2dbfc84d6d8c2b07e6b6f6b329f9d4d93d93a32113370133cc43f2",
+          "sim/envs/robodojo/separating_recovery.py": "d93b1b3ebf1a4230a45c3d95c0d44419de1c076b0a1ee10b2450612b9c8da92a",
+          "sim/envs/robodojo/spatial_replanning.py": "837aa524baae1093ea1ddcf5201f8ab403e9f1780b2d614b533b140669f60f0f",
+          "sim/envs/robodojo/stability_diagnostics.py": "fb03a0e3ef88afc7fdc19040a6ffcc660326987c7be5a5924d926ee31d103825",
+          "sim/envs/robodojo/support_contact.py": "15afe25649c7706125b510f4202bec28ac3574d7cce0a3da24674f5122c131be",
+          "sim/envs/robodojo/support_hold.py": "169d00a32097a8ef8723001bb897f2a894f81fb19a97d747fe4ea0776ceaad36",
+          "sim/envs/robodojo/support_separation.py": "869ded971cfb2fde429f1072f0cf28042bd606f2b106c4aa88ba2770feb1dcba",
+          "sim/envs/robodojo/task_contract.py": "842ffa0e0fa37eb0a37776cb233f1598fecd36246a96fb3bf226cb3c925b1406",
+          "sim/envs/robodojo/tool_contact.py": "3bda0d42a33a4fef0e9c21a900149353a5c7e803c797829172aea41fd7b019a3",
+          "sim/envs/robodojo/unified_env.py": "c737af58b3d4cce8f85dbb0da838bff3790d0b90596fb31388d34f5dd3ec888c",
+          "sim/envs/robodojo/upstream_compat.py": "bb066c2f288c243950076b82eb3c9f813e0b5e7ed5083a08c1c5c6f0781aa665",
+          "sim/envs/robodojo/worker_bridge.py": "1e9c23241b21f507ed3cdab7115bb1e0d8b379cddf5c3f9d95a40e0e6e4eba64",
+          "sim/envs/robodojo/workpiece_references.py": "332c39414420dc7f9dbe224ef87b5527e724d08bc883705ca28d53f6f21af265",
+          "sim/envs/robodojo/x5_calibration.py": "c27ad5ac12bacc934ac630e8acef42d5067f562f87ce1838a4c6b9bb95fbcafa",
+          "tools/codex_robodojo_host.py": "4e33398f3b5908e69989470623a367566019d0b21649c8b6704e5553c41309a6",
+          "tools/harness_config.py": "3268e3e37d2fcfe5f43d677a10153b2a36a6b039375afb49e03de658068f6b06",
+          "tools/harness_evidence.py": "9e38c3bcd3c0eb5b951cb8c157aa2c59c26cd1d88aa5df264539e6316c41c82d",
+          "tools/harness_robodojo.py": "203a59bef9c7f6da2a449710acb55fa3d031bcaebfe5df98a3d0061bac930ca5",
+          "tools/harness_state.py": "3276f6f8f32f88c8d0023b98543be45288d88fc8964f439c29458e2654184dd2",
+          "tools/harness_transport.py": "8529046654251e42d9058500419c84a4933e1b9673d6b47ff1c0ac32e76a99fe",
+          "sim/envs/robodojo/push_contact.py": "010d9645b75e3e91ca94a4529dcd3c80cb9a2ad1018e0711803d48f1a573f9dc",
+          "sim/envs/robodojo/episode_protocol.py": "80ca0c059ca3a0a5b0ade31764549e9901c846f9c1c6ef9040c1244fb410cdb6",
+          "tools/robodojo_skill_library.py": "91ad764d47e27a11f34e089397383a9b17534aabb86609a8de3333fda8c30d94",
+          "plugins/openeta/skills/openeta-robodojo/references/align-insert.md": "c709edcfd0ae65cd252ea22d059a90e7ccca4a5f603e6d160f8bbb538d07cef6",
+          "plugins/openeta/skills/openeta-robodojo/references/articulated-interaction.md": "88c7f4256c7cc604525281f46573042da3b90e9866fe89b694dd52448dc6b736",
+          "plugins/openeta/skills/openeta-robodojo/references/pick-place.md": "ed6c99bc3b870250ecb969e1300e8bef661d6bd1fc77368b7c6c3c719c5cfdf7",
+          "plugins/openeta/skills/openeta-robodojo/references/push-slide.md": "c75428689ab644fd2ac4ac16ed635caf3a3902f3dbd0c7629913276832d62c0b",
+          "plugins/openeta/skills/openeta-robodojo/references/stack-support.md": "364507c4073a3b6c6ba4601498d5bc3d1400f79a5573afefd93ec300fc2fbca1",
+          "plugins/openeta/skills/openeta-robodojo/references/tool-use.md": "e688e22eaf31d5879a046af406ddb8efae4d1ad2c8f610664118ca8d30db11c5",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth.md": "075255e22c61fce123a37aeb992f96ba2ec52c655cecb6b3768b88a4120a972a",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/grasp.md": "f495e0430f85cc04e1f97e4b7dddd1d9f277237f97692d94b7f2c7ac36389f75",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/push.md": "6145f30bce8a78bd7794146614b5d2f272d1a17caff7cdd1ec3ee6d82086182b",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/support.md": "96ba1723aca1574159e06b5857d7d8ca667c5939bbe159123e5368678088c995",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/tool.md": "5ff8f9eb8ae9b491d1f2c9b72fd00aae3eb5c2017d142dbe48efeb69f90e8c35",
+          "sim/envs/robodojo/physical_contact.py": "87d270219a59e48069c61c778cdad6b7cd89c0247fca43ea377063a7f2f31629",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/physical-contact.md": "dcb87be8dfb9a18783b6a72f23dc5d297c6bbaa4a3705db0d5d4f6bd8f8aeecf",
+          "sim/envs/robodojo/bounded_wait.py": "2d02797641cfdd6d82a998d2e9891c9f64312dd3fed75226327b76ffd479a72b",
+          "sim/envs/robodojo/articulation_bindings.py": "f5080cb3f3f207e208ee4febdc2cae13c6edada07515a3ac6bb98048a67a4d7e",
+          "sim/envs/robodojo/observation_clock.py": "2fb371915893b08b56a136fbab2ce4a18e05fbd9c24cf31af3034273f14b01ca",
+          "sim/envs/robodojo/motion_precision.py": "879a6cba5180c89fea1435996bd11f352b37edae97f966ff1307dd92fc6c1e66",
+          "sim/envs/robodojo/gpu_runtime.py": "b551d2203dcf51a444e58d6759e20f0dac52575b396eb5f4f0594957be881ed0",
+          "plugins/openeta/skills/openeta-robodojo/references/cloth-edge-grasp.md": "f4770efb50707fc0c17949b7ace32b950ed8b23f1488b30cd7d2311716b03612",
+          "sim/envs/robodojo/cloth_material_profile.py": "70bdf13a7a560eabf8190e7760ce211fe8e3d149722fdb1e6f97912b1a1ff27e",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth-visual.md": "b80d78eb24702c1962f29c21a925fc4015f05264c9a73660b43886c1ddef49f9",
+          "sim/envs/robodojo/gpu_lifecycle.py": "6c5daa418b2b3a5e48f156947c539bca8ec70ddffe5f044dd4346a6f585ce505",
+          "tools/robodojo_visual_aids.py": "4d0d8d4116a3032f33710ab55e8b8f5bf978dbc7f79b2acac417999b01f851d2",
+          "sim/envs/robodojo/completion_feedback.py": "fd2ce3a548eb517a2a033eb8a2ca2aadefb17cdd964477e24e4718f958389f88",
+          "sim/envs/robodojo/completion_feedback_generic.py": "224df158e914a69c90acb354a7bc34b3f0c1134d758909b650a41bdcf1f75f1d",
+          "sim/envs/robodojo/completion_task_registry.py": "83234358de57c61106edf884db322a60f261cb6bca5d3d0744cfd7444b13661e",
+          "sim/envs/robodojo/native_surface.py": "190a26eff09c4e1fea00af80f210d8be6075493e848da117ac00e03f6721e1fa",
+          "sim/envs/robodojo/voxel_geometry.py": "c46f162c781129436fe775d192873381b0d036356c5dee8ab0a8a859d1d9f256",
+          "sim/envs/robodojo/native_fluid.py": "83762a7632edfcf89a3551e710b62687193d75c41eb89f122810529c0c19dd26",
+          "sim/envs/robodojo/fluid_execution.py": "84925d29b18a0235bebe5a29238f1b397f70e1b0b9d53603bfff63eae926fef4",
+          "sim/envs/robodojo/execution_horizon.py": "85b3be000a18a9d2fedad04fc0bdee5f6098d2d364e802797f7aae14a66114f4",
+          "plugins/openeta/skills/openeta-robodojo/references/moving-target.md": "c2cd7009e2a05b721773a31a39563e7e93737978391ab4872e5ebd141eb37af8",
+          "tools/harness_experience.py": "77eee64a29b00f89f1998d22ceec4cef485413e1fad0c91fe3c05c5e3c47122a",
+          "sim/envs/robodojo/gripper_aperture.py": "a3fdb83f395d3ecbf79b31f6eb5f9332ddaab2708cb911c6a52dce3f44743d65",
+          "sim/envs/robodojo/robot_ownership.py": "61073eb67ca37fa5f12c55c43789198071e5d622fdc6ecfc971df36b8bfef770",
+          "sim/envs/robodojo/support_execution.py": "0e94a7afe6d953c0e297975c6a984cb832981544667bad253ea508c9f17bf6a6",
+          "sim/envs/robodojo/support_phase.py": "dba41008ea14b32393788e584698cff3776383d5739753dbb0334c7736e59c94",
+          "sim/envs/robodojo/support_geometry.py": "8f88fd97087354b5ff765fdec172f411ea23e1c5b3428928e30fc77d20bbe742",
+          "sim/envs/robodojo/collision_state.py": "72a95813c851bb1072e60164578876b84b06735c608b04a02ddb63a6936c32de",
+          "tools/task_rule_supplements.py": "eda182c4288639e2d1ddf60a4370e66d18c46969214aa693799c8ed236608cd4",
+          "sim/envs/robodojo/initialization_profile.py": "41f943a6ae57db7a44fc6a1edd5bd98343dd7194efb8fc4e809d3b69a6be12d5",
+          "sim/envs/robodojo/completion_task_requirements.py": "259d17ae9a9fcba09c35c4405e175bed827e2f3daa33ad6eb0dac4cc48b6fc34"
+        }
+      },
+      "robodojo_dual_atomic_visual_v75": {
+        "id": "robodojo_dual_atomic_visual_v75",
+        "kind": "interface",
+        "version": 75,
+        "factory": "configured_robodojo_atomic",
+        "tool_profile": "atomic",
+        "effectors": [
+          "parallel_gripper"
+        ],
+        "supports_multiple_effectors": true,
+        "baseline_commit": "9d9b5a877f8498d081f761c69f63d1765827343c",
+        "source_sha256": {
+          "plugins/openeta/skills/openeta-robodojo/SKILL.md": "e06c3d724f2a1627ecc2103d6236d6a4630e73b30dc96c3d2173990b667390e3",
+          "sim/envs/robodojo/arm_continuity.py": "9aa447db3eb1df4b197d689cd001db78004eef8f60d7614853baae00efbeb95d",
+          "sim/envs/robodojo/asset_repairs.py": "7e0597371242ead759f91a570d158d11237ea7ef298f005efea8057e07de9747",
+          "sim/envs/robodojo/attached_geometry.py": "33a79a201fd9dcb19657971d263d7c767a3b63b9ce4e33620ab91d9f3e3617c8",
+          "sim/envs/robodojo/boundary_recovery.py": "a6691b60335b76b7adaf293182eb866a94080fcb79655ff024125f94c9007e99",
+          "sim/envs/robodojo/calibration.py": "edf9520842144b3a02bd03a264e450cbebea2c8cea69c3d6b878b488985aca91",
+          "sim/envs/robodojo/cameras.py": "8d32eb93469bceabcd49c208a4deac86febe097cf758504623d13f2b2752d12f",
+          "sim/envs/robodojo/checked_control.py": "7d60c51372a51cab68c52be4493ca37fae3c2a6bdb185dd5600fd3e1b62c09f9",
+          "sim/envs/robodojo/clearance_recovery.py": "4ed5b1633d4a3fb6c709710db72b478f8d33baeb7cd0e810736f519098c75a7c",
+          "sim/envs/robodojo/closure_diagnostics.py": "f7467329e35c71603721dfe30a6132c95372a8ad9181a14b8ca4fb0cdd5e345c",
+          "sim/envs/robodojo/cloth_execution.py": "77c11c99a72c18c6ae86172e81458aa060bee77415aa1c5112aff77488cc319b",
+          "sim/envs/robodojo/cloth_recovery.py": "278695b74beb12b03c094153192e8e110d1925282dd117267e7e1a405408741e",
+          "sim/envs/robodojo/collision_bounds.py": "ce231437d0947fdc4cb7b4ffaf95fd4faee7dcd8c146e6058370c1350cd40c28",
+          "sim/envs/robodojo/collision_geometry.py": "8617f0b32462e1c803de7dd893ea348106205d6122945bfc3117ba96990877cf",
+          "sim/envs/robodojo/contact_bounds.py": "9c0247a8221f34d8564a5e01dec45c5475af66e8e8969207e037d8c6781ad268",
+          "sim/envs/robodojo/coordinated_motion.py": "55026dfd616ac2a8e7de38f739b3512ca4015d97a22f66b7913f5c38b4e099ce",
+          "sim/envs/robodojo/coordination.py": "f6e41e986c25f8c8730275360a9b5ef2d6f0bbedb53afe7f674605e86efc0097",
+          "sim/envs/robodojo/deformable_collision.py": "d804c8c471ff70f12a1f0b8ceacbe3fe388a2af83b839a633de8b250b4384b66",
+          "sim/envs/robodojo/deformable_surface.py": "2f6f175dad1de43d9c2c789101d2c586b786eb695e677a848102dfdc5ebd058f",
+          "sim/envs/robodojo/episode_recording.py": "1a85231ffae3a8d9881faa19fac299d62b08ce641ad52a995a43508bbc5922c3",
+          "sim/envs/robodojo/gripper_continuity.py": "fda3fd9220a621c4f2668ab8d98cf7b79b7113c6d7e82afb4ae88a6846be8c88",
+          "sim/envs/robodojo/holding_motion.py": "d22a97840e57c7a43be6bd1815ae34187052613e10073159c04db4ac5de94b73",
+          "sim/envs/robodojo/ik_candidates.py": "88e422dfa6176aec84d5f64f21331758cd9e300ac33ce8e9864d3433eb6afa49",
+          "sim/envs/robodojo/joint_planning.py": "73dead1e4b76f2436d93d693462359297fe009c3d567b060bf7c4e106ad38dc1",
+          "sim/envs/robodojo/layout.py": "9ee10aebf37ee74ceb558de413b92ab7ddd0d5b6fbf9333f5235e7bd08ca37b1",
+          "sim/envs/robodojo/measurements.py": "2a6b7ea5699603395cd0558091f7d7bd8c653c37c843978a7995db2c57a7711f",
+          "sim/envs/robodojo/motion_budget.py": "8cbb1db57f7a15598f37b60d74105e2230531eaadf95be25c45c274c19e15e62",
+          "sim/envs/robodojo/motion_corridor.py": "f00565587991411bef33c8cd85e8998b5f83142b2f2f16ae8a71462d6a376120",
+          "sim/envs/robodojo/motion_planning.py": "e5a6794722fbf71984800b2e648ee71e2f77ae3619fdb0f587552a750edee0a0",
+          "sim/envs/robodojo/motion_rate.py": "a082b06834d99e55e14b3160592767b35cc183adcf9a95196d8c435512b6389b",
+          "sim/envs/robodojo/mount_geometry.py": "f81013d7e59c43af6c98f04fc7199919b7ad095d4157b8ff8fe8e5b0d1dbd83a",
+          "sim/envs/robodojo/native_cloth.py": "6a63c396da33562550097fb7ea76b3d49255041f70ef9bdf0410f555cd6c416f",
+          "sim/envs/robodojo/native_convex.py": "899f9cd0611d508e57118ba6877e2d8c429287a23b7e256fa5ce2f5fb5eee4fd",
+          "sim/envs/robodojo/native_reward.py": "1410329ca37a7c67a587bdc53354af05267531c023ea5fd99b992c6470339c01",
+          "sim/envs/robodojo/native_scene.py": "65cb2a97fa93fd5ea5ab0e7c1f7eb8a83c97da68da65c9f1082f639c227e1a32",
+          "sim/envs/robodojo/outcome.py": "117e1a5fb8ebe60f41065fb3ceb647d9ffb2e9dbf94f10b2afc004fa1a378b0e",
+          "sim/envs/robodojo/physical_bindings.py": "02c5b90463a8783bc124bded868de6c3f3b73a58098681ab70e47f7d89f049cb",
+          "sim/envs/robodojo/primitive_geometry.py": "d8d62ac37ecf5821e6e4ee275a6663a282f9950d888d89751b9d2ecfced9c96c",
+          "sim/envs/robodojo/public_errors.py": "7072e4b5bb453d5a647b947a29792bc97eab6055f78abdde7fdc298e4daa8483",
+          "sim/envs/robodojo/retired_geometry.py": "75c20692e6f7d3676ad9e7d18bd9323ee9bc9da67cdd361a086abebce9591bb3",
+          "sim/envs/robodojo/scene_geometry.py": "f44eb31cbe2dbfc84d6d8c2b07e6b6f6b329f9d4d93d93a32113370133cc43f2",
+          "sim/envs/robodojo/separating_recovery.py": "d93b1b3ebf1a4230a45c3d95c0d44419de1c076b0a1ee10b2450612b9c8da92a",
+          "sim/envs/robodojo/spatial_replanning.py": "837aa524baae1093ea1ddcf5201f8ab403e9f1780b2d614b533b140669f60f0f",
+          "sim/envs/robodojo/stability_diagnostics.py": "fb03a0e3ef88afc7fdc19040a6ffcc660326987c7be5a5924d926ee31d103825",
+          "sim/envs/robodojo/support_contact.py": "15afe25649c7706125b510f4202bec28ac3574d7cce0a3da24674f5122c131be",
+          "sim/envs/robodojo/support_hold.py": "169d00a32097a8ef8723001bb897f2a894f81fb19a97d747fe4ea0776ceaad36",
+          "sim/envs/robodojo/support_separation.py": "869ded971cfb2fde429f1072f0cf28042bd606f2b106c4aa88ba2770feb1dcba",
+          "sim/envs/robodojo/task_contract.py": "842ffa0e0fa37eb0a37776cb233f1598fecd36246a96fb3bf226cb3c925b1406",
+          "sim/envs/robodojo/tool_contact.py": "3bda0d42a33a4fef0e9c21a900149353a5c7e803c797829172aea41fd7b019a3",
+          "sim/envs/robodojo/unified_env.py": "c737af58b3d4cce8f85dbb0da838bff3790d0b90596fb31388d34f5dd3ec888c",
+          "sim/envs/robodojo/upstream_compat.py": "bb066c2f288c243950076b82eb3c9f813e0b5e7ed5083a08c1c5c6f0781aa665",
+          "sim/envs/robodojo/worker_bridge.py": "1e9c23241b21f507ed3cdab7115bb1e0d8b379cddf5c3f9d95a40e0e6e4eba64",
+          "sim/envs/robodojo/workpiece_references.py": "332c39414420dc7f9dbe224ef87b5527e724d08bc883705ca28d53f6f21af265",
+          "sim/envs/robodojo/x5_calibration.py": "c27ad5ac12bacc934ac630e8acef42d5067f562f87ce1838a4c6b9bb95fbcafa",
+          "tools/codex_robodojo_host.py": "4e33398f3b5908e69989470623a367566019d0b21649c8b6704e5553c41309a6",
+          "tools/harness_config.py": "3268e3e37d2fcfe5f43d677a10153b2a36a6b039375afb49e03de658068f6b06",
+          "tools/harness_evidence.py": "9e38c3bcd3c0eb5b951cb8c157aa2c59c26cd1d88aa5df264539e6316c41c82d",
+          "tools/harness_robodojo.py": "203a59bef9c7f6da2a449710acb55fa3d031bcaebfe5df98a3d0061bac930ca5",
+          "tools/harness_state.py": "3276f6f8f32f88c8d0023b98543be45288d88fc8964f439c29458e2654184dd2",
+          "tools/harness_transport.py": "8529046654251e42d9058500419c84a4933e1b9673d6b47ff1c0ac32e76a99fe",
+          "sim/envs/robodojo/push_contact.py": "010d9645b75e3e91ca94a4529dcd3c80cb9a2ad1018e0711803d48f1a573f9dc",
+          "sim/envs/robodojo/episode_protocol.py": "80ca0c059ca3a0a5b0ade31764549e9901c846f9c1c6ef9040c1244fb410cdb6",
+          "tools/robodojo_skill_library.py": "91ad764d47e27a11f34e089397383a9b17534aabb86609a8de3333fda8c30d94",
+          "plugins/openeta/skills/openeta-robodojo/references/align-insert.md": "c709edcfd0ae65cd252ea22d059a90e7ccca4a5f603e6d160f8bbb538d07cef6",
+          "plugins/openeta/skills/openeta-robodojo/references/articulated-interaction.md": "88c7f4256c7cc604525281f46573042da3b90e9866fe89b694dd52448dc6b736",
+          "plugins/openeta/skills/openeta-robodojo/references/pick-place.md": "ed6c99bc3b870250ecb969e1300e8bef661d6bd1fc77368b7c6c3c719c5cfdf7",
+          "plugins/openeta/skills/openeta-robodojo/references/push-slide.md": "c75428689ab644fd2ac4ac16ed635caf3a3902f3dbd0c7629913276832d62c0b",
+          "plugins/openeta/skills/openeta-robodojo/references/stack-support.md": "364507c4073a3b6c6ba4601498d5bc3d1400f79a5573afefd93ec300fc2fbca1",
+          "plugins/openeta/skills/openeta-robodojo/references/tool-use.md": "e688e22eaf31d5879a046af406ddb8efae4d1ad2c8f610664118ca8d30db11c5",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth.md": "075255e22c61fce123a37aeb992f96ba2ec52c655cecb6b3768b88a4120a972a",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/grasp.md": "f495e0430f85cc04e1f97e4b7dddd1d9f277237f97692d94b7f2c7ac36389f75",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/push.md": "6145f30bce8a78bd7794146614b5d2f272d1a17caff7cdd1ec3ee6d82086182b",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/support.md": "96ba1723aca1574159e06b5857d7d8ca667c5939bbe159123e5368678088c995",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/tool.md": "5ff8f9eb8ae9b491d1f2c9b72fd00aae3eb5c2017d142dbe48efeb69f90e8c35",
+          "sim/envs/robodojo/physical_contact.py": "87d270219a59e48069c61c778cdad6b7cd89c0247fca43ea377063a7f2f31629",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/physical-contact.md": "dcb87be8dfb9a18783b6a72f23dc5d297c6bbaa4a3705db0d5d4f6bd8f8aeecf",
+          "sim/envs/robodojo/bounded_wait.py": "2d02797641cfdd6d82a998d2e9891c9f64312dd3fed75226327b76ffd479a72b",
+          "sim/envs/robodojo/articulation_bindings.py": "f5080cb3f3f207e208ee4febdc2cae13c6edada07515a3ac6bb98048a67a4d7e",
+          "sim/envs/robodojo/observation_clock.py": "2fb371915893b08b56a136fbab2ce4a18e05fbd9c24cf31af3034273f14b01ca",
+          "sim/envs/robodojo/motion_precision.py": "879a6cba5180c89fea1435996bd11f352b37edae97f966ff1307dd92fc6c1e66",
+          "plugins/openeta/skills/openeta-robodojo/references/cloth-edge-grasp.md": "f4770efb50707fc0c17949b7ace32b950ed8b23f1488b30cd7d2311716b03612",
+          "sim/envs/robodojo/cloth_material_profile.py": "70bdf13a7a560eabf8190e7760ce211fe8e3d149722fdb1e6f97912b1a1ff27e",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth-visual.md": "b80d78eb24702c1962f29c21a925fc4015f05264c9a73660b43886c1ddef49f9",
+          "tools/robodojo_visual_aids.py": "4d0d8d4116a3032f33710ab55e8b8f5bf978dbc7f79b2acac417999b01f851d2",
+          "sim/envs/robodojo/completion_feedback.py": "fd2ce3a548eb517a2a033eb8a2ca2aadefb17cdd964477e24e4718f958389f88",
+          "sim/envs/robodojo/completion_feedback_generic.py": "224df158e914a69c90acb354a7bc34b3f0c1134d758909b650a41bdcf1f75f1d",
+          "sim/envs/robodojo/completion_task_registry.py": "83234358de57c61106edf884db322a60f261cb6bca5d3d0744cfd7444b13661e",
+          "sim/envs/robodojo/native_surface.py": "190a26eff09c4e1fea00af80f210d8be6075493e848da117ac00e03f6721e1fa",
+          "sim/envs/robodojo/voxel_geometry.py": "c46f162c781129436fe775d192873381b0d036356c5dee8ab0a8a859d1d9f256",
+          "sim/envs/robodojo/native_fluid.py": "83762a7632edfcf89a3551e710b62687193d75c41eb89f122810529c0c19dd26",
+          "sim/envs/robodojo/fluid_execution.py": "84925d29b18a0235bebe5a29238f1b397f70e1b0b9d53603bfff63eae926fef4",
+          "sim/envs/robodojo/execution_horizon.py": "85b3be000a18a9d2fedad04fc0bdee5f6098d2d364e802797f7aae14a66114f4",
+          "plugins/openeta/skills/openeta-robodojo/references/moving-target.md": "c2cd7009e2a05b721773a31a39563e7e93737978391ab4872e5ebd141eb37af8",
+          "tools/harness_experience.py": "77eee64a29b00f89f1998d22ceec4cef485413e1fad0c91fe3c05c5e3c47122a",
+          "sim/envs/robodojo/gripper_aperture.py": "a3fdb83f395d3ecbf79b31f6eb5f9332ddaab2708cb911c6a52dce3f44743d65",
+          "sim/envs/robodojo/robot_ownership.py": "61073eb67ca37fa5f12c55c43789198071e5d622fdc6ecfc971df36b8bfef770",
+          "sim/envs/robodojo/support_execution.py": "0e94a7afe6d953c0e297975c6a984cb832981544667bad253ea508c9f17bf6a6",
+          "sim/envs/robodojo/support_phase.py": "dba41008ea14b32393788e584698cff3776383d5739753dbb0334c7736e59c94",
+          "sim/envs/robodojo/support_geometry.py": "8f88fd97087354b5ff765fdec172f411ea23e1c5b3428928e30fc77d20bbe742",
+          "sim/envs/robodojo/collision_state.py": "72a95813c851bb1072e60164578876b84b06735c608b04a02ddb63a6936c32de",
+          "tools/task_rule_supplements.py": "eda182c4288639e2d1ddf60a4370e66d18c46969214aa693799c8ed236608cd4",
+          "sim/envs/robodojo/initialization_profile.py": "41f943a6ae57db7a44fc6a1edd5bd98343dd7194efb8fc4e809d3b69a6be12d5",
+          "sim/envs/robodojo/completion_task_requirements.py": "259d17ae9a9fcba09c35c4405e175bed827e2f3daa33ad6eb0dac4cc48b6fc34"
+        },
+        "visual_aids": "tcp_overlay_v1"
+      },
+      "robodojo_dual_atomic_lossless_v86": {
+        "id": "robodojo_dual_atomic_lossless_v86",
+        "kind": "interface",
+        "version": 86,
+        "factory": "configured_robodojo_atomic",
+        "tool_profile": "atomic",
+        "effectors": [
+          "parallel_gripper"
+        ],
+        "supports_multiple_effectors": true,
+        "baseline_commit": "9d9b5a877f8498d081f761c69f63d1765827343c",
+        "source_sha256": {
+          "plugins/openeta/skills/openeta-robodojo/SKILL.md": "e06c3d724f2a1627ecc2103d6236d6a4630e73b30dc96c3d2173990b667390e3",
+          "sim/envs/robodojo/arm_continuity.py": "9aa447db3eb1df4b197d689cd001db78004eef8f60d7614853baae00efbeb95d",
+          "sim/envs/robodojo/asset_repairs.py": "7e0597371242ead759f91a570d158d11237ea7ef298f005efea8057e07de9747",
+          "sim/envs/robodojo/attached_geometry.py": "33a79a201fd9dcb19657971d263d7c767a3b63b9ce4e33620ab91d9f3e3617c8",
+          "sim/envs/robodojo/boundary_recovery.py": "a6691b60335b76b7adaf293182eb866a94080fcb79655ff024125f94c9007e99",
+          "sim/envs/robodojo/calibration.py": "edf9520842144b3a02bd03a264e450cbebea2c8cea69c3d6b878b488985aca91",
+          "sim/envs/robodojo/cameras.py": "8d32eb93469bceabcd49c208a4deac86febe097cf758504623d13f2b2752d12f",
+          "sim/envs/robodojo/checked_control.py": "7d60c51372a51cab68c52be4493ca37fae3c2a6bdb185dd5600fd3e1b62c09f9",
+          "sim/envs/robodojo/clearance_recovery.py": "4ed5b1633d4a3fb6c709710db72b478f8d33baeb7cd0e810736f519098c75a7c",
+          "sim/envs/robodojo/closure_diagnostics.py": "f7467329e35c71603721dfe30a6132c95372a8ad9181a14b8ca4fb0cdd5e345c",
+          "sim/envs/robodojo/cloth_execution.py": "77c11c99a72c18c6ae86172e81458aa060bee77415aa1c5112aff77488cc319b",
+          "sim/envs/robodojo/cloth_recovery.py": "278695b74beb12b03c094153192e8e110d1925282dd117267e7e1a405408741e",
+          "sim/envs/robodojo/collision_bounds.py": "ce231437d0947fdc4cb7b4ffaf95fd4faee7dcd8c146e6058370c1350cd40c28",
+          "sim/envs/robodojo/collision_geometry.py": "8617f0b32462e1c803de7dd893ea348106205d6122945bfc3117ba96990877cf",
+          "sim/envs/robodojo/contact_bounds.py": "9c0247a8221f34d8564a5e01dec45c5475af66e8e8969207e037d8c6781ad268",
+          "sim/envs/robodojo/coordinated_motion.py": "55026dfd616ac2a8e7de38f739b3512ca4015d97a22f66b7913f5c38b4e099ce",
+          "sim/envs/robodojo/coordination.py": "f6e41e986c25f8c8730275360a9b5ef2d6f0bbedb53afe7f674605e86efc0097",
+          "sim/envs/robodojo/deformable_collision.py": "d804c8c471ff70f12a1f0b8ceacbe3fe388a2af83b839a633de8b250b4384b66",
+          "sim/envs/robodojo/deformable_surface.py": "2f6f175dad1de43d9c2c789101d2c586b786eb695e677a848102dfdc5ebd058f",
+          "sim/envs/robodojo/episode_recording.py": "1a85231ffae3a8d9881faa19fac299d62b08ce641ad52a995a43508bbc5922c3",
+          "sim/envs/robodojo/gripper_continuity.py": "fda3fd9220a621c4f2668ab8d98cf7b79b7113c6d7e82afb4ae88a6846be8c88",
+          "sim/envs/robodojo/holding_motion.py": "d22a97840e57c7a43be6bd1815ae34187052613e10073159c04db4ac5de94b73",
+          "sim/envs/robodojo/ik_candidates.py": "88e422dfa6176aec84d5f64f21331758cd9e300ac33ce8e9864d3433eb6afa49",
+          "sim/envs/robodojo/joint_planning.py": "73dead1e4b76f2436d93d693462359297fe009c3d567b060bf7c4e106ad38dc1",
+          "sim/envs/robodojo/layout.py": "9ee10aebf37ee74ceb558de413b92ab7ddd0d5b6fbf9333f5235e7bd08ca37b1",
+          "sim/envs/robodojo/measurements.py": "2a6b7ea5699603395cd0558091f7d7bd8c653c37c843978a7995db2c57a7711f",
+          "sim/envs/robodojo/motion_budget.py": "8cbb1db57f7a15598f37b60d74105e2230531eaadf95be25c45c274c19e15e62",
+          "sim/envs/robodojo/motion_corridor.py": "f00565587991411bef33c8cd85e8998b5f83142b2f2f16ae8a71462d6a376120",
+          "sim/envs/robodojo/motion_planning.py": "e5a6794722fbf71984800b2e648ee71e2f77ae3619fdb0f587552a750edee0a0",
+          "sim/envs/robodojo/motion_rate.py": "a082b06834d99e55e14b3160592767b35cc183adcf9a95196d8c435512b6389b",
+          "sim/envs/robodojo/mount_geometry.py": "f81013d7e59c43af6c98f04fc7199919b7ad095d4157b8ff8fe8e5b0d1dbd83a",
+          "sim/envs/robodojo/native_cloth.py": "6a63c396da33562550097fb7ea76b3d49255041f70ef9bdf0410f555cd6c416f",
+          "sim/envs/robodojo/native_convex.py": "899f9cd0611d508e57118ba6877e2d8c429287a23b7e256fa5ce2f5fb5eee4fd",
+          "sim/envs/robodojo/native_reward.py": "1410329ca37a7c67a587bdc53354af05267531c023ea5fd99b992c6470339c01",
+          "sim/envs/robodojo/native_scene.py": "65cb2a97fa93fd5ea5ab0e7c1f7eb8a83c97da68da65c9f1082f639c227e1a32",
+          "sim/envs/robodojo/outcome.py": "117e1a5fb8ebe60f41065fb3ceb647d9ffb2e9dbf94f10b2afc004fa1a378b0e",
+          "sim/envs/robodojo/physical_bindings.py": "02c5b90463a8783bc124bded868de6c3f3b73a58098681ab70e47f7d89f049cb",
+          "sim/envs/robodojo/primitive_geometry.py": "d8d62ac37ecf5821e6e4ee275a6663a282f9950d888d89751b9d2ecfced9c96c",
+          "sim/envs/robodojo/public_errors.py": "7072e4b5bb453d5a647b947a29792bc97eab6055f78abdde7fdc298e4daa8483",
+          "sim/envs/robodojo/retired_geometry.py": "75c20692e6f7d3676ad9e7d18bd9323ee9bc9da67cdd361a086abebce9591bb3",
+          "sim/envs/robodojo/scene_geometry.py": "f44eb31cbe2dbfc84d6d8c2b07e6b6f6b329f9d4d93d93a32113370133cc43f2",
+          "sim/envs/robodojo/separating_recovery.py": "d93b1b3ebf1a4230a45c3d95c0d44419de1c076b0a1ee10b2450612b9c8da92a",
+          "sim/envs/robodojo/spatial_replanning.py": "837aa524baae1093ea1ddcf5201f8ab403e9f1780b2d614b533b140669f60f0f",
+          "sim/envs/robodojo/stability_diagnostics.py": "fb03a0e3ef88afc7fdc19040a6ffcc660326987c7be5a5924d926ee31d103825",
+          "sim/envs/robodojo/support_contact.py": "15afe25649c7706125b510f4202bec28ac3574d7cce0a3da24674f5122c131be",
+          "sim/envs/robodojo/support_hold.py": "169d00a32097a8ef8723001bb897f2a894f81fb19a97d747fe4ea0776ceaad36",
+          "sim/envs/robodojo/support_separation.py": "869ded971cfb2fde429f1072f0cf28042bd606f2b106c4aa88ba2770feb1dcba",
+          "sim/envs/robodojo/task_contract.py": "842ffa0e0fa37eb0a37776cb233f1598fecd36246a96fb3bf226cb3c925b1406",
+          "sim/envs/robodojo/tool_contact.py": "3bda0d42a33a4fef0e9c21a900149353a5c7e803c797829172aea41fd7b019a3",
+          "sim/envs/robodojo/unified_env.py": "c737af58b3d4cce8f85dbb0da838bff3790d0b90596fb31388d34f5dd3ec888c",
+          "sim/envs/robodojo/upstream_compat.py": "bb066c2f288c243950076b82eb3c9f813e0b5e7ed5083a08c1c5c6f0781aa665",
+          "sim/envs/robodojo/worker_bridge.py": "1e9c23241b21f507ed3cdab7115bb1e0d8b379cddf5c3f9d95a40e0e6e4eba64",
+          "sim/envs/robodojo/workpiece_references.py": "332c39414420dc7f9dbe224ef87b5527e724d08bc883705ca28d53f6f21af265",
+          "sim/envs/robodojo/x5_calibration.py": "c27ad5ac12bacc934ac630e8acef42d5067f562f87ce1838a4c6b9bb95fbcafa",
+          "tools/codex_robodojo_host.py": "4e33398f3b5908e69989470623a367566019d0b21649c8b6704e5553c41309a6",
+          "tools/harness_config.py": "3268e3e37d2fcfe5f43d677a10153b2a36a6b039375afb49e03de658068f6b06",
+          "tools/harness_evidence.py": "9e38c3bcd3c0eb5b951cb8c157aa2c59c26cd1d88aa5df264539e6316c41c82d",
+          "tools/harness_robodojo.py": "203a59bef9c7f6da2a449710acb55fa3d031bcaebfe5df98a3d0061bac930ca5",
+          "tools/harness_state.py": "3276f6f8f32f88c8d0023b98543be45288d88fc8964f439c29458e2654184dd2",
+          "tools/harness_transport.py": "8529046654251e42d9058500419c84a4933e1b9673d6b47ff1c0ac32e76a99fe",
+          "sim/envs/robodojo/push_contact.py": "010d9645b75e3e91ca94a4529dcd3c80cb9a2ad1018e0711803d48f1a573f9dc",
+          "sim/envs/robodojo/episode_protocol.py": "80ca0c059ca3a0a5b0ade31764549e9901c846f9c1c6ef9040c1244fb410cdb6",
+          "tools/robodojo_skill_library.py": "91ad764d47e27a11f34e089397383a9b17534aabb86609a8de3333fda8c30d94",
+          "plugins/openeta/skills/openeta-robodojo/references/align-insert.md": "c709edcfd0ae65cd252ea22d059a90e7ccca4a5f603e6d160f8bbb538d07cef6",
+          "plugins/openeta/skills/openeta-robodojo/references/articulated-interaction.md": "88c7f4256c7cc604525281f46573042da3b90e9866fe89b694dd52448dc6b736",
+          "plugins/openeta/skills/openeta-robodojo/references/pick-place.md": "ed6c99bc3b870250ecb969e1300e8bef661d6bd1fc77368b7c6c3c719c5cfdf7",
+          "plugins/openeta/skills/openeta-robodojo/references/push-slide.md": "c75428689ab644fd2ac4ac16ed635caf3a3902f3dbd0c7629913276832d62c0b",
+          "plugins/openeta/skills/openeta-robodojo/references/stack-support.md": "364507c4073a3b6c6ba4601498d5bc3d1400f79a5573afefd93ec300fc2fbca1",
+          "plugins/openeta/skills/openeta-robodojo/references/tool-use.md": "e688e22eaf31d5879a046af406ddb8efae4d1ad2c8f610664118ca8d30db11c5",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth.md": "075255e22c61fce123a37aeb992f96ba2ec52c655cecb6b3768b88a4120a972a",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/grasp.md": "f495e0430f85cc04e1f97e4b7dddd1d9f277237f97692d94b7f2c7ac36389f75",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/push.md": "6145f30bce8a78bd7794146614b5d2f272d1a17caff7cdd1ec3ee6d82086182b",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/support.md": "96ba1723aca1574159e06b5857d7d8ca667c5939bbe159123e5368678088c995",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/tool.md": "5ff8f9eb8ae9b491d1f2c9b72fd00aae3eb5c2017d142dbe48efeb69f90e8c35",
+          "sim/envs/robodojo/physical_contact.py": "87d270219a59e48069c61c778cdad6b7cd89c0247fca43ea377063a7f2f31629",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/physical-contact.md": "dcb87be8dfb9a18783b6a72f23dc5d297c6bbaa4a3705db0d5d4f6bd8f8aeecf",
+          "sim/envs/robodojo/bounded_wait.py": "2d02797641cfdd6d82a998d2e9891c9f64312dd3fed75226327b76ffd479a72b",
+          "sim/envs/robodojo/articulation_bindings.py": "f5080cb3f3f207e208ee4febdc2cae13c6edada07515a3ac6bb98048a67a4d7e",
+          "sim/envs/robodojo/observation_clock.py": "2fb371915893b08b56a136fbab2ce4a18e05fbd9c24cf31af3034273f14b01ca",
+          "sim/envs/robodojo/motion_precision.py": "879a6cba5180c89fea1435996bd11f352b37edae97f966ff1307dd92fc6c1e66",
+          "plugins/openeta/skills/openeta-robodojo/references/cloth-edge-grasp.md": "f4770efb50707fc0c17949b7ace32b950ed8b23f1488b30cd7d2311716b03612",
+          "sim/envs/robodojo/cloth_material_profile.py": "70bdf13a7a560eabf8190e7760ce211fe8e3d149722fdb1e6f97912b1a1ff27e",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth-visual.md": "b80d78eb24702c1962f29c21a925fc4015f05264c9a73660b43886c1ddef49f9",
+          "tools/robodojo_visual_aids.py": "4d0d8d4116a3032f33710ab55e8b8f5bf978dbc7f79b2acac417999b01f851d2",
+          "sim/envs/robodojo/completion_feedback.py": "fd2ce3a548eb517a2a033eb8a2ca2aadefb17cdd964477e24e4718f958389f88",
+          "sim/envs/robodojo/completion_feedback_generic.py": "224df158e914a69c90acb354a7bc34b3f0c1134d758909b650a41bdcf1f75f1d",
+          "sim/envs/robodojo/completion_task_registry.py": "83234358de57c61106edf884db322a60f261cb6bca5d3d0744cfd7444b13661e",
+          "sim/envs/robodojo/native_surface.py": "190a26eff09c4e1fea00af80f210d8be6075493e848da117ac00e03f6721e1fa",
+          "sim/envs/robodojo/voxel_geometry.py": "c46f162c781129436fe775d192873381b0d036356c5dee8ab0a8a859d1d9f256",
+          "sim/envs/robodojo/native_fluid.py": "83762a7632edfcf89a3551e710b62687193d75c41eb89f122810529c0c19dd26",
+          "sim/envs/robodojo/fluid_execution.py": "84925d29b18a0235bebe5a29238f1b397f70e1b0b9d53603bfff63eae926fef4",
+          "sim/envs/robodojo/execution_horizon.py": "85b3be000a18a9d2fedad04fc0bdee5f6098d2d364e802797f7aae14a66114f4",
+          "plugins/openeta/skills/openeta-robodojo/references/moving-target.md": "c2cd7009e2a05b721773a31a39563e7e93737978391ab4872e5ebd141eb37af8",
+          "tools/robodojo_image_transport.py": "8019d7c959b66fc8a53f383a2e18583d3328e5800e6d0ae9ec189483c5c18558",
+          "tools/harness_experience.py": "77eee64a29b00f89f1998d22ceec4cef485413e1fad0c91fe3c05c5e3c47122a",
+          "sim/envs/robodojo/gripper_aperture.py": "a3fdb83f395d3ecbf79b31f6eb5f9332ddaab2708cb911c6a52dce3f44743d65",
+          "sim/envs/robodojo/robot_ownership.py": "61073eb67ca37fa5f12c55c43789198071e5d622fdc6ecfc971df36b8bfef770",
+          "sim/envs/robodojo/support_execution.py": "0e94a7afe6d953c0e297975c6a984cb832981544667bad253ea508c9f17bf6a6",
+          "sim/envs/robodojo/support_phase.py": "dba41008ea14b32393788e584698cff3776383d5739753dbb0334c7736e59c94",
+          "sim/envs/robodojo/support_geometry.py": "8f88fd97087354b5ff765fdec172f411ea23e1c5b3428928e30fc77d20bbe742",
+          "sim/envs/robodojo/collision_state.py": "72a95813c851bb1072e60164578876b84b06735c608b04a02ddb63a6936c32de",
+          "tools/task_rule_supplements.py": "eda182c4288639e2d1ddf60a4370e66d18c46969214aa693799c8ed236608cd4",
+          "sim/envs/robodojo/initialization_profile.py": "41f943a6ae57db7a44fc6a1edd5bd98343dd7194efb8fc4e809d3b69a6be12d5",
+          "sim/envs/robodojo/completion_task_requirements.py": "259d17ae9a9fcba09c35c4405e175bed827e2f3daa33ad6eb0dac4cc48b6fc34"
+        },
+        "visual_aids": "tcp_overlay_v1",
+        "image_encoding": "lossless_webp_if_smaller_v1"
+      },
+      "robodojo_dual_atomic_lossless_v86_fk_v112": {
+        "id": "robodojo_dual_atomic_lossless_v86_fk_v112",
+        "kind": "interface",
+        "version": 112,
+        "factory": "configured_robodojo_atomic",
+        "tool_profile": "atomic",
+        "effectors": [
+          "parallel_gripper"
+        ],
+        "supports_multiple_effectors": true,
+        "baseline_commit": "9d9b5a877f8498d081f761c69f63d1765827343c",
+        "source_sha256": {
+          "plugins/openeta/skills/openeta-robodojo/SKILL.md": "e06c3d724f2a1627ecc2103d6236d6a4630e73b30dc96c3d2173990b667390e3",
+          "sim/envs/robodojo/arm_continuity.py": "9aa447db3eb1df4b197d689cd001db78004eef8f60d7614853baae00efbeb95d",
+          "sim/envs/robodojo/asset_repairs.py": "7e0597371242ead759f91a570d158d11237ea7ef298f005efea8057e07de9747",
+          "sim/envs/robodojo/attached_geometry.py": "33a79a201fd9dcb19657971d263d7c767a3b63b9ce4e33620ab91d9f3e3617c8",
+          "sim/envs/robodojo/boundary_recovery.py": "a6691b60335b76b7adaf293182eb866a94080fcb79655ff024125f94c9007e99",
+          "sim/envs/robodojo/calibration.py": "edf9520842144b3a02bd03a264e450cbebea2c8cea69c3d6b878b488985aca91",
+          "sim/envs/robodojo/cameras.py": "8d32eb93469bceabcd49c208a4deac86febe097cf758504623d13f2b2752d12f",
+          "sim/envs/robodojo/checked_control.py": "40d73a65dd8227a60b390afac5d7eebc91151459b48a78953ab59aa57e4b3384",
+          "sim/envs/robodojo/clearance_recovery.py": "4ed5b1633d4a3fb6c709710db72b478f8d33baeb7cd0e810736f519098c75a7c",
+          "sim/envs/robodojo/closure_diagnostics.py": "f7467329e35c71603721dfe30a6132c95372a8ad9181a14b8ca4fb0cdd5e345c",
+          "sim/envs/robodojo/cloth_execution.py": "77c11c99a72c18c6ae86172e81458aa060bee77415aa1c5112aff77488cc319b",
+          "sim/envs/robodojo/cloth_recovery.py": "278695b74beb12b03c094153192e8e110d1925282dd117267e7e1a405408741e",
+          "sim/envs/robodojo/collision_bounds.py": "ce231437d0947fdc4cb7b4ffaf95fd4faee7dcd8c146e6058370c1350cd40c28",
+          "sim/envs/robodojo/collision_geometry.py": "da79e3f4daa874672b08dc6581f2c50400de7a83bd1b547534199c41cb9665c8",
+          "sim/envs/robodojo/contact_bounds.py": "9c0247a8221f34d8564a5e01dec45c5475af66e8e8969207e037d8c6781ad268",
+          "sim/envs/robodojo/coordinated_motion.py": "55026dfd616ac2a8e7de38f739b3512ca4015d97a22f66b7913f5c38b4e099ce",
+          "sim/envs/robodojo/coordination.py": "f6e41e986c25f8c8730275360a9b5ef2d6f0bbedb53afe7f674605e86efc0097",
+          "sim/envs/robodojo/deformable_collision.py": "d804c8c471ff70f12a1f0b8ceacbe3fe388a2af83b839a633de8b250b4384b66",
+          "sim/envs/robodojo/deformable_surface.py": "2f6f175dad1de43d9c2c789101d2c586b786eb695e677a848102dfdc5ebd058f",
+          "sim/envs/robodojo/episode_recording.py": "1a85231ffae3a8d9881faa19fac299d62b08ce641ad52a995a43508bbc5922c3",
+          "sim/envs/robodojo/gripper_continuity.py": "fda3fd9220a621c4f2668ab8d98cf7b79b7113c6d7e82afb4ae88a6846be8c88",
+          "sim/envs/robodojo/holding_motion.py": "d22a97840e57c7a43be6bd1815ae34187052613e10073159c04db4ac5de94b73",
+          "sim/envs/robodojo/ik_candidates.py": "88e422dfa6176aec84d5f64f21331758cd9e300ac33ce8e9864d3433eb6afa49",
+          "sim/envs/robodojo/joint_planning.py": "73dead1e4b76f2436d93d693462359297fe009c3d567b060bf7c4e106ad38dc1",
+          "sim/envs/robodojo/layout.py": "9ee10aebf37ee74ceb558de413b92ab7ddd0d5b6fbf9333f5235e7bd08ca37b1",
+          "sim/envs/robodojo/measurements.py": "2a6b7ea5699603395cd0558091f7d7bd8c653c37c843978a7995db2c57a7711f",
+          "sim/envs/robodojo/motion_budget.py": "8cbb1db57f7a15598f37b60d74105e2230531eaadf95be25c45c274c19e15e62",
+          "sim/envs/robodojo/motion_corridor.py": "f00565587991411bef33c8cd85e8998b5f83142b2f2f16ae8a71462d6a376120",
+          "sim/envs/robodojo/motion_planning.py": "e5a6794722fbf71984800b2e648ee71e2f77ae3619fdb0f587552a750edee0a0",
+          "sim/envs/robodojo/motion_rate.py": "a082b06834d99e55e14b3160592767b35cc183adcf9a95196d8c435512b6389b",
+          "sim/envs/robodojo/mount_geometry.py": "f81013d7e59c43af6c98f04fc7199919b7ad095d4157b8ff8fe8e5b0d1dbd83a",
+          "sim/envs/robodojo/native_cloth.py": "6a63c396da33562550097fb7ea76b3d49255041f70ef9bdf0410f555cd6c416f",
+          "sim/envs/robodojo/native_convex.py": "899f9cd0611d508e57118ba6877e2d8c429287a23b7e256fa5ce2f5fb5eee4fd",
+          "sim/envs/robodojo/native_reward.py": "1410329ca37a7c67a587bdc53354af05267531c023ea5fd99b992c6470339c01",
+          "sim/envs/robodojo/native_scene.py": "22c57c7ac66defc468de136c4bf7175be51a78051bae81b8071868f66b7ff2b0",
+          "sim/envs/robodojo/outcome.py": "117e1a5fb8ebe60f41065fb3ceb647d9ffb2e9dbf94f10b2afc004fa1a378b0e",
+          "sim/envs/robodojo/physical_bindings.py": "02c5b90463a8783bc124bded868de6c3f3b73a58098681ab70e47f7d89f049cb",
+          "sim/envs/robodojo/primitive_geometry.py": "d8d62ac37ecf5821e6e4ee275a6663a282f9950d888d89751b9d2ecfced9c96c",
+          "sim/envs/robodojo/public_errors.py": "7072e4b5bb453d5a647b947a29792bc97eab6055f78abdde7fdc298e4daa8483",
+          "sim/envs/robodojo/retired_geometry.py": "75c20692e6f7d3676ad9e7d18bd9323ee9bc9da67cdd361a086abebce9591bb3",
+          "sim/envs/robodojo/scene_geometry.py": "f44eb31cbe2dbfc84d6d8c2b07e6b6f6b329f9d4d93d93a32113370133cc43f2",
+          "sim/envs/robodojo/separating_recovery.py": "d93b1b3ebf1a4230a45c3d95c0d44419de1c076b0a1ee10b2450612b9c8da92a",
+          "sim/envs/robodojo/spatial_replanning.py": "837aa524baae1093ea1ddcf5201f8ab403e9f1780b2d614b533b140669f60f0f",
+          "sim/envs/robodojo/stability_diagnostics.py": "fb03a0e3ef88afc7fdc19040a6ffcc660326987c7be5a5924d926ee31d103825",
+          "sim/envs/robodojo/support_contact.py": "15afe25649c7706125b510f4202bec28ac3574d7cce0a3da24674f5122c131be",
+          "sim/envs/robodojo/support_hold.py": "169d00a32097a8ef8723001bb897f2a894f81fb19a97d747fe4ea0776ceaad36",
+          "sim/envs/robodojo/support_separation.py": "869ded971cfb2fde429f1072f0cf28042bd606f2b106c4aa88ba2770feb1dcba",
+          "sim/envs/robodojo/task_contract.py": "842ffa0e0fa37eb0a37776cb233f1598fecd36246a96fb3bf226cb3c925b1406",
+          "sim/envs/robodojo/tool_contact.py": "3bda0d42a33a4fef0e9c21a900149353a5c7e803c797829172aea41fd7b019a3",
+          "sim/envs/robodojo/unified_env.py": "c737af58b3d4cce8f85dbb0da838bff3790d0b90596fb31388d34f5dd3ec888c",
+          "sim/envs/robodojo/upstream_compat.py": "bb066c2f288c243950076b82eb3c9f813e0b5e7ed5083a08c1c5c6f0781aa665",
+          "sim/envs/robodojo/worker_bridge.py": "1e9c23241b21f507ed3cdab7115bb1e0d8b379cddf5c3f9d95a40e0e6e4eba64",
+          "sim/envs/robodojo/workpiece_references.py": "332c39414420dc7f9dbe224ef87b5527e724d08bc883705ca28d53f6f21af265",
+          "sim/envs/robodojo/x5_calibration.py": "c27ad5ac12bacc934ac630e8acef42d5067f562f87ce1838a4c6b9bb95fbcafa",
+          "tools/codex_robodojo_host.py": "4e33398f3b5908e69989470623a367566019d0b21649c8b6704e5553c41309a6",
+          "tools/harness_config.py": "3268e3e37d2fcfe5f43d677a10153b2a36a6b039375afb49e03de658068f6b06",
+          "tools/harness_evidence.py": "9e38c3bcd3c0eb5b951cb8c157aa2c59c26cd1d88aa5df264539e6316c41c82d",
+          "tools/harness_robodojo.py": "203a59bef9c7f6da2a449710acb55fa3d031bcaebfe5df98a3d0061bac930ca5",
+          "tools/harness_state.py": "3276f6f8f32f88c8d0023b98543be45288d88fc8964f439c29458e2654184dd2",
+          "tools/harness_transport.py": "8529046654251e42d9058500419c84a4933e1b9673d6b47ff1c0ac32e76a99fe",
+          "sim/envs/robodojo/push_contact.py": "010d9645b75e3e91ca94a4529dcd3c80cb9a2ad1018e0711803d48f1a573f9dc",
+          "sim/envs/robodojo/episode_protocol.py": "80ca0c059ca3a0a5b0ade31764549e9901c846f9c1c6ef9040c1244fb410cdb6",
+          "tools/robodojo_skill_library.py": "91ad764d47e27a11f34e089397383a9b17534aabb86609a8de3333fda8c30d94",
+          "plugins/openeta/skills/openeta-robodojo/references/align-insert.md": "c709edcfd0ae65cd252ea22d059a90e7ccca4a5f603e6d160f8bbb538d07cef6",
+          "plugins/openeta/skills/openeta-robodojo/references/articulated-interaction.md": "88c7f4256c7cc604525281f46573042da3b90e9866fe89b694dd52448dc6b736",
+          "plugins/openeta/skills/openeta-robodojo/references/pick-place.md": "ed6c99bc3b870250ecb969e1300e8bef661d6bd1fc77368b7c6c3c719c5cfdf7",
+          "plugins/openeta/skills/openeta-robodojo/references/push-slide.md": "c75428689ab644fd2ac4ac16ed635caf3a3902f3dbd0c7629913276832d62c0b",
+          "plugins/openeta/skills/openeta-robodojo/references/stack-support.md": "364507c4073a3b6c6ba4601498d5bc3d1400f79a5573afefd93ec300fc2fbca1",
+          "plugins/openeta/skills/openeta-robodojo/references/tool-use.md": "e688e22eaf31d5879a046af406ddb8efae4d1ad2c8f610664118ca8d30db11c5",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth.md": "075255e22c61fce123a37aeb992f96ba2ec52c655cecb6b3768b88a4120a972a",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/grasp.md": "f495e0430f85cc04e1f97e4b7dddd1d9f277237f97692d94b7f2c7ac36389f75",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/push.md": "6145f30bce8a78bd7794146614b5d2f272d1a17caff7cdd1ec3ee6d82086182b",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/support.md": "96ba1723aca1574159e06b5857d7d8ca667c5939bbe159123e5368678088c995",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/tool.md": "5ff8f9eb8ae9b491d1f2c9b72fd00aae3eb5c2017d142dbe48efeb69f90e8c35",
+          "sim/envs/robodojo/physical_contact.py": "87d270219a59e48069c61c778cdad6b7cd89c0247fca43ea377063a7f2f31629",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/physical-contact.md": "dcb87be8dfb9a18783b6a72f23dc5d297c6bbaa4a3705db0d5d4f6bd8f8aeecf",
+          "sim/envs/robodojo/bounded_wait.py": "2d02797641cfdd6d82a998d2e9891c9f64312dd3fed75226327b76ffd479a72b",
+          "sim/envs/robodojo/articulation_bindings.py": "f5080cb3f3f207e208ee4febdc2cae13c6edada07515a3ac6bb98048a67a4d7e",
+          "sim/envs/robodojo/observation_clock.py": "2fb371915893b08b56a136fbab2ce4a18e05fbd9c24cf31af3034273f14b01ca",
+          "sim/envs/robodojo/motion_precision.py": "879a6cba5180c89fea1435996bd11f352b37edae97f966ff1307dd92fc6c1e66",
+          "plugins/openeta/skills/openeta-robodojo/references/cloth-edge-grasp.md": "f4770efb50707fc0c17949b7ace32b950ed8b23f1488b30cd7d2311716b03612",
+          "sim/envs/robodojo/cloth_material_profile.py": "70bdf13a7a560eabf8190e7760ce211fe8e3d149722fdb1e6f97912b1a1ff27e",
+          "plugins/openeta/skills/openeta-robodojo/references/contracts/cloth-visual.md": "b80d78eb24702c1962f29c21a925fc4015f05264c9a73660b43886c1ddef49f9",
+          "tools/robodojo_visual_aids.py": "4d0d8d4116a3032f33710ab55e8b8f5bf978dbc7f79b2acac417999b01f851d2",
+          "sim/envs/robodojo/completion_feedback.py": "fd2ce3a548eb517a2a033eb8a2ca2aadefb17cdd964477e24e4718f958389f88",
+          "sim/envs/robodojo/completion_feedback_generic.py": "224df158e914a69c90acb354a7bc34b3f0c1134d758909b650a41bdcf1f75f1d",
+          "sim/envs/robodojo/completion_task_registry.py": "83234358de57c61106edf884db322a60f261cb6bca5d3d0744cfd7444b13661e",
+          "sim/envs/robodojo/native_surface.py": "190a26eff09c4e1fea00af80f210d8be6075493e848da117ac00e03f6721e1fa",
+          "sim/envs/robodojo/voxel_geometry.py": "c46f162c781129436fe775d192873381b0d036356c5dee8ab0a8a859d1d9f256",
+          "sim/envs/robodojo/native_fluid.py": "83762a7632edfcf89a3551e710b62687193d75c41eb89f122810529c0c19dd26",
+          "sim/envs/robodojo/fluid_execution.py": "84925d29b18a0235bebe5a29238f1b397f70e1b0b9d53603bfff63eae926fef4",
+          "sim/envs/robodojo/execution_horizon.py": "85b3be000a18a9d2fedad04fc0bdee5f6098d2d364e802797f7aae14a66114f4",
+          "plugins/openeta/skills/openeta-robodojo/references/moving-target.md": "c2cd7009e2a05b721773a31a39563e7e93737978391ab4872e5ebd141eb37af8",
+          "tools/robodojo_image_transport.py": "8019d7c959b66fc8a53f383a2e18583d3328e5800e6d0ae9ec189483c5c18558",
+          "tools/harness_experience.py": "77eee64a29b00f89f1998d22ceec4cef485413e1fad0c91fe3c05c5e3c47122a",
+          "sim/envs/robodojo/gripper_aperture.py": "a3fdb83f395d3ecbf79b31f6eb5f9332ddaab2708cb911c6a52dce3f44743d65",
+          "sim/envs/robodojo/robot_ownership.py": "61073eb67ca37fa5f12c55c43789198071e5d622fdc6ecfc971df36b8bfef770",
+          "sim/envs/robodojo/support_execution.py": "0e94a7afe6d953c0e297975c6a984cb832981544667bad253ea508c9f17bf6a6",
+          "sim/envs/robodojo/support_phase.py": "dba41008ea14b32393788e584698cff3776383d5739753dbb0334c7736e59c94",
+          "sim/envs/robodojo/support_geometry.py": "dd983dad1605ea172d6b4644e5edc0e3fb75724cf99e75c741817f1d8213fd99",
+          "sim/envs/robodojo/collision_state.py": "da086894cb5c1d0f4bc3e43e599dad31e8b190f74ffe8ef67550c18b75b3b196",
+          "tools/task_rule_supplements.py": "eda182c4288639e2d1ddf60a4370e66d18c46969214aa693799c8ed236608cd4",
+          "sim/envs/robodojo/initialization_profile.py": "41f943a6ae57db7a44fc6a1edd5bd98343dd7194efb8fc4e809d3b69a6be12d5",
+          "sim/envs/robodojo/completion_task_requirements.py": "259d17ae9a9fcba09c35c4405e175bed827e2f3daa33ad6eb0dac4cc48b6fc34",
+          "sim/envs/robodojo/fk_diagnostics.py": "eaef7177075f7eaf46fa093a463aa143dbf1f60d72763415665c2da573140cb7"
+        },
+        "visual_aids": "tcp_overlay_v1",
+        "image_encoding": "lossless_webp_if_smaller_v1"
+      }
+    }
+  }
+}

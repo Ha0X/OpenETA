@@ -1,0 +1,283 @@
+{
+  "baseline_commit": "9d9b5a877f8498d081f761c69f63d1765827343c",
+  "schemas": {
+    "episode_status": {
+      "name": "episode_status",
+      "title": null,
+      "description": "Read current episode state, evidence and images. Does not refresh the simulator.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": null,
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    "finish_episode": {
+      "name": "finish_episode",
+      "title": null,
+      "description": "Submit task completion to existing Host gates. Success needs current official evidence. Use success=false to stop an unsuccessful attempt.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "success",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": null,
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    "observe": {
+      "name": "observe",
+      "title": null,
+      "description": "Refresh RGB-D views and measured robot state. Optional crop is in original image pixels; cropped-image clicks must be mapped back using returned origin/scale.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "camera": {
+            "enum": [
+              "agentview",
+              "robot0_eye_in_hand",
+              "wrist"
+            ]
+          },
+          "crop_xyxy": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "minItems": 4,
+            "maxItems": 4
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": null,
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    "mark_point": {
+      "name": "mark_point",
+      "title": null,
+      "description": "Measure the first visible surface at a pixel of a CURRENT RGB image. Uses aligned depth and calibration, no learned perception. Returns immutable world point and confirmation image. A surface point is not automatically a grip-site or grasp. Depth edges are reported; prefer an interior pixel. Use point + offset for free-space waypoints.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source_packet_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "camera_frame_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "x": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "y": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "source_packet_id",
+          "camera_frame_id",
+          "x",
+          "y"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": null,
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    "move_to": {
+      "name": "move_to",
+      "title": null,
+      "description": "Control the Panda grip-site. Choose xyz_m, point_id + optional offset_m, or delta_m in world/grip_site frame; omit position to rotate. approach_world specifies local +Z and jaw_world local +X; supply both for a full pose or omit both to preserve orientation. preview=true renders the proposed pose without motion. Execution automatically checks fresh IK then uses Mink collision checks. The default controller tracks a straight position segment with gradual shortest-angle rotation; a safe endpoint does not guarantee this path is executable. If path tracking is blocked, choose a different waypoint or rotate at a clear waypoint. contact_point_id explicitly requests gripper contact with that measured surface's object; supply only for near-contact moves. For transport or large reorientation, choose clearance waypoints from visible geometry before moving. Use waypoints for a short route or consecutive calls with observation checkpoints. A collinear midpoint does not avoid an obstacle. No arrival or preview proves grasp/task success.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "xyz_m": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "point_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "offset_m": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "delta_m": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "delta_frame": {
+            "enum": [
+              "world",
+              "grip_site"
+            ]
+          },
+          "motion_mode": {
+            "enum": [
+              "strict",
+              "recovery"
+            ],
+            "description": "Default strict. Explicit recovery permits up to 20 mm path deviation and 12 degrees orientation-path deviation for a target within 150 mm. Final pose tolerances and all collision checks remain unchanged. Use for a short retreat/reorientation after blockage; no contact_point_id, waypoint array or symmetric mode."
+          },
+          "approach_world": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "jaw_world": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "orientation_mode": {
+            "enum": [
+              "strict",
+              "parallel_jaw_symmetric"
+            ],
+            "description": "Default strict. Symmetric explicitly permits swapping fingers of an empty, open Panda gripper. Two IK candidates are ranked by joint travel, limit margin and rotation; controller path is not previewed. Do not use for held objects, fixture manipulation or required wrist view."
+          },
+          "contact_point_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "preview": {
+            "type": "boolean"
+          },
+          "waypoints": {
+            "type": "array",
+            "maxItems": 4,
+            "description": "Optional ordered intermediate poses before the top-level final target. Each segment is straight; no automatic global avoidance or corner smoothing. Route poses use absolute xyz_m or point_id+offset_m, or orientation-only; strict orientation only. Omitted orientation inherits the preceding target. Contact actions must be separate calls. Stops at the first failed segment; remaining segments never execute automatically.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "xyz_m": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "point_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "offset_m": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "approach_world": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "jaw_world": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": null,
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    "gripper_control": {
+      "name": "gripper_control",
+      "title": null,
+      "description": "Open or close the gripper and return measured state plus final images. Close can use contact_point_id from a fresh surface mark, or the preceding contact move's binding. Opening clears attachment. Aperture alone does not establish object retention.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "open",
+              "close"
+            ]
+          },
+          "contact_point_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": null,
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    }
+  },
+  "legacy_builder_ast_sha256": "1580ebc7874454662383012fecbfd531839a823e58e620edd64bdad376b9e290"
+}

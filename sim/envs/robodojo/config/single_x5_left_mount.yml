@@ -1,0 +1,13 @@
+# Explicit deployment overlay; not automatically registered or selected.
+# Preserve the upstream left-arm mounting location and all world collisions.
+# The central x=0 mounting collides with the native camera-stand pole.
+# Changing mounting changes the benchmark/embodiment binding: reset and create
+# a new run/config identity; never relocate an existing task mid-episode.
+benchmark_commit: ee67a1468510da7624a089164402359f2afc72c8
+robots:
+  - robot_type: arm
+    robot_name: x5
+    coupled: false
+    default_root_pos: [-0.3, -0.45, 0.765]
+    default_root_rot: [0.707, 0.0, 0.0, 0.707]
+    grasp_perfect_direction: top_down_little_right

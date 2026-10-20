@@ -39,6 +39,7 @@ _BENCH_MAP: dict[str, str] = {
     "metaworld": "metaworld", "maniskill": "maniskill",
     "libero": "libero", "robocasa": "robocasa",
     "genesis": "genesis", "d4rl": "d4rl", "behavior": "behavior",
+    "robodojo": "robodojo",
 }
 
 
@@ -289,6 +290,25 @@ def _behavior_env_from_activate() -> dict[str, str]:
     return out
 
 
+def _robodojo_env_from_activate() -> dict[str, str]:
+    """Read RoboDojo paths written by ``setup_envs.sh``."""
+    path = os.path.join(str(_SIM_DIR), "venvs", "robodojo", "activate_extra.sh")
+    out: dict[str, str] = {}
+    try:
+        with open(path, encoding="utf-8") as handle:
+            for line in handle:
+                line = line.strip()
+                if not line.startswith("export ") or "=" not in line:
+                    continue
+                key, _, value = line[len("export "):].partition("=")
+                value = value.strip().strip('"').strip("'")
+                if key.strip() and value and "$" not in value and "`" not in value:
+                    out[key.strip()] = value
+    except FileNotFoundError:
+        pass
+    return out
+
+
 def _start_pipe_drainers(proc: "subprocess.Popen") -> None:
     """Continuously drain a worker's stdout/stderr so it can't block on write.
 
@@ -345,11 +365,32 @@ class BenchWorkerHandle:
         data = json.dumps(body).encode("utf-8") if body is not None else None
         req = urllib.request.Request(url, data=data, method=method)
         req.add_header("Content-Type", "application/json")
+        progress_stop = threading.Event()
+        progress_thread = None
+        if self.bench == "robodojo":
+            started = time.monotonic()
+
+            def _report_progress() -> None:
+                while not progress_stop.wait(15.0):
+                    elapsed = int(time.monotonic() - started)
+                    print(
+                        f"[robodojo] still waiting: {method} {path} "
+                        f"({elapsed}s elapsed; Isaac initialization may be busy)",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+
+            progress_thread = threading.Thread(target=_report_progress, daemon=True)
+            progress_thread.start()
+            print(f"[robodojo] request: {method} {path}", file=sys.stderr, flush=True)
         try:
             # Isaac Kit can spend several minutes compiling shaders on the
             # first BEHAVIOR create/reset. Keep this configurable while using
             # a timeout that does not kill a healthy cold start.
-            timeout_s = float(os.environ.get("OPENETA_WORKER_HTTP_TIMEOUT_S", "600"))
+            default_timeout_s = "1800" if self.bench == "robodojo" else "600"
+            timeout_s = float(
+                os.environ.get("OPENETA_WORKER_HTTP_TIMEOUT_S", default_timeout_s)
+            )
             with urllib.request.urlopen(req, timeout=timeout_s) as resp:
                 return json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as exc:
@@ -359,6 +400,10 @@ class BenchWorkerHandle:
                 return {"error": f"HTTP {exc.code}: {exc.reason}"}
         except Exception as exc:
             return {"error": f"Worker request failed: {exc}"}
+        finally:
+            progress_stop.set()
+            if progress_thread is not None:
+                progress_thread.join(timeout=0.2)
 
     def stop(self, *, wait: bool = False) -> None:
         """Terminate the worker process, escalating to SIGKILL if it lingers.
@@ -492,10 +537,21 @@ class BenchWorkerManager:
             if "OMNIGIBSON_DATA_PATH" not in child_env:
                 child_env["OMNIGIBSON_DATA_PATH"] = os.path.join(
                     behavior_root, "src", "BEHAVIOR-1K", "datasets")
+        if bench == "robodojo":
+            for key, value in _robodojo_env_from_activate().items():
+                child_env.setdefault(key, value)
+            robodojo_root = os.path.join(str(_SIM_DIR), "venvs", "robodojo", "src", "RoboDojo")
+            child_env.setdefault("ROBODOJO_ROOT", robodojo_root)
+            child_env.setdefault("ROBODOJO_ASSET_ROOT", os.path.join(robodojo_root, "assets"))
+            child_env.setdefault("OMNI_KIT_ACCEPT_EULA", "YES")
+            child_env.setdefault("OMNIGIBSON_HEADLESS", "True")
 
         worker_script = os.path.join(str(_SIM_DIR), "bench_worker.py")
+        worker_args = [python_exe, "-u", worker_script, "--bench", bench, "--port", "0"]
+        if bench == "robodojo":
+            worker_args.append("--headless")
         proc = subprocess.Popen(
-            [python_exe, "-u", worker_script, "--bench", bench, "--port", "0"],
+            worker_args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -504,7 +560,7 @@ class BenchWorkerManager:
         )
         # Read the port line from stdout (first non-empty digit-only line)
         port_str = ""
-        for _ in range(60):  # 30s timeout
+        for _ in range(120):
             line = proc.stdout.readline()
             if not line:
                 if proc.poll() is not None:
@@ -520,7 +576,7 @@ class BenchWorkerManager:
 
         if not port_str:
             proc.kill()
-            raise RuntimeError(f"Worker for '{bench}' did not print a port within 30s")
+            raise RuntimeError(f"Worker for '{bench}' did not print a port")
 
         port = int(port_str)
         base_url = f"http://127.0.0.1:{port}"
@@ -585,7 +641,7 @@ class BenchWorkerManager:
                     w.stop(wait=True)
                     pool.remove(w)
 
-            pool_max = _pool_max()
+            pool_max = 1 if bench == "robodojo" else _pool_max()
             if not pool:
                 chosen = self._spawn_worker(bench)
                 pool.append(chosen)
@@ -606,11 +662,15 @@ class BenchWorkerManager:
             for bench, pool in self._pools.items():
                 for w in pool:
                     if w.base_url == base_url:
-                        if bench == "behavior":
+                        if bench in ("behavior", "robodojo"):
                             # Isaac Kit is process-global and cannot be cleanly
                             # re-created after og.shutdown(). A BEHAVIOR worker
                             # is deliberately single-environment / single-use.
                             w.stop(wait=True)
+                            if w.process is None or w.process.poll() is None:
+                                raise RuntimeError(
+                                    "BEHAVIOR worker exit is unconfirmed; retaining cleanup ownership"
+                                )
                             pool.remove(w)
                             return
                         w.env_count = max(0, w.env_count - 1)
@@ -642,13 +702,21 @@ class BenchWorkerManager:
         return proc.poll() is not None
 
     def _health_check(self, wh: BenchWorkerHandle) -> bool:
-        for _ in range(10):  # retry for up to ~5s
+        attempts = 180 if wh.bench == "robodojo" else 10
+        for _ in range(attempts):  # Isaac startup can take several minutes
             try:
                 req = urllib.request.Request(f"{wh.base_url}/health")
                 with urllib.request.urlopen(req, timeout=2) as resp:
                     data = json.loads(resp.read().decode("utf-8"))
                     return data.get("ok", False)
             except Exception:
+                if wh.bench == "robodojo" and _ % 10 == 0:
+                    print(
+                        f"[robodojo] waiting for worker health "
+                        f"({(_ + 1) * 0.5:.0f}s elapsed)",
+                        file=sys.stderr,
+                        flush=True,
+                    )
                 time.sleep(0.5)
         return False
 
@@ -730,7 +798,7 @@ class BenchWorkerManager:
     def available_benches(self) -> dict[str, bool]:
         """Return which benches have venvs (i.e. are launchable)."""
         result = {"dummy": True}
-        for bench in ["metaworld", "maniskill", "libero", "robocasa", "genesis", "d4rl", "behavior"]:
+        for bench in ["metaworld", "maniskill", "libero", "robocasa", "genesis", "d4rl", "behavior", "robodojo"]:
             result[bench] = _venv_python(bench) is not None
         return result
 
@@ -836,13 +904,13 @@ def _proxy_reachability(meta: dict, body: dict) -> dict:
     )
 
 
-def _proxy_controller_goal(meta: dict, body: dict) -> dict:
+def _proxy_controller_goal(meta: dict, body: dict, *, operation: str = 'controller-goal') -> dict:
     """Execute a worker-local host-selected controller goal and cache its state."""
 
     mgr = _get_mgr()
     result = mgr.proxy_handle_op(
         meta,
-        f"/env/{meta['remote_handle']}/controller-goal",
+        f"/env/{meta['remote_handle']}/{operation}",
         method="POST",
         body=body,
     )
@@ -858,6 +926,10 @@ def _proxy_controller_goal(meta: dict, body: dict) -> dict:
             )
         _mark_obs_dirty(key)
     return _public_observation_result(meta, result)
+
+
+def _proxy_gripper_goal(meta: dict, body: dict) -> dict:
+    return _proxy_controller_goal(meta, body, operation='gripper-goal')
 
 
 def _proxy_render(meta: dict) -> dict:

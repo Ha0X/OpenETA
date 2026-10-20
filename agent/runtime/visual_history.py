@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING, Mapping
 
 from adapter.protocol import EnvObservation, JsonDict
 from agent.backends.planner import PlannerBackend, PlannerBackendRequest
+from agent.backends.request_lineage import isolated_request_lineage
 from agent.runtime.actions import PipelineStatus
 
 if TYPE_CHECKING:
@@ -329,6 +330,8 @@ class VisualHistoryManager:
         request = PlannerBackendRequest(
             tool_context={
                 "schema_version": "openeta.visual_delta_request.v1",
+                "role": "visual_differencing",
+                **isolated_request_lineage(memory.session_id),
                 "task": task,
                 "from_observation": _public_observation_ref(previous, previous_main),
                 "to_observation": _public_observation_ref(current, current_main),
@@ -562,6 +565,35 @@ def observation_history(memory: "AgentMemory") -> list[JsonDict]:
         for event_type, payload in _history_events(memory)
         if event_type == "observation" and isinstance(payload, dict)
     ]
+
+
+def resolve_image_evidence_reference(memory: "AgentMemory", reference: str) -> JsonDict:
+    """Resolve an exact Host-published image ID; never parse it as a file path.
+
+    Historical observation IDs stay inspectable. The current_observation alias
+    resolves only against the latest registered observation, not an older step.
+    Callers must still enforce their session file and image-size boundaries.
+    """
+    records = observation_history(memory)
+    matches = []
+    for index, record in enumerate(records):
+        for artifact in _rgb_artifacts(record):
+            ids = {_evidence_id(record, artifact)}
+            if index == len(records) - 1:
+                step = _environment_step(record)
+                ids.add(f"current_observation:{step if step is not None else 'na'}:{artifact.get('frame_id', '')}")
+            if reference not in ids:
+                continue
+            matches.append({
+                **_planner_image_evidence(record, artifact, role="requested_evidence_view", freshness="stored_evidence"),
+                "requested_image_ref": reference,
+                "source_packet_id": artifact.get("packet_id"),
+                "source_object_scene_epoch": record.get("object_scene_epoch"),
+                "source_robot_motion_epoch": record.get("robot_motion_epoch"),
+            })
+    if len(matches) != 1:
+        raise ValueError("unknown or ambiguous image evidence ID in this session; copy an exact published evidence_id or a saved image path")
+    return matches[0]
 
 
 def visual_delta_history(memory: "AgentMemory") -> list[JsonDict]:

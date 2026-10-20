@@ -2,7 +2,7 @@
 
 本仓库工作树用于隔离 BEHAVIOR-1K（B1K）仿真适配与主干 Agent 开发。它从
 Agent 基线提交 `9c2ce70` 创建，开发分支为
-`dev/huaizezheng/b1k-sim-adapter`。
+`dev/example/b1k-sim-adapter`。
 
 ## 仓库与远程约定
 

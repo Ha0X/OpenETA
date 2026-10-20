@@ -24,18 +24,21 @@ The worker exposes a subset of the REST API:
 
 from __future__ import annotations
 
-import argparse, asyncio, base64, copy, io, json, math, os, queue, sys, threading, uuid, warnings
+import argparse, asyncio, base64, copy, io, json, math, os, queue, socket, subprocess, sys, threading, uuid, warnings
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 import contextlib
+from weakref import WeakValueDictionary
 
 warnings.filterwarnings("ignore")
 os.environ.setdefault("MUJOCO_GL", "egl")
 os.environ.setdefault("MS_SKIP_ASSET_DOWNLOAD_PROMPT", "1")
-os.environ.setdefault("LIBERO_DIR", "/home/yfzhang/nvme1/LIBERO")
+os.environ.setdefault("LIBERO_DIR", "/opt/LIBERO")
 os.environ.setdefault(
     "LIBERO_DATASET_PATH",
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "venvs", "libero", "assets", "datasets"),
 )
+os.environ.setdefault("OMNI_KIT_ACCEPT_EULA", "YES")
+os.environ.setdefault("OMNIGIBSON_HEADLESS", "True")
 
 # ── ensure sim/ package is importable ──────────────────────────────
 _REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -94,7 +97,7 @@ _env_errors: dict[str, str] = {}  # handle → last error message
 # (1) is serialising, producing the "handle matches but scene doesn't"
 # garbling.  ``_gl_lock`` only guards the GPU call, not this shared dict, so
 # we need a separate per-handle lock that spans "mutate/read obs + serialise".
-_obs_locks: dict[str, threading.Lock] = {}
+_obs_locks: WeakValueDictionary = WeakValueDictionary()
 _obs_locks_guard = threading.Lock()
 
 # Handles whose episode has already terminated/truncated.  robosuite raises
@@ -134,6 +137,180 @@ def _obs_lock_for(handle: str) -> threading.Lock:
 # RLock (re-entrant): a locked ``step`` re-enters the lock when it calls
 # ``_inject_render_frame`` on the same thread.
 _gl_lock = threading.RLock()
+
+_robodojo_app = None
+_robodojo_root = ""
+_robodojo_policy_process = None
+
+
+def _load_robodojo_yaml(path: str) -> dict:
+    import yaml
+
+    with open(path, encoding="utf-8") as handle:
+        return yaml.safe_load(handle) or {}
+
+
+def _init_robodojo_runtime(args_cli) -> None:
+    """Launch Isaac once and prepare the official RoboDojo eval factory."""
+    global _robodojo_app, _robodojo_root
+    from isaaclab.app import AppLauncher
+
+    _robodojo_app = AppLauncher(args_cli).app
+    _robodojo_root = os.environ["ROBODOJO_ROOT"]
+    _ensure_robodojo_policy_server()
+    # RoboDojo's eval client imports ``client_server`` as a top-level module;
+    # that package lives under XPolicyLab in the upstream checkout.  The
+    # official scripts run with XPolicyLab on the import path, so mirror that
+    # layout in the isolated worker.
+    # Keep RoboDojo's own ``utils`` package ahead of XPolicyLab's similarly
+    # named package.  Otherwise ``utils.load_file`` resolves to XPolicyLab,
+    # which lacks load_object_metadata and breaks scene layout loading.
+    for path in (os.path.join(_robodojo_root, "XPolicyLab"), _robodojo_root):
+        if path not in sys.path:
+            sys.path.insert(0, path)
+    print(f"[worker:robodojo] Isaac runtime ready at {_robodojo_root}", file=sys.stderr, flush=True)
+
+
+def _ensure_robodojo_policy_server() -> None:
+    """Provide the real local policy endpoint required by RoboDojo EvalEnv.
+
+    Smoke tests start this endpoint in the parent process. MCP workers are
+    launched directly by ``BenchWorkerManager``, so they need the same
+    lifecycle internally instead of falling back to port 1 and retrying.
+    """
+    global _robodojo_policy_process
+    try:
+        configured_port = int(os.environ.get("ROBODOJO_POLICY_PORT", "0"))
+    except ValueError:
+        configured_port = 0
+    if configured_port > 1 or os.environ.get("ROBODOJO_POLICY_URL"):
+        return
+    sock = socket.socket()
+    sock.bind(("127.0.0.1", 0))
+    port = sock.getsockname()[1]
+    sock.close()
+    policy_script = os.path.join(_REPO, "scripts", "robodojo_smoke_policy_server.py")
+    _robodojo_policy_process = subprocess.Popen(
+        [sys.executable, policy_script, "--port", str(port)],
+        env=dict(os.environ),
+        stdout=sys.stderr,
+        stderr=sys.stderr,
+    )
+    os.environ["ROBODOJO_POLICY_PORT"] = str(port)
+    os.environ["ROBODOJO_POLICY_URL"] = f"ws://127.0.0.1:{port}"
+    print(f"[worker:robodojo] policy server at ws://127.0.0.1:{port}", file=sys.stderr, flush=True)
+
+
+def _make_robodojo_env(task_name: str, seed: int, robot: str | None = None,
+                        robot_variant: str = "single_x5"):
+    """Construct one official RoboDojo EvalEnv inside the worker process."""
+    if _robodojo_app is None:
+        raise RuntimeError("RoboDojo Isaac runtime was not initialized")
+    import importlib
+    from omegaconf import OmegaConf
+
+    root = _robodojo_root
+    env_cfg_name = os.environ.get("ROBODOJO_ENV_CFG", "arx_x5")
+    top = _load_robodojo_yaml(os.path.join(root, "env_cfg", f"{env_cfg_name}.yml"))
+    config = top.get("config", {})
+    task_registry = importlib.import_module("task.RoboDojo.task_registry")
+    from sim.envs.robodojo.upstream_compat import install_robot_naming, install_action_dimensions, install_action_codec
+    from sim.envs.robodojo.layout import resolve_native_layout, bind_layout, verify_live_layout
+    robot_manager_module = importlib.import_module("env.robot_manager.robot_manager")
+    install_robot_naming(robot_manager_module.RobotManager)
+    native_layout = resolve_native_layout(root, task_name, _load_robodojo_yaml(os.path.join(root, "task", "RoboDojo", "config", "_task.yml")), _load_robodojo_yaml)
+    source_task_name = task_name
+    task_config_path = task_registry.task_config_path(
+        os.path.join(root, "task", "RoboDojo", "config"), source_task_name
+    )
+    robot_config = os.environ.get("ROBODOJO_ROBOT_CONFIG", "").strip()
+    if robot_variant == "dual_x5":
+        # A single-arm deployment override must not remove the second arm.
+        robot_config = os.environ.get("ROBODOJO_DUAL_ROBOT_CONFIG", "").strip()
+        if native_layout["support_actors"] and os.environ.get("OPENETA_ROBODOJO_SUPPORT_POLICY") == "native_auxiliary_ownership_v1" and not robot_config:
+            robot_config = os.path.join(root, "env_cfg", "robot", native_layout["robot_config"]+".yml")
+    if not robot_config:
+        robot_config = os.path.join(
+            os.path.dirname(__file__), "envs", "robodojo", "config",
+            "dual_x5.yml" if robot_variant == "dual_x5" else "single_x5.yml",
+        )
+    if robot_config and os.path.isabs(robot_config):
+        robot_path = robot_config
+    else:
+        robot_name = robot_config or config["robot"]
+        robot_path = os.path.join(root, "env_cfg", "robot", f"{robot_name}.yml")
+    if not os.path.isfile(robot_path):
+        raise FileNotFoundError(
+            f"RoboDojo robot config not found: {robot_path}. "
+            f"Set ROBODOJO_ROBOT_CONFIG to an existing {robot_variant} overlay."
+        )
+    env_cfg = {
+        "sim": _load_robodojo_yaml(os.path.join(root, "env_cfg", "sim", f"{config['sim']}.yml")),
+        "scene": _load_robodojo_yaml(os.path.join(root, "env_cfg", "scene", f"{config['scene']}.yml")),
+        "camera": _load_robodojo_yaml(os.path.join(root, "env_cfg", "camera", f"{config['camera']}.yml")),
+        "robot": _load_robodojo_yaml(robot_path),
+        "task_env": _load_robodojo_yaml(task_config_path),
+        # RoboDojo's EvalEnv expects the complete env config in eval_cfg,
+        # including the top-level ``config`` section (the official launcher
+        # starts from arx_x5.yml and mutates it in place).
+        "eval_cfg": dict(top),
+        "deploy_cfg": {"policy_name": "openeta_smoke", "host": "127.0.0.1",
+                        "port": int(os.environ.get("ROBODOJO_POLICY_PORT", "1")),
+                        "policy_server_url": os.environ.get("ROBODOJO_POLICY_URL", "")},
+    }
+    env_cfg["eval_cfg"].update({
+        "task_name": source_task_name,
+        "config_name": env_cfg_name,
+        "seed": seed,
+        "num_envs": 1,
+        "eval_batch": False,
+        "eval_num": 1,
+        "policy_name": "openeta_smoke",
+        "observation": top.get("observation", {}),
+    })
+    layout_contract = bind_layout(native_layout, env_cfg["robot"], robot_variant, support_policy=os.environ.get("OPENETA_ROBODOJO_SUPPORT_POLICY") or None)
+    env_cfg["config"] = dict(config, robot=robot_variant)
+    env_cfg["eval_cfg"]["config"] = dict(config, robot=robot_variant)
+    from sim.envs.robodojo.calibration import configure_sensors, install_camera_contract
+    env_cfg = configure_sensors(env_cfg)
+    install_camera_contract()
+    from sim.envs.robodojo.gpu_runtime import configure as configure_gpu_runtime, install as install_gpu_runtime
+    env_cfg = configure_gpu_runtime(env_cfg)
+    install_gpu_runtime()
+    from sim.envs.robodojo.cloth_material_profile import install as install_cloth_material
+    install_cloth_material()
+    config_obj = OmegaConf.create(env_cfg)
+    # ``env_cfg`` is a plain dict until this point.  Apply overrides only to
+    # the fully-created DictConfig; OmegaConf.update(dict, ...) raises
+    # ``Unexpected type`` before RoboDojo gets a chance to construct.
+    OmegaConf.update(config_obj, "sim.scene.num_envs", 1, force_add=True)
+    # BaseEnv consumes a per-environment seed list.  This mirrors the
+    # upstream eval client for the Stage2 one-environment worker.
+    OmegaConf.update(config_obj, "sim.seed", [seed], force_add=True)
+    OmegaConf.update(config_obj, "eval_cfg.num_envs", 1, force_add=True)
+    # Official eval_client propagates the observation collection rate into the
+    # camera config before creating the environment.  Without this field the
+    # upstream CameraManager leaves default_frequency uninitialised.
+    collect_freq = config_obj.eval_cfg.get("observation", {}).get("collect_freq", 0)
+    OmegaConf.update(config_obj, "camera.default_frequency", collect_freq, force_add=True)
+    create_eval_env = importlib.import_module("src.eval_client.eval_env").create_eval_env
+    eval_module = importlib.import_module("src.eval_client.eval_env")
+    install_action_dimensions(eval_module, robot_variant)
+    from sim.envs.robodojo.asset_repairs import install as install_asset_repairs
+    install_asset_repairs()
+    from sim.envs.robodojo.retired_geometry import install as install_retired_geometry
+    install_retired_geometry()
+    from env.scene_manager.layout_manager import LayoutManager
+    from sim.envs.robodojo.gpu_lifecycle import install_preallocated_layout_identity
+    install_preallocated_layout_identity(LayoutManager)
+    env = create_eval_env(config_obj, _robodojo_app)
+    from sim.envs.robodojo.stability_diagnostics import install as install_stability_diagnostics
+    install_stability_diagnostics(env)
+    from sim.envs.robodojo.calibration import SENSOR_CONTRACT
+    env._openeta_sensor_contract = SENSOR_CONTRACT
+    verify_live_layout(env, layout_contract)
+    install_action_codec(type(env))
+    return env
 
 
 def _patch_robosuite_render_context() -> None:
@@ -289,6 +466,7 @@ def _auto_activate(env_id: str) -> None:
         "robocasa": "robocasa",
         "genesis": "genesis",
         "d4rl": "d4rl",
+        "robodojo": "robodojo",
     }
     target = mapping.get(bench)
     if target:
@@ -299,6 +477,31 @@ def _make_env(eid: str, task: str = "", seed: int = 0, render_mode: str = "rgb_a
                image_width: int | None = None, image_height: int | None = None,
                include_objects: bool = False, robot: str | None = None):
     """Create a gym env, auto-activating the bench if needed."""
+    if eid.startswith("openeta/robodojo_"):
+        from sim.envs.robodojo.unified_env import RoboDojoEnv
+        from sim.unified_env import UnifiedEnv
+
+        is_dual = "robodojo_dual_x5_" in eid
+        prefix = "openeta/robodojo_dual_x5_" if is_dual else "openeta/robodojo_single_x5_"
+        task_name = task or eid.removeprefix(prefix).removesuffix("-v0")
+        variant = "dual_x5" if is_dual else "single_x5"
+        backend = _make_robodojo_env(task_name, seed, robot, variant)
+        raw = RoboDojoEnv(
+            task_name,
+            seed=seed,
+            robot=robot or "x5",
+            render_mode=render_mode,
+            image_width=image_width,
+            image_height=image_height,
+            backend_env=backend,
+            robot_variant=variant,
+            arm_roles=("left", "right") if is_dual else ("primary",),
+            interactive=True,
+        )
+        env = UnifiedEnv(raw, render_mode=render_mode)
+        env._backend = "robodojo"
+        return env
+
     import gymnasium as gym
     _auto_activate(eid)
     kwargs: dict = {}
@@ -452,12 +655,10 @@ def _step_with_image(env, act, handle: str = "", render: bool = True) -> dict:
     Render failure is non-fatal — we still return the step result without
     a camera frame so the user can decide to retry or reset.
 
-    When ``render`` is ``False`` the (GPU-bound, ~130 ms) camera render is
-    skipped entirely.  This is used by ``move_to``'s closed-loop stepping,
-    which only reads the EE pose / joint positions from the result and never
-    the image — the dashboard's own background ``/render_all`` refresh keeps
-    the live view updated independently.  Skipping the render here makes
-    each control step ~5-8x faster.
+    When ``render`` is ``False``, skip the extra render and intermediate camera
+    conversion/encoding for transport. Some backends still render internally
+    during env.step(). The controller only needs robot state on these steps;
+    periodic, terminal and final observations retain their camera frames.
     """
     from adapter.protocol import EnvObservation, StepResult
 
@@ -490,7 +691,12 @@ def _step_with_image(env, act, handle: str = "", render: bool = True) -> dict:
                     pass  # render is best-effort; don't lose the step result
         if handle:
             _last_obs[handle] = obs
-        env_obs = EnvObservation.from_dict(obs)
+        # Keep the complete raw observation in _last_obs for later observe/
+        # render. Strip cameras only from the intermediate wire projection,
+        # BEFORE from_dict expands every RGB/depth pixel into Python numbers.
+        # Terminal receipts must keep the exact final visual evidence too.
+        wire_obs = obs if render or term or trunc else {**obs, "cameras": {}}
+        env_obs = EnvObservation.from_dict(wire_obs)
         # Sanitise info: drop non-serialisable values while still holding the
         # handle lock, then publish the done bit and its exact terminal result
         # atomically so a concurrent repeated request cannot observe one
@@ -529,6 +735,8 @@ def _reset_with_image(env, seed=None, handle: str = "") -> dict:
         with _gl_lock:
             obs, _ = env.reset(seed=seed)
             _inject_render_frame(env, obs)
+            from sim.private_state import capture
+            capture(env, 'initial-reset', {'seed':seed,'handle':handle})
         if handle:
             _last_obs[handle] = obs
             _done_handles.discard(handle)  # fresh episode — stepping allowed again
@@ -734,6 +942,7 @@ async def create_env(request):
     except Exception:
         pass
     be = getattr(env, "_backend", "")
+    robot_variant = "dual_x5" if "robodojo_dual_x5_" in eid else ("single_x5" if be == "robodojo" else None)
     if be == "metaworld":
         adesc = "xyz+gripper delta (4D)"
     elif be == "libero":
@@ -791,21 +1000,23 @@ async def create_env(request):
     return _json_response({
         "handle": h, "env_id": eid, "action_dim": adim, "action_desc": adesc,
         "action_low": alo, "action_high": ahi, "backend": be, "action_hint": hints,
-        "robot": body.get("robot"), "control_spec": control_spec,
+        "robot": body.get("robot"), "robot_variant": robot_variant, "control_spec": control_spec,
     })
 
 
 async def close_env(request):
     h = request.path_params.get("handle", "")
+    result = await _run_sim_call(_close_environment, h, bench=request.app.state.bench)
+    return _json_response(result)
+
+
+def _close_environment(h: str, *, bench: str) -> dict:
     # Serialise close against any in-flight step/observe on this handle so we
     # don't yank the env / cache out from under an active serialisation.
     with _obs_lock_for(h):
-        env = _envs.pop(h, None)
-        _last_obs.pop(h, None)
-        _done_handles.discard(h)
-        _terminal_step_results.pop(h, None)
-        if env:
-            if request.app.state.bench == "behavior":
+        env = _envs.get(h)
+        if env is not None:
+            if bench == "behavior":
                 # Sending og.shutdown() from inside this HTTP handler closes Kit's
                 # process resources before uvicorn can flush the response. The
                 # manager treats BEHAVIOR workers as single-use and terminates the
@@ -813,16 +1024,18 @@ async def close_env(request):
                 result = {"ok": True, "worker_retire_required": True}
             else:
                 try:
-                    await _run_sim_call(env.close)
-                except Exception:
-                    pass
+                    env.close()
+                except Exception as exc:
+                    return {"ok": False, "error": f"{type(exc).__name__}: {exc}",
+                            "close_state": "close_failed", "retryable": True}
                 result = {"ok": True, "worker_retire_required": False}
         else:
-            result = {"ok": False, "worker_retire_required": False}
-    # Drop the now-unused lock (a late concurrent caller just gets a fresh one).
-    with _obs_locks_guard:
-        _obs_locks.pop(h, None)
-    return _json_response(result)
+            result = {"ok": True, "already_closed": True, "worker_retire_required": False}
+        _envs.pop(h, None)
+        _last_obs.pop(h, None)
+        _done_handles.discard(h)
+        _terminal_step_results.pop(h, None)
+        return result
 
 
 def _safe_json_body(body: bytes) -> dict:
@@ -943,6 +1156,9 @@ async def reachability_env(request):
 
     def _check():
         from sim.reachability import check_endpoint_reachability
+        from sim.ik_search_policy import (
+            DEFAULT_IK_MAX_ATTEMPTS, DEFAULT_IK_MAX_NFEV_PER_ATTEMPT, DEFAULT_IK_TIMEOUT_S,
+        )
 
         # Capture current qpos consistently with reset/step/close.  The solver
         # uses an independent MjData and therefore never mutates the live env.
@@ -951,14 +1167,15 @@ async def reachability_env(request):
                 env,
                 target_xyz=xyz,
                 target_quat_xyzw=target_quat,
+                arm=body.get("arm"),
                 preserve_current_orientation=body.get(
                     "preserve_current_orientation", True
                 ),
                 position_tolerance_m=body.get("position_tolerance_m", 0.002),
                 orientation_tolerance_rad=body.get("orientation_tolerance_rad", 0.05),
-                max_attempts=body.get("max_attempts", 24),
-                max_nfev_per_attempt=body.get("max_nfev_per_attempt", 300),
-                timeout_s=body.get("timeout_s", 10.0),
+                max_attempts=body.get("max_attempts", DEFAULT_IK_MAX_ATTEMPTS),
+                max_nfev_per_attempt=body.get("max_nfev_per_attempt", DEFAULT_IK_MAX_NFEV_PER_ATTEMPT),
+                timeout_s=body.get("timeout_s", DEFAULT_IK_TIMEOUT_S),
             )
 
     return _json_response(await _run_sim_call(_check))
@@ -1018,6 +1235,7 @@ async def controller_goal_env(request):
                 else None
             ),
             motion_execution_condition=body.get("motion_execution_condition", "A"),
+            motion_mode=body.get('motion_mode', 'strict'),
             step_callback=lambda action, render: _step_with_image(
                 env,
                 action,
@@ -1028,10 +1246,13 @@ async def controller_goal_env(request):
         # Always return a fresh final visual observation, even when the short
         # controller run completed before the periodic render cadence.
         result["observation"] = _observe_with_image(env, handle=h)
+        from sim.controllers.gripper_contact import measure_gripper_contact
+        result['gripper_contact'] = measure_gripper_contact(env)
         return result
 
     try:
-        result = await _run_sim_call(_execute)
+        from sim.private_state import recorded
+        result = await _run_sim_call(lambda: recorded(env, 'move', {'handle':h,**body}, _execute))
         _env_errors.pop(h, None)
         return _json_response(result)
     except Exception as exc:
@@ -1051,6 +1272,40 @@ async def controller_goal_env(request):
             },
             500,
         )
+
+
+async def gripper_goal_env(request):
+    h = request.path_params.get('handle', '')
+    env = _envs.get(h)
+    if env is None:
+        return _json_response({'error':'Unknown handle'},400)
+    body = _safe_json_body(await request.body())
+    def execute():
+        from sim.controllers.gripper_guard import execute_checked_gripper
+        result = execute_checked_gripper(env.unwrapped, action=body.get('action'),
+            max_steps=body.get('max_steps'), contact_authorization=body.get('contact_authorization'),
+            step_callback=lambda action, render: _step_with_image(env,action,handle=h,render=render))
+        from sim.controllers.gripper_contact import measure_gripper_contact
+        result['gripper_contact'] = measure_gripper_contact(env.unwrapped)
+        # Camera observables were disabled during physics. Refresh agentview,
+        # wrist and depth once, then add the final render camera. No extra step.
+        from sim.controllers.mink_goal import _libero_runtime
+        from adapter.protocol import EnvObservation
+        raw,_ = _libero_runtime(env.unwrapped)
+        with _obs_lock_for(h), _gl_lock:
+            observation = env.unwrapped._normalise_obs(raw.env._get_observations(force_update=True))
+            _inject_render_frame(env,observation)
+            _last_obs[h] = observation
+            result['observation'] = EnvObservation.from_dict(observation).to_mcp_dict()
+            if result.get('terminated') or result.get('truncated'):
+                _terminal_step_results[h] = copy.deepcopy(result)
+        return result
+    from sim.private_state import recorded
+    try:
+        return _json_response(await _run_sim_call(lambda: recorded(env,'gripper',{'handle':h,**body},execute)))
+    except Exception as exc:
+        return _json_response({'error':f'checked gripper failed: {type(exc).__name__}: {exc}',
+            'stop_reason':'control_step_failed'},500)
 
 
 async def render_env(request):
@@ -1128,6 +1383,7 @@ app = Starlette(routes=[
     Route("/env/{handle}/render", render_env, methods=["POST"]),
     Route("/env/{handle}/reachability", reachability_env, methods=["POST"]),
     Route("/env/{handle}/controller-goal", controller_goal_env, methods=["POST"]),
+    Route("/env/{handle}/gripper-goal", gripper_goal_env, methods=["POST"]),
     Route("/render_all", render_all_envs, methods=["POST"]),
 ])
 
@@ -1136,11 +1392,21 @@ app = Starlette(routes=[
 # Main
 # ══════════════════════════════════════════════════════════════════════
 
+# Dedicated deployment dependency path; shared venv remains unchanged.
+if os.environ.get("OPENETA_ROBODOJO_FCL_PATH"):
+    sys.path.insert(0, os.environ["OPENETA_ROBODOJO_FCL_PATH"])
+from sim.envs.robodojo.worker_bridge import install_worker
+install_worker(sys.modules[__name__])
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description="OpenETA Bench Worker")
     p.add_argument("--bench", required=True, help="Bench name (libero, metaworld, maniskill, etc.)")
     p.add_argument("--port", type=int, default=0, help="Port (0 = random)")
     p.add_argument("--host", default="127.0.0.1")
+    if "robodojo" in sys.argv:
+        from isaaclab.app import AppLauncher
+
+        AppLauncher.add_app_launcher_args(p)
     args = p.parse_args()
 
     import socket
@@ -1160,6 +1426,13 @@ if __name__ == "__main__":
     sock.listen(128)
     port = sock.getsockname()[1]
 
+    # Report the reserved port before slow Isaac startup; queued connections
+    # are accepted once uvicorn starts.
+    print(port, flush=True)
+
+    if args.bench == "robodojo":
+        _init_robodojo_runtime(args)
+
     # Register envs for this bench (suppress bench info output during init)
     import io as _io
     _old_stdout = sys.stdout
@@ -1170,16 +1443,11 @@ if __name__ == "__main__":
     # Store bench name on app state
     app.state.bench = args.bench
 
-    # Write port to stdout (single clean line) for parent process discovery.
-    # Safe to announce now: the socket is already bound+listening, so the parent
-    # can connect (and the OS queues the connection until uvicorn accepts).
-    print(port, flush=True)
-
     # Start server on the pre-bound socket (fd is inherited by uvicorn).
     import uvicorn
     config = uvicorn.Config(app, fd=sock.fileno(), log_level="warning")
     server = uvicorn.Server(config)
-    if args.bench == "behavior":
+    if args.bench in ("behavior", "robodojo"):
         # Isaac Kit / OmniGibson requires the process main thread (signal
         # handlers, render loop, and teardown). Keep HTTP responsive in a
         # server thread and execute every simulator operation here via queue.
@@ -1195,3 +1463,9 @@ if __name__ == "__main__":
             server_thread.join(timeout=5)
     else:
         server.run()
+    if _robodojo_policy_process is not None:
+        _robodojo_policy_process.terminate()
+        try:
+            _robodojo_policy_process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            _robodojo_policy_process.kill()

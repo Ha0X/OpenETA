@@ -138,6 +138,7 @@ def build_reachability_summary(payload: JsonDict) -> JsonDict:
     }
     for key in (
         "kinematic_status",
+        "constraint_diagnosis",
         "orientation_mode",
         "feasible",
         "message",
@@ -300,6 +301,9 @@ def build_motion_summary(payload: JsonDict) -> JsonDict:
     """Return compact controller outcome fields used for closed-loop recovery."""
 
     summary: JsonDict = {}
+    gripper_contact = payload.get("gripper_contact")
+    if isinstance(gripper_contact, dict):
+        summary["gripper_contact"] = _compact_scalar_mapping(gripper_contact)
     collision = payload.get("collision")
     if isinstance(collision, dict):
         summary["collision"] = _compact_scalar_mapping(collision)
@@ -309,6 +313,27 @@ def build_motion_summary(payload: JsonDict) -> JsonDict:
     controller_failure = payload.get("controller_failure")
     if isinstance(controller_failure, dict):
         summary["controller_failure"] = _compact_scalar_mapping(controller_failure)
+        constraints = controller_failure.get('constraints')
+        if isinstance(constraints, list):
+            summary['controller_failure']['constraints'] = sorted({v for v in constraints
+                if isinstance(v, str) and v in {'joint_limit', 'robot_collision',
+                    'attached_collision', 'path_tracking', 'fixture_contact_scope'}})
+        from sim.controllers.collision_feedback import public_candidate_obstacles
+        candidates = public_candidate_obstacles(controller_failure.get("candidate_obstacles"))
+        if candidates:
+            summary["controller_failure"]["candidate_obstacles"] = candidates
+        from sim.controllers.collision_feedback import public_tracking_constraints
+        tracking = public_tracking_constraints(controller_failure.get("tracking_constraints"))
+        if tracking:
+            summary["controller_failure"]["tracking_constraints"] = tracking
+        from sim.controllers.stall_feedback import public_stall_context
+        stall = public_stall_context(controller_failure.get("stall_context"))
+        if stall:
+            summary["controller_failure"]["stall_context"] = stall
+        from sim.controllers.candidate_feedback import public_candidate_trace
+        trace = public_candidate_trace(controller_failure.get('candidate_trace'))
+        if trace:
+            summary['controller_failure']['candidate_trace'] = trace
     convergence_diagnostics = payload.get("convergence_diagnostics")
     if isinstance(convergence_diagnostics, dict):
         summary["convergence_diagnostics"] = _plain_json_value(
@@ -386,7 +411,7 @@ def build_motion_summary(payload: JsonDict) -> JsonDict:
         if isinstance(value, dict):
             summary[key] = _compact_pose(value)
     steps = payload.get("steps_executed")
-    if isinstance(steps, int):
+    if isinstance(steps, int) and not isinstance(steps, bool) and steps >= 0:
         summary["steps_executed"] = steps
     for key in (
         "position_error_m",

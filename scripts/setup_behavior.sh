@@ -17,7 +17,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-BEHAVIOR_ROOT="${BEHAVIOR_ROOT:-/home/yfzhang/nvme1/BEHAVIOR-1K}"
+BEHAVIOR_ROOT="${BEHAVIOR_ROOT:-/opt/openeta-data/BEHAVIOR-1K}"
 CONDA_ENV_NAME="${CONDA_ENV_NAME:-behavior}"
 BEHAVIOR_TAG="${BEHAVIOR_TAG:-v3.9.1}"
 # Upstream setup.sh pins torch 2.7.0+cu128; the CUDA toolkit must match that

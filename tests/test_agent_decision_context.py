@@ -14,6 +14,7 @@ from agent.runtime.planner import (
     PlannerDecision,
     ToolCallingPlanner,
     _project_latest_tool_outputs,
+    _bounded_decision_value,
     build_tool_context,
 )
 from agent.runtime.skills import build_default_skill_registry
@@ -34,6 +35,105 @@ class RecordingBackend(PlannerBackend):
                 "reasoning": "current evidence inspected",
             }
         )
+
+
+def test_projection_distinguishes_source_completeness_and_retains_leaf_values():
+    source = {"truncated": False, "matches": [
+        {"id": f"hit-{index}", "cursor": {"char_offset": index, "version": "v1"}}
+        for index in range(100)
+    ]}
+    projected = _bounded_decision_value(source, depth=4, max_items=8)
+    assert projected["truncated"] is False
+    assert projected["matches"][0]["cursor"] == {"char_offset": 0, "version": "v1"}
+    metadata = projected["__context_projection__"]
+    assert metadata["source_truncated"] is False
+    assert metadata["model_visible_complete"] is False
+    assert metadata["omissions"] == [{"json_pointer": "/matches", "kind": "list_items",
+                                      "original_count": 100, "visible_count": 8}]
+    assert len(source["matches"]) == 100
+
+
+def test_projection_reports_strings_depth_and_dict_clipping_separately():
+    source = {"message": "abcdef", "nested": {"one": {"two": [1]}},
+              "many": {str(index): index for index in range(20)}}
+    projected = _bounded_decision_value(source, depth=2, max_items=3, max_string_chars=3)
+    metadata = projected["__context_projection__"]
+    assert {item["kind"] for item in metadata["omissions"]} == {
+        "string_chars", "depth", "dict_entries",
+    }
+    invalid_flag = _bounded_decision_value({"truncated": "x" * 10000}, max_string_chars=10)
+    assert invalid_flag["__context_projection__"]["source_truncated"] is None
+    assert len(json.dumps(invalid_flag)) < 1000
+
+
+def test_wire_path_filter_preserves_text_json_but_still_hides_camera_paths():
+    from agent.backends.planner import _strip_visual_transport_paths
+    source = {"records": [
+        {"type": "json", "path": "/session/full-result.json"},
+        {"type": "text", "path": "/session/log.txt"},
+        {"type": "image", "path": "/session/camera.png", "frame_id": "wrist"},
+        {"type": {}, "path": "/unknown", "schema_version": []},
+    ]}
+    projected = _strip_visual_transport_paths(source)["records"]
+    assert projected[0]["path"] == "/session/full-result.json"
+    assert projected[1]["path"] == "/session/log.txt"
+    assert "path" not in projected[2] and "path" not in projected[3]
+    assert projected[2]["frame_id"] == "wrist"
+
+
+def test_artifact_grep_survives_real_python_and_final_provider_projection(tmp_path):
+    from agent.backends.planner import OpenAICompatiblePlannerBackend, OpenAICompatiblePlannerBackendConfig
+    from agent.tools.coding import PythonExecConfig, PythonExecRuntime
+    from agent.tools.registry import ToolExecutionContext
+    from agent.runtime.text_artifacts import read_text_artifact
+
+    path = tmp_path / "evidence.txt"
+    path.write_text("".join("x" * 1000 + f"NEEDLE-{i}" + "z" * 1000 + "\n" for i in range(100)))
+    tools = build_default_tool_registry()
+    runtime = PythonExecRuntime(PythonExecConfig(
+        session_root=str(tmp_path), max_inline_structured_chars=1_000_000,
+    ))
+    tool_result = runtime.handler(ToolExecutionContext(
+        name="python_exec", spec=tools.get("python_exec"),
+        parameters={"code": f"result = artifacts.grep_text({str(path)!r}, 'NEEDLE', max_matches=100)"},
+    ))
+    assert tool_result.success is True
+    assert tool_result.details["outputs"]["result"]["truncated"] is False
+    memory = AgentMemory()
+    memory.start_session(task="inspect evidence")
+    memory.add_action(EnvAction(action_type="tool_call", command={
+        "status": "executed", "tool_calls": [{
+            "name": "python_exec", "status": "executed",
+            "result": {"success": True, "content": tool_result.content, "details": tool_result.details},
+        }],
+    }))
+    bodies = []
+
+    def transport(url, body, headers, timeout_s):
+        bodies.append(body)
+        return {"choices": [{"message": {"content": (
+            '<decision><kind>response</kind><name>talk</name><parameters><message>inspect</message>'
+            '</parameters><reasoning>read evidence</reasoning></decision>'
+        )}}]}
+
+    backend = OpenAICompatiblePlannerBackend(OpenAICompatiblePlannerBackendConfig(
+        model="fixture", api_base="https://example.invalid", api_key="fixture",
+        enable_vision=False, max_attempts=1,
+    ), transport=transport)
+    ToolCallingPlanner(backend=backend).plan(
+        _observation(), memory=memory, tools=tools, skills=build_default_skill_registry(),
+    )
+    content = bodies[0]["messages"][-1]["content"]
+    wire = json.loads(content)
+    visible = wire["tool_context"]["decision_state"]["last_action_effect"]["outputs"]
+    assert visible["result"]["truncated"] is False
+    hits = visible["result"]["matches"]
+    assert 0 < len(hits) < 100
+    assert "NEEDLE-0" in hits[0]["text"]
+    assert visible["__context_projection__"]["model_visible_complete"] is False
+    assert visible["result"]["path"] == str(path)
+    page = read_text_artifact(path, cursor=hits[0]["read_cursor"], max_chars=8)
+    assert page["text"] == "NEEDLE-0"
 
 
 def _observation() -> EnvObservation:
@@ -88,6 +188,65 @@ def test_agent_context_prioritizes_current_evidence_and_agent_memory() -> None:
     assert "required_action" not in str(agent_context)
     compatibility_payload = {key: value for key, value in context.items() if key != "agent_context"}
     assert len(json.dumps(agent_context)) < len(json.dumps(compatibility_payload))
+
+
+def test_agent_context_projects_latest_molmopoint_review_image() -> None:
+    memory = AgentMemory()
+    memory.start_session(task="open the middle drawer")
+    memory.add_action(
+        EnvAction(
+            action_type="tool_call",
+            command={
+                "status": "executed",
+                "tool_calls": [
+                    {
+                        "name": "molmopoint",
+                        "status": "executed",
+                        "result": {
+                            "success": True,
+                            "details": {
+                                "operational_success": True,
+                                "outputs": {"source_packet_ids": ["obs-0001"]},
+                                "artifacts": [
+                                    {
+                                        "type": "molmopoint_point_overlay",
+                                        "kind": "image",
+                                        "path": "/session/point-overlay.png",
+                                    },
+                                    {
+                                        "type": "molmopoint_contact_sheet",
+                                        "kind": "image",
+                                        "path": "/session/point-contact-sheet.png",
+                                    },
+                                ],
+                            },
+                        },
+                    }
+                ],
+            },
+        )
+    )
+
+    context = build_tool_context(
+        observation=_observation(),
+        memory=memory,
+        tools=build_default_tool_registry(),
+        skills=build_default_skill_registry(),
+    )
+
+    assert context["agent_context"]["review_vision_evidence"] == [
+        {
+            "evidence_id": "tool_review:molmopoint:0",
+            "role": "tool_result_review",
+            "source_tool": "molmopoint",
+            "artifact_type": "molmopoint_contact_sheet",
+            "path": "/session/point-contact-sheet.png",
+            "freshness": "derived_from_source_packet",
+            "derived": True,
+            "not_world_observation": True,
+            "source_packet_id": "obs-0001",
+        }
+    ]
 
 
 def test_latest_probe_projection_keeps_short_ik_handoff_and_omits_pose_payload() -> None:
@@ -1005,7 +1164,8 @@ def test_wrist_alignment_bundle_hides_host_paths_from_planner_call() -> None:
         memory.resolve_wrist_alignment_bundle(public["bundle_id"])
 
 
-def test_exact_instance_mismatch_cannot_be_overridden_by_sam_selection() -> None:
+@pytest.mark.parametrize("verifier_decision", ["mismatch", "abstain"])
+def test_reference_verifier_cannot_veto_main_agent_selection(verifier_decision) -> None:
     memory = AgentMemory()
     memory.start_session(task="pick the green bottle")
     memory.save_fact(
@@ -1016,7 +1176,7 @@ def test_exact_instance_mismatch_cannot_be_overridden_by_sam_selection() -> None
             "target_prompt": "bottle",
             "candidates": [{"id": "detection_000", "mask_ref": "orange.png"}],
             "identity_conflict": {
-                "decision": "mismatch",
+                "decision": verifier_decision,
                 "confidence": 0.97,
                 "reason": "reference is green; candidate is orange",
             },
@@ -1024,16 +1184,16 @@ def test_exact_instance_mismatch_cannot_be_overridden_by_sam_selection() -> None
         source="asset_reference",
     )
 
-    with pytest.raises(ValueError, match="target_identity_conflict"):
-        memory.resolve_sam3_selection(
+    selected = memory.resolve_sam3_selection(
             result_id="sam-wrong-bottle",
             detection_id="detection_000",
             selection_source="main_agent_vlm",
             reason="generic bottle semantics",
         )
 
-    assert memory.pending_sam3_selection() is not None
-    assert memory.selected_sam3_detection() is None
+    assert memory.pending_sam3_selection() is None
+    assert selected["reference_verification_advice"]["decision"] == verifier_decision
+    assert selected["reference_verification_advice"]["blocking"] is False
 
 
 def test_new_target_detection_requires_explicit_identity_relation() -> None:
@@ -1135,6 +1295,53 @@ def test_agent_can_explicitly_replace_a_misidentified_target_anchor() -> None:
     assert corrected["identity_anchor_id"] != old_anchor_id
     assert corrected["replaced_identity_anchor_id"] == old_anchor_id
     assert corrected["identity_continuity"] == "anchor_replaced_after_misidentification"
+
+
+def test_agent_can_advance_to_a_distinct_required_target_without_claiming_misidentification() -> None:
+    memory = AgentMemory()
+    memory.start_session(task="put both cans in the basket")
+    memory.save_fact(
+        "pending_sam3_selection",
+        {
+            "result_id": "sam-first-can",
+            "evidence_role": "target_object",
+            "target_prompt": "alphabet soup can",
+            "source_packet_id": "packet-1",
+            "candidates": [{"id": "detection_000", "mask_ref": "alphabet.png"}],
+        },
+        source="test",
+    )
+    first = memory.resolve_sam3_selection(
+        result_id="sam-first-can",
+        detection_id="detection_000",
+        selection_source="main_agent_vlm",
+        reason="first explicitly required can",
+    )
+    first_anchor_id = first["identity_anchor_id"]
+    memory.save_fact(
+        "pending_sam3_selection",
+        {
+            "result_id": "sam-second-can",
+            "evidence_role": "target_object",
+            "target_prompt": "tomato sauce can",
+            "source_packet_id": "packet-2",
+            "candidates": [{"id": "detection_001", "mask_ref": "tomato.png"}],
+        },
+        source="test",
+    )
+
+    second = memory.resolve_sam3_selection(
+        result_id="sam-second-can",
+        detection_id="detection_001",
+        selection_source="main_agent_vlm",
+        reason="alphabet soup is already placed; tomato sauce is the next required target",
+        identity_anchor_id=first_anchor_id,
+        identity_relation="new_task_target",
+    )
+
+    assert second["identity_anchor_id"] != first_anchor_id
+    assert second["previous_task_target_anchor_id"] == first_anchor_id
+    assert second["identity_continuity"] == "intentional_next_task_target"
 
 def test_fresh_observation_and_motion_reconciliation_remain_host_invariants() -> None:
     memory = AgentMemory()

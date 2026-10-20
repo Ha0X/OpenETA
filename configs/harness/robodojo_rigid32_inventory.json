@@ -1,0 +1,572 @@
+{
+  "schema_version": 1,
+  "native_revision": "ee67a1468510da7624a089164402359f2afc72c8",
+  "scope": "base_tasks_excluding_random_variants",
+  "acceptance_is_benchmark_success": false,
+  "tasks": [
+    {
+      "task": "align_blocks",
+      "scene_types": [
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "c8597e96132cd7c9d30f3ae101f7bbe8ac28597b629599d75d442bbea4c6e74c",
+      "scene_config_sha256": "082c9d7a32968052b8ce954bee212c7ec0a96b756150701d4b531abdea59be2b",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "arrange_largest_number",
+      "scene_types": [
+        "Rigid",
+        "Geometry",
+        "ProhibitedArea"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "277acd20ae4345dc71267762e588b7b0343387c71685183890f044a4808b7a20",
+      "scene_config_sha256": "3bf6b7e286ea328fb1e4a994a8d30af9afb4b0b4dcd7ceafed43cc6160c9978f",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "build_tower",
+      "scene_types": [
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "814cf6ffb459871e5cf49f4e127903dbfbc30926f33db71de0b84a71ab235d6e",
+      "scene_config_sha256": "e1bab8756bbc5664e3171e2389c060a79a3fbbf92a6af4ef555dcaf59fce275c",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "classify_objects",
+      "scene_types": [
+        "Geometry",
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "aef4333c088766375e21a928d53a9a93aaee285fecae41e22385acdc74dd11ac",
+      "scene_config_sha256": "80a754d2aedd6a89f58185eae36f5b2eb1a28250f40a67325f576fde34650384",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "classify_objects_by_language",
+      "scene_types": [
+        "Geometry",
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "242a8f048f487eb174ef246be78613bbb5f153549ee11a2650412718cf3b36c9",
+      "scene_config_sha256": "ac6c739ca82a64b53c799af79b44363db1a88246f76d867f8830729e5613507b",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "cover_blocks",
+      "scene_types": [
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "9d14931b16842b93bea8abf9a07991a93a7e663b93c5fd1695108c8b922ab862",
+      "scene_config_sha256": "68f90c85fad2b152cf7853cf48888d09ce74bb27a692ff2feacd11160771c5a7",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "deposit_coin",
+      "scene_types": [
+        "Geometry",
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "f9868ef827ec17b8db6c4650cc5d9a9e593d20d00ee822e2212ce229ec01fb61",
+      "scene_config_sha256": "f547b12216fb9a5dfe2e7d7e882d89e1e53ee1a805c943ba09a3c2cdea8c17a3",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "fasten_screws",
+      "scene_types": [
+        "Rigid",
+        "Geometry",
+        "ProhibitedArea"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "2e187a28e33e44efb87baae6463b3ec35264ccd41e35c21a1be44f6361675185",
+      "scene_config_sha256": "5fbe4cf5b3ee2eafc2771137b13176f01617f8b2131f02503e676a7b62e2eabf",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "fill_egg_holder",
+      "scene_types": [
+        "Geometry",
+        "Rigid",
+        "Articulation"
+      ],
+      "candidate": false,
+      "excluded_types": [
+        "Articulation"
+      ],
+      "task_source_sha256": "506dfb772f8882ae53966e3580affde19c3c0f11591c78cc5f5b1d997ba04f7e",
+      "scene_config_sha256": "d79129278c9a5488d63bb1d3865f2c6b39f21f85957ec94ace091af9ae29e31f",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "fill_pen_holder",
+      "scene_types": [
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "8706dce239487e078b21af0b95bcc5cd4eabdcdadcdcbc6400d6b138d982f1e6",
+      "scene_config_sha256": "ac72e5582495e8757c547997b317e2fe990370009527b1faa6bfbf4e1275537c",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "fold_clothes",
+      "scene_types": [
+        "Garment"
+      ],
+      "candidate": false,
+      "excluded_types": [
+        "Garment"
+      ],
+      "task_source_sha256": "ecea9c287d0579605330168e6f36734704fb14a6b1e5dec82b6f2ee3a56ec20a",
+      "scene_config_sha256": "56447e3f592e0db388ebb7482ec758ecd5485ec81b9227c2dffe5390bd7d8c8e",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "general_pickup",
+      "scene_types": [
+        "Rigid",
+        "Clutter"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "1a9eef7fe518f9d2c6805ad1a8f97c1045fa83726f84b9c63f67ffdfabbc40a7",
+      "scene_config_sha256": "35de68117cb0ed596b30db1c62f1f9090f2cd1237242a03d5aaeb7186e791d93",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "hang_mugs",
+      "scene_types": [
+        "Rigid",
+        "Geometry"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "4bc6586bd87de030b9c580fea2a45e7977c3b6a4d75cf3c43b546d349d42e906",
+      "scene_config_sha256": "0086d374d3f7e82abb85e43a17cdfa437e1ac645a0171fb47496c2b81427dce9",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "imitate_sorting_sequence",
+      "scene_types": [
+        "Geometry",
+        "Rigid",
+        "Prohibited_Area"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "18400cb3c5f5103492819df2dcdf05a77916106e8a503cb62b4ee6cdbaa9305b",
+      "scene_config_sha256": "d9e194d8c742288601c641ccb75052a67da46e536c0b06c7fb7311d9e2c61a42",
+      "native_robot_config": "dual_x5_and_franka_competition",
+      "admission_blocker": "support_franka_and_demonstration_or_opponent_adapter_missing"
+    },
+    {
+      "task": "insert_key",
+      "scene_types": [
+        "Geometry",
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "180978a2915744f0596fbca4ea0ad6dcb47dce005d43f06807249bc8b4d1a828",
+      "scene_config_sha256": "c0b409d5c020e0ad706c378b6f63b39dfe7bed4682d978907c40e1cfa7623335",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "insert_tubes",
+      "scene_types": [
+        "Rigid",
+        "Geometry"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "9a68795ddbd0b816ffd7627e673390ecd83594c0e9d374d4e3abf3435ad439e1",
+      "scene_config_sha256": "5c070e5c764a2ea93f8de0b52e6a664a23c717963fe09fe3af17918a4a1ee9ef",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "make_kong",
+      "scene_types": [
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "b9266689d65f9213b05219ad952344f9fd63be8892097ec0103af99791b245d5",
+      "scene_config_sha256": "8a33c9e57b6e6c719c4800911c37272ba055ad0f4cda2f1de9d531ee2910351a",
+      "native_robot_config": "dual_x5_and_franka_competition",
+      "admission_blocker": "support_franka_and_demonstration_or_opponent_adapter_missing"
+    },
+    {
+      "task": "make_toast",
+      "scene_types": [
+        "Articulation",
+        "Geometry",
+        "Rigid"
+      ],
+      "candidate": false,
+      "excluded_types": [
+        "Articulation"
+      ],
+      "task_source_sha256": "1047f484a73d1f92304393879b51f87e33d661b6ad7937198352fe37a0d3233d",
+      "scene_config_sha256": "d190a26233db174538ff0052b4c2958a3b107f0ccc63d0fdfe28da4c7f5dc57b",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "match_and_pick_from_conveyor",
+      "scene_types": [
+        "Dynamic",
+        "Rigid"
+      ],
+      "candidate": false,
+      "excluded_types": [
+        "Dynamic"
+      ],
+      "task_source_sha256": "53110b8a0c971bd3ae8878bfb7d0dcd9626bd9b610d4e7fc91772313b435a5c0",
+      "scene_config_sha256": "0ae1c2537d9b1880748316928cfd7ba4c6421ecccfedb85c4c5395a7a86c5361",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "organize_table",
+      "scene_types": [
+        "Geometry",
+        "Rigid",
+        "ProhibitedArea"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "aceb298e78f3f39e4cf9a9f4c5a4f747b2c55f1a6006de2065e110a05f4295d6",
+      "scene_config_sha256": "9ffa15dd279060d4f042285a2c53a341c7208e2f89a2f3dd36ee08b22aa453fa",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "pack_objects_into_box",
+      "scene_types": [
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "84a1cf1dd5e166f36291130f9d8cb5dfe4b3f4732a46674bef6374a7ea2d66be",
+      "scene_config_sha256": "e232962b8394d08c04c5da14deb88d7b233afa00ab99af8001c084218951d7ca",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "pick_from_conveyor_by_image",
+      "scene_types": [
+        "Dynamic",
+        "Geometry",
+        "Rigid"
+      ],
+      "candidate": false,
+      "excluded_types": [
+        "Dynamic"
+      ],
+      "task_source_sha256": "a0d29576d0aab8232d2fd3ebcc8c510e81c70b4cc04602a5be3e99ee2275e01d",
+      "scene_config_sha256": "6b310b70a0ead9d09e7c221c6bbc952140a44b1d43034613bf02e954eebcf9dd",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "play_Xylophone",
+      "scene_types": [
+        "Rigid",
+        "Geometry"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "b7a4b0bc0457bcf55d714ca1867476fc4aabc53084adfc78d3ff5d1437bf7847",
+      "scene_config_sha256": "28adedb0f03c49693af32cea37855f3f95ec3f76f031bfd571fb8bfffb2ec59c",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "play_stacking_toy",
+      "scene_types": [
+        "Geometry",
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "23361329ee7efe330da1f1c241415205bafed2b6c082a913659d868a80d338c3",
+      "scene_config_sha256": "a09afc106161064a2ea6a40882d717f7872bd4875309a97431d6863a9b7ffa1c",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "play_tic_tac_toe",
+      "scene_types": [
+        "Geometry",
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "8f75ebfe55c997ad9bd3b342db46e843e87397db94356f31cadcbe0cb483bca7",
+      "scene_config_sha256": "63f863a7fb81a040f65803c64f97c4e9577d4fe32cd0f92563bdc72d1aa336d2",
+      "native_robot_config": "dual_x5_and_franka_competition",
+      "admission_blocker": "support_franka_and_demonstration_or_opponent_adapter_missing"
+    },
+    {
+      "task": "plug_in_charger",
+      "scene_types": [
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "aaa59ade46dc54f430e1148e3f6fae487970cd29eb2c07b5ff7b4045edb831b6",
+      "scene_config_sha256": "2046b47112049e038ecfa24a8c8044fb1db84f629a4a32eeb24822157d2d4dcb",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "pour_balls_into_vase",
+      "scene_types": [
+        "Rigid",
+        "Geometry"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "eae388b93ec196c401f76bbab3b0119cb2164f90bece0225d4fb925d3f2b73ab",
+      "scene_config_sha256": "084a707af61d24123912777b417fe0c0b230eb9653e686af42570791e924ff8b",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "pour_by_language",
+      "scene_types": [
+        "Rigid",
+        "Fluid"
+      ],
+      "candidate": false,
+      "excluded_types": [
+        "Fluid"
+      ],
+      "task_source_sha256": "f7a15a7fca2c649a7918d68960ede27e667f409a339b668dd9876db890724cfb",
+      "scene_config_sha256": "efb2e3c3cb08dd6d2d2ae011b3e9a218b5f1f0a92f025b8e3b9e8abd7011c250",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "pour_liquid_into_cup",
+      "scene_types": [
+        "Rigid",
+        "Fluid"
+      ],
+      "candidate": false,
+      "excluded_types": [
+        "Fluid"
+      ],
+      "task_source_sha256": "73f8c91b57c352fdc1e7ba3fe5354b3c10e4156d8e5ba777762ad0fa1aff5663",
+      "scene_config_sha256": "32092b11667b3306579b04225303610c061585ace28531fa9996afc339c5a2ba",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "press_by_number",
+      "scene_types": [
+        "Geometry",
+        "Articulation"
+      ],
+      "candidate": false,
+      "excluded_types": [
+        "Articulation"
+      ],
+      "task_source_sha256": "006f969087c00c417a63875a9de153f698c52d1f1ca0caf0aa16076aa15059c5",
+      "scene_config_sha256": "b784643495bcbca933f5a5fbc91b7dad3465fe888239b358d516977c78c38f63",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "push_T",
+      "scene_types": [
+        "Rigid",
+        "Geometry"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "a01d753bc320ffbf492ccc29e5f7ab3b39e6c7d255cd25804db1934a30fa5b41",
+      "scene_config_sha256": "b55ea11002ff3e5dc63982ca8c1247fd7bee4f4a607f4d674e220b86cf120a25",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "put_bottles_into_dustbin",
+      "scene_types": [
+        "Rigid",
+        "Geometry"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "3ba6e19df0c5ff19ba961092f031ce14e91e72a9a4a5934eece6000a1ffa1c48",
+      "scene_config_sha256": "7eddf43e287b6e8aea686c6d686fb87e13ac1be1cb5aac16a8a2b0d2e9eb976e",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "solve_equation",
+      "scene_types": [
+        "Rigid",
+        "Geometry"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "e287a2f36b82b28e8ca7824f63b1b723b02972ea6dfc115ff32b2882729751f7",
+      "scene_config_sha256": "bdaad2ff1cc8b7ec6413a3715d49ea9cefd664e7e204544977832e18785f1e75",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "sort_nesting_dolls_by_size",
+      "scene_types": [
+        "Rigid",
+        "ProhibitedArea"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "1838fa6b515bad3796895cb5c1883c6a42789b7dada5434765764600e70beb49",
+      "scene_config_sha256": "8927cb2ebb18449554d851e629bd7d568e12e46c5c3c636c8e7122f4fab1ed1f",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "stack_blocks",
+      "scene_types": [
+        "Rigid",
+        "ProhibitedArea"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "50bd388f9e47002966fbb0146742467a820295b8686e0f86379f0efbcfffcc1b",
+      "scene_config_sha256": "2802e88ebc3e2d3d05ce345d75e9ad6151a6690e4ef1e0021a5223d291a402d2",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "stack_blocks_by_language",
+      "scene_types": [
+        "Rigid",
+        "ProhibitedArea"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "68fc05bf1534a400e6dc93aab04e7561fa43485a226e3a74b4560ac154c1b6fb",
+      "scene_config_sha256": "4fbfed4f7fc49120831087e709a8dbdfdb4504eb143196000d5790b54eb3bc40",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "stack_bowls",
+      "scene_types": [
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "022c129ec3493183b1a26688a0402f5a00a1546ae011999e9c19f4c0029e2b7d",
+      "scene_config_sha256": "4e2aaa12b8b0f58ca801f1a93638c46d3b49ebad809c5a8011382ccda846dcb1",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "store_laptop_and_headphones",
+      "scene_types": [
+        "Articulation",
+        "Rigid",
+        "Geometry"
+      ],
+      "candidate": false,
+      "excluded_types": [
+        "Articulation"
+      ],
+      "task_source_sha256": "2bee4e31f0594900629fe7f43266e16fecb310b152930ce51524507136809a92",
+      "scene_config_sha256": "0fdaab803a9370a9e2d1fc8d86a5788daa3940c08fd6f767334f625642fca3e2",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "store_tools_in_toolbox",
+      "scene_types": [
+        "Geometry",
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "2969fc3eb171560b3c0bcea62b9f38b8b35f3aecc9bcc7085c3b1cec365b48fc",
+      "scene_config_sha256": "641c8ef92393bd986e408d26a84b1cfcdac27466a5ac5f0b3ebe4bb84430c527",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "swap_T",
+      "scene_types": [
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "57fc289b3957caa454e1d8e005e3a57c973d6ab40121845c94799e61e4bfafdf",
+      "scene_config_sha256": "1daf769911e13714b4aeabd208292931e32f4dd39968893152bb7bb477c46c9b",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "swap_blocks",
+      "scene_types": [
+        "Geometry",
+        "Rigid",
+        "Articulation"
+      ],
+      "candidate": false,
+      "excluded_types": [
+        "Articulation"
+      ],
+      "task_source_sha256": "08ed24ae9dff27f4e5c850161a02f62ce237859c096d9b06a853a7890e0ad4ed",
+      "scene_config_sha256": "b6bb2a9df494719f26c6b1aab2e7576107ae76e2fbac8b63a5770f21e0e9f05f",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    },
+    {
+      "task": "sweep_blocks",
+      "scene_types": [
+        "Rigid"
+      ],
+      "candidate": true,
+      "excluded_types": [],
+      "task_source_sha256": "65786217e199c1e2b26ec8e2c232bf98ecb304a20939d0908fe12bc41e990614",
+      "scene_config_sha256": "98aa25ac39be9d335c71b2b586bbba372789e9d61e652e1147152c87febbf1f5",
+      "native_robot_config": "dual_x5",
+      "admission_blocker": null
+    }
+  ]
+}

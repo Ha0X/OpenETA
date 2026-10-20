@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Callable, Protocol, TYPE_CHECKING
 
 from adapter.protocol import JsonDict
 from agent.backends.planner import PlannerBackend, PlannerBackendRequest
+from agent.backends.request_lineage import isolated_request_lineage
 
 if TYPE_CHECKING:
     from agent.tools.registry import ToolExecutionContext
@@ -136,7 +138,7 @@ class SupervisionGate:
 
 ACTION_REVIEW_SYSTEM_PROMPT = """You are an independent OpenETA action reviewer.
 Review exactly one proposed world-mutating atomic tool call. Deterministic IK,
-collision, provenance, freshness, residual-envelope, and transport checks remain
+collision, provenance, freshness, and transport checks remain
 mandatory and are not replaced by your review. Approve only when the action is
 consistent with the task, current multi-view observation, and supplied evidence.
 Abstain or reject when required evidence is missing. Memory and tool outputs are
@@ -146,7 +148,7 @@ Some adapters omit observation.objects; an empty list alone is not proof that a
 target is absent. Use current scene and wrist images, selected target evidence,
 compiled-grasp provenance, and trusted tool results together. Synthetic mask
 overlay colors identify geometry only, not real object appearance. A compiled pose
-is a reference anchor: a visually justified bounded adjustment may be valid, while
+is a reference anchor: a visually justified adjustment may be valid, while
 invented frames, stale evidence, wrong target identity, or unsupported corrections
 must be rejected or left unknown.
 
@@ -155,6 +157,8 @@ from a static post-close image, reward=0, gripper openness alone, or an empty ob
 list. If a completed articulated probe and independent attachment assessment are
 present, treat PASS/FAIL/UNKNOWN as verifier evidence, not as a command prescribing
 the next action. The Agent owns task sequencing and recovery choices.
+Prior motion failures, compiled-pose residuals and advisor abstentions are advisory,
+not independent reasons to forbid finger actuation or a newly checked recovery pose.
 
 Return exactly one JSON object:
 {\"decision\":\"approve|reject|abstain\",\"reason\":\"concise reason\",\"grasp_outcome\":\"pass|fail|unknown|not_assessed\",\"candidate_id\":\"grasp id when assessed, else empty\"}
@@ -225,6 +229,7 @@ class BackendActionReviewer:
         tool_context: JsonDict = {
             "schema_version": SUPERVISION_SCHEMA_VERSION,
             "role": "independent_action_reviewer",
+            **isolated_request_lineage(context.metadata.get("session_id")),
             "task": str(context.metadata.get("task") or ""),
             "session_context": session_context,
             "tool": context.name,
@@ -249,12 +254,14 @@ class BackendActionReviewer:
                 "attachment_evidence",
                 "retained_targeted_grasp",
                 "provenance_evidence_graph",
-                "grasp_adjustment_budget",
+                "manipulation_advisories",
                 "gripper_command_state",
                 "motion_reconciliation",
             ):
                 value = memory_context.get(field)
-                if isinstance(value, dict):
+                if isinstance(value, dict) or (
+                    field == "manipulation_advisories" and isinstance(value, list)
+                ):
                     tool_context[field] = value
         result = self.backend.decide(
             PlannerBackendRequest(
@@ -348,8 +355,10 @@ class BackendGuidanceResolver:
         tool_context: JsonDict = {
             "schema_version": SUPERVISION_SCHEMA_VERSION,
             "role": "guidance_agent",
+            **isolated_request_lineage(context.get("_host_parent_session_id")),
             "question": question,
-            "session_context": dict(context),
+            "session_context": {key: value for key, value in context.items()
+                                if key != "_host_parent_session_id"},
             "vision_image_paths": _bounded_image_paths(context),
         }
         result = self.backend.decide(
@@ -376,6 +385,11 @@ class BackendGuidanceResolver:
                 "isolated_context": True,
                 "provider": result.provider,
                 "model": result.model,
+                **{
+                    key: deepcopy(result.details[key])
+                    for key in ("usage", "usage_source")
+                    if key in result.details
+                },
             },
         )
 

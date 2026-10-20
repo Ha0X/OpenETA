@@ -460,6 +460,12 @@ class RobotState:
         jn_raw = d.get("joint_names") or []
         jn = [str(n) for n in jn_raw] if isinstance(jn_raw, (list, tuple)) else []
 
+        arms_raw = d.get("arms") or {}
+        arms = {
+            str(role): cls.from_dict(value) for role, value in arms_raw.items()
+            if isinstance(value, dict)
+        } if isinstance(arms_raw, dict) else {}
+
         return cls(
             joint_positions=jp,
             joint_velocities=jv,
@@ -468,11 +474,7 @@ class RobotState:
             gripper_state=gs,
             base_pose=bp,
             metadata=meta,
-            arms={
-                str(role): cls.from_dict(state)
-                for role, state in d.get("arms", {}).items()
-                if isinstance(state, dict)
-            },
+            arms=arms,
         )
 
 

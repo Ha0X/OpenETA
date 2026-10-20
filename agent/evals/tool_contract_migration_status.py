@@ -451,7 +451,7 @@ def audit_tool_contract_migration_status(
         _requirement(
             "shared_rfc_sync",
             "complete" if shared_rfc_synced else "pending_sync",
-            ["https://sii-czxy.feishu.cn/docx/HFB9d1ws8ow1CuxQeiacxMbonXe"],
+            ["https://github.com/OpenMOSS/OpenETA"],
             gaps=[] if shared_rfc_synced else ["approved decision has not been synced"],
         ),
         _requirement(
@@ -496,7 +496,7 @@ def audit_tool_contract_migration_status(
             "warnings": int(test_warnings),
         },
         "harness_wiki": {
-            "url": "https://sii-czxy.feishu.cn/wiki/A6M9wTBoCiOYPwkT9rWcwgfon2f",
+            "url": "https://github.com/OpenMOSS/OpenETA",
             "revision": harness_revision,
         },
         "interpretation": (

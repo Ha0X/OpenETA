@@ -1,0 +1,438 @@
+{
+  "schema_version": "1",
+  "benchmark_commit": "ee67a1468510da7624a089164402359f2afc72c8",
+  "robot_variant": "dual_x5",
+  "tasks": [
+    {
+      "task": "general_pickup",
+      "class_path": "task.RoboDojo.tasks.general_pickup.general_pickup",
+      "required_arms": 2,
+      "coordination_type": "independent_or_synchronized",
+      "allowed_action_modes": [
+        "ee_delta",
+        "ee_pose",
+        "joint_position"
+      ],
+      "dual_arm_status": "untested"
+    },
+    {
+      "task": "sweep_blocks",
+      "class_path": "task.RoboDojo.tasks.sweep_blocks.sweep_blocks",
+      "required_arms": 2,
+      "coordination_type": "handover_and_tool_use",
+      "allowed_action_modes": [
+        "ee_delta",
+        "ee_pose",
+        "joint_position"
+      ],
+      "dual_arm_status": "untested"
+    },
+    {
+      "task": "pour_balls_into_vase",
+      "class_path": "task.RoboDojo.tasks.pour_balls_into_vase.pour_balls_into_vase",
+      "required_arms": 2,
+      "coordination_type": "independent_or_synchronized",
+      "allowed_action_modes": [
+        "ee_delta",
+        "ee_pose",
+        "joint_position"
+      ],
+      "dual_arm_status": "untested"
+    },
+    {
+      "task": "align_blocks",
+      "class_path": "task.RoboDojo.tasks.align_blocks.align_blocks",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "arrange_largest_number",
+      "class_path": "task.RoboDojo.tasks.arrange_largest_number.arrange_largest_number",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "build_tower",
+      "class_path": "task.RoboDojo.tasks.build_tower.build_tower",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "classify_objects",
+      "class_path": "task.RoboDojo.tasks.classify_objects.classify_objects",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "classify_objects_by_language",
+      "class_path": "task.RoboDojo.tasks.classify_objects_by_language.classify_objects_by_language",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "cover_blocks",
+      "class_path": "task.RoboDojo.tasks.cover_blocks.cover_blocks",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "deposit_coin",
+      "class_path": "task.RoboDojo.tasks.deposit_coin.deposit_coin",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "fasten_screws",
+      "class_path": "task.RoboDojo.tasks.fasten_screws.fasten_screws",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "fill_pen_holder",
+      "class_path": "task.RoboDojo.tasks.fill_pen_holder.fill_pen_holder",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "hang_mugs",
+      "class_path": "task.RoboDojo.tasks.hang_mugs.hang_mugs",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "insert_key",
+      "class_path": "task.RoboDojo.tasks.insert_key.insert_key",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "insert_tubes",
+      "class_path": "task.RoboDojo.tasks.insert_tubes.insert_tubes",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "organize_table",
+      "class_path": "task.RoboDojo.tasks.organize_table.organize_table",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "pack_objects_into_box",
+      "class_path": "task.RoboDojo.tasks.pack_objects_into_box.pack_objects_into_box",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "play_Xylophone",
+      "class_path": "task.RoboDojo.tasks.play_Xylophone.play_Xylophone",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "play_stacking_toy",
+      "class_path": "task.RoboDojo.tasks.play_stacking_toy.play_stacking_toy",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "plug_in_charger",
+      "class_path": "task.RoboDojo.tasks.plug_in_charger.plug_in_charger",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "push_T",
+      "class_path": "task.RoboDojo.tasks.push_T.push_T",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "put_bottles_into_dustbin",
+      "class_path": "task.RoboDojo.tasks.put_bottles_into_dustbin.put_bottles_into_dustbin",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "solve_equation",
+      "class_path": "task.RoboDojo.tasks.solve_equation.solve_equation",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "sort_nesting_dolls_by_size",
+      "class_path": "task.RoboDojo.tasks.sort_nesting_dolls_by_size.sort_nesting_dolls_by_size",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "stack_blocks",
+      "class_path": "task.RoboDojo.tasks.stack_blocks.stack_blocks",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "stack_blocks_by_language",
+      "class_path": "task.RoboDojo.tasks.stack_blocks_by_language.stack_blocks_by_language",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "stack_bowls",
+      "class_path": "task.RoboDojo.tasks.stack_bowls.stack_bowls",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "store_tools_in_toolbox",
+      "class_path": "task.RoboDojo.tasks.store_tools_in_toolbox.store_tools_in_toolbox",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "swap_T",
+      "class_path": "task.RoboDojo.tasks.swap_T.swap_T",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "rigid32_admission_candidates"
+    },
+    {
+      "task": "fold_clothes",
+      "class_path": "task.RoboDojo.tasks.fold_clothes.fold_clothes",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "cloth_short_horizon_development_acceptance"
+    },
+    {
+      "task": "fill_egg_holder",
+      "class_path": "task.RoboDojo.tasks.fill_egg_holder.fill_egg_holder",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5",
+      "scene_types": [
+        "Geometry",
+        "Rigid",
+        "Articulation"
+      ],
+      "execution_requirements": [
+        "live_articulation_link_geometry"
+      ],
+      "description": "RoboDojo native task fill_egg_holder. Catalog registration only; execution unverified. Native layout: dual_x5. Required capabilities: live_articulation_link_geometry."
+    },
+    {
+      "task": "imitate_sorting_sequence",
+      "class_path": "task.RoboDojo.tasks.imitate_sorting_sequence.imitate_sorting_sequence",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5_and_franka_competition",
+      "scene_types": [
+        "Geometry",
+        "Rigid",
+        "Prohibited_Area"
+      ],
+      "execution_requirements": [
+        "support_articulation_geometry",
+        "time_dependent_collision_check",
+        "native_support_phase_advancement",
+        "observable_demonstration_progress"
+      ],
+      "description": "RoboDojo native task imitate_sorting_sequence. Catalog registration only; execution unverified. Native layout: dual_x5_and_franka_competition. Required capabilities: support_articulation_geometry, time_dependent_collision_check, native_support_phase_advancement, observable_demonstration_progress."
+    },
+    {
+      "task": "make_kong",
+      "class_path": "task.RoboDojo.tasks.make_kong.make_kong",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5_and_franka_competition",
+      "scene_types": [
+        "Rigid"
+      ],
+      "execution_requirements": [
+        "support_articulation_geometry",
+        "time_dependent_collision_check",
+        "native_support_phase_advancement",
+        "observable_demonstration_progress"
+      ],
+      "description": "RoboDojo native task make_kong. Catalog registration only; execution unverified. Native layout: dual_x5_and_franka_competition. Required capabilities: support_articulation_geometry, time_dependent_collision_check, native_support_phase_advancement, observable_demonstration_progress."
+    },
+    {
+      "task": "make_toast",
+      "class_path": "task.RoboDojo.tasks.make_toast.make_toast",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5",
+      "scene_types": [
+        "Articulation",
+        "Geometry",
+        "Rigid"
+      ],
+      "execution_requirements": [
+        "live_articulation_link_geometry"
+      ],
+      "description": "RoboDojo native task make_toast. Catalog registration only; execution unverified. Native layout: dual_x5. Required capabilities: live_articulation_link_geometry."
+    },
+    {
+      "task": "match_and_pick_from_conveyor",
+      "class_path": "task.RoboDojo.tasks.match_and_pick_from_conveyor.match_and_pick_from_conveyor",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5",
+      "scene_types": [
+        "Dynamic",
+        "Rigid"
+      ],
+      "execution_requirements": [
+        "live_dynamic_geometry"
+      ],
+      "description": "RoboDojo native task match_and_pick_from_conveyor. Catalog registration only; execution unverified. Native layout: dual_x5. Required capabilities: live_dynamic_geometry."
+    },
+    {
+      "task": "pick_from_conveyor_by_image",
+      "class_path": "task.RoboDojo.tasks.pick_from_conveyor_by_image.pick_from_conveyor_by_image",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5",
+      "scene_types": [
+        "Dynamic",
+        "Geometry",
+        "Rigid"
+      ],
+      "execution_requirements": [
+        "live_dynamic_geometry"
+      ],
+      "description": "RoboDojo native task pick_from_conveyor_by_image. Catalog registration only; execution unverified. Native layout: dual_x5. Required capabilities: live_dynamic_geometry."
+    },
+    {
+      "task": "play_tic_tac_toe",
+      "class_path": "task.RoboDojo.tasks.play_tic_tac_toe.play_tic_tac_toe",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5_and_franka_competition",
+      "scene_types": [
+        "Geometry",
+        "Rigid"
+      ],
+      "execution_requirements": [
+        "support_articulation_geometry",
+        "time_dependent_collision_check",
+        "native_support_phase_advancement",
+        "observable_demonstration_progress"
+      ],
+      "description": "RoboDojo native task play_tic_tac_toe. Catalog registration only; execution unverified. Native layout: dual_x5_and_franka_competition. Required capabilities: support_articulation_geometry, time_dependent_collision_check, native_support_phase_advancement, observable_demonstration_progress."
+    },
+    {
+      "task": "pour_by_language",
+      "class_path": "task.RoboDojo.tasks.pour_by_language.pour_by_language",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5",
+      "scene_types": [
+        "Rigid",
+        "Fluid"
+      ],
+      "execution_requirements": [
+        "live_fluid_adapter"
+      ],
+      "description": "RoboDojo native task pour_by_language. Catalog registration only; execution unverified. Native layout: dual_x5. Required capabilities: live_fluid_adapter."
+    },
+    {
+      "task": "pour_liquid_into_cup",
+      "class_path": "task.RoboDojo.tasks.pour_liquid_into_cup.pour_liquid_into_cup",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5",
+      "scene_types": [
+        "Rigid",
+        "Fluid"
+      ],
+      "execution_requirements": [
+        "live_fluid_adapter"
+      ],
+      "description": "RoboDojo native task pour_liquid_into_cup. Catalog registration only; execution unverified. Native layout: dual_x5. Required capabilities: live_fluid_adapter."
+    },
+    {
+      "task": "press_by_number",
+      "class_path": "task.RoboDojo.tasks.press_by_number.press_by_number",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5",
+      "scene_types": [
+        "Geometry",
+        "Articulation"
+      ],
+      "execution_requirements": [
+        "live_articulation_link_geometry"
+      ],
+      "description": "RoboDojo native task press_by_number. Catalog registration only; execution unverified. Native layout: dual_x5. Required capabilities: live_articulation_link_geometry."
+    },
+    {
+      "task": "store_laptop_and_headphones",
+      "class_path": "task.RoboDojo.tasks.store_laptop_and_headphones.store_laptop_and_headphones",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5",
+      "scene_types": [
+        "Articulation",
+        "Rigid",
+        "Geometry"
+      ],
+      "execution_requirements": [
+        "live_articulation_link_geometry"
+      ],
+      "description": "RoboDojo native task store_laptop_and_headphones. Catalog registration only; execution unverified. Native layout: dual_x5. Required capabilities: live_articulation_link_geometry."
+    },
+    {
+      "task": "swap_blocks",
+      "class_path": "task.RoboDojo.tasks.swap_blocks.swap_blocks",
+      "required_arms": 2,
+      "dual_arm_status": "untested",
+      "source": "native42_catalog_registration",
+      "native_robot_config": "dual_x5",
+      "scene_types": [
+        "Geometry",
+        "Rigid",
+        "Articulation"
+      ],
+      "execution_requirements": [
+        "live_articulation_link_geometry"
+      ],
+      "description": "RoboDojo native task swap_blocks. Catalog registration only; execution unverified. Native layout: dual_x5. Required capabilities: live_articulation_link_geometry."
+    }
+  ]
+}

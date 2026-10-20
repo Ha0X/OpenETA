@@ -205,7 +205,7 @@
       "id": "shared_rfc_sync",
       "status": "complete",
       "evidence": [
-        "https://sii-czxy.feishu.cn/docx/HFB9d1ws8ow1CuxQeiacxMbonXe"
+        "https://github.com/OpenMOSS/OpenETA"
       ],
       "gaps": []
     },
@@ -228,7 +228,7 @@
     "warnings": 0
   },
   "harness_wiki": {
-    "url": "https://sii-czxy.feishu.cn/wiki/A6M9wTBoCiOYPwkT9rWcwgfon2f",
+    "url": "https://github.com/OpenMOSS/OpenETA",
     "revision": 291
   },
   "interpretation": "The reviewed migration is complete only when local evidence, the durable review decision, the narrow enforcing canary, and shared RFC sync all pass. All 35 public tools are verified. Request-validation canaries are scoped separately; gate-repair and executable-gate authority remain unchanged."

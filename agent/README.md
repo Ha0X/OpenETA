@@ -267,7 +267,7 @@ gitignored `.openeta_memory/` directory.
 ## Object Memory Bank
 
 `retrieve_asset_reference` uses the Object Memory Bank at
-`http://10.11.18.197:8080` by default. No configuration is needed for this
+`http://127.0.0.1:8080` by default. No configuration is needed for this
 anonymous internal endpoint. To override it, set the URL and API key together
 in the process environment or a local ignored `.env`:
 

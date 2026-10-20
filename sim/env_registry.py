@@ -45,6 +45,7 @@ _HOT_BENCHES: dict[str, str] = {
     "robocasa":   "robocasa",
     "genesis":    "genesis",
     "d4rl":       "d4rl",
+    "robodojo":   "",
 }
 
 
@@ -89,7 +90,7 @@ def hot_activate(bench: str) -> bool:
     """
     import sys, os, importlib
 
-    if bench in ("dummy", "behavior"):
+    if bench in ("dummy", "behavior", "robodojo"):
         return True
 
     # Map bench name → python import name
@@ -100,7 +101,7 @@ def hot_activate(bench: str) -> bool:
     }
     pkg = _BENCH_PKG.get(bench, bench)
     if bench == "libero":
-        lib_dir = os.environ.get("LIBERO_DIR", "/home/yfzhang/nvme1/LIBERO")
+        lib_dir = os.environ.get("LIBERO_DIR", "/opt/LIBERO")
         if lib_dir not in sys.path:
             sys.path.insert(0, lib_dir)
 
@@ -153,6 +154,7 @@ def _register_bench(bench: str) -> None:
         "robocasa":  _register_robocasa_envs,
         "genesis":   _register_genesis_envs,
         "d4rl":      _register_d4rl_envs,
+        "robodojo":  _register_robodojo_envs,
     }.get(bench)
     if _fn is None:
         return
@@ -166,8 +168,9 @@ def _register_bench(bench: str) -> None:
 def hot_list_available() -> dict[str, bool]:
     """Return which benches are installable (venv on disk)."""
     import os
-    result = {"dummy": True, "behavior": True}
     venvs_dir = os.path.join(os.path.dirname(__file__), "venvs")
+    result = {"dummy": True, "behavior": True,
+              "robodojo": os.path.isdir(os.path.join(venvs_dir, "robodojo"))}
     for bench in ["metaworld", "maniskill", "libero", "robocasa", "genesis", "d4rl"]:
         result[bench] = os.path.isdir(os.path.join(venvs_dir, bench))
     return result
@@ -282,7 +285,7 @@ def make_env(
         suite_name = parts[0]
         task_idx = int(parts[1]) if len(parts) > 1 else 0
         raw = _make_libero_direct_worker(suite_name, task_idx, task_name,
-                                         image_width=image_width, image_height=image_height)
+                                         image_width=image_width, image_height=image_height, seed=seed)
         ue = UnifiedEnv(raw, render_mode=render_mode)
         ue._include_objects = include_objects
         return ue
@@ -316,6 +319,22 @@ def make_env(
             **overrides,
         )
         ue = UnifiedEnv(raw, render_mode=render_mode)
+        ue._include_objects = include_objects
+        return ue
+    if env_type == "robodojo":
+        from sim.envs.robodojo.unified_env import RoboDojoEnv
+
+        raw = RoboDojoEnv(
+            task_name,
+            seed=seed,
+            robot=robot or "x5",
+            render_mode=render_mode,
+            image_width=image_width,
+            image_height=image_height,
+            **overrides,
+        )
+        ue = UnifiedEnv(raw, render_mode=render_mode)
+        ue._backend = "robodojo"
         ue._include_objects = include_objects
         return ue
 
@@ -416,10 +435,11 @@ def _make_maniskill_direct(task_id: str, render_mode: str | None = "rgb_array",
 
 
 def _make_libero_direct(task: Any, render_mode: str | None = "rgb_array",
-                         image_width: int | None = None, image_height: int | None = None) -> gym.Env:
+                         image_width: int | None = None, image_height: int | None = None,
+                         seed: int = 0) -> gym.Env:
     """Create a LIBERO OffScreenRenderEnv from a Benchmark Task."""
     import sys, os
-    lib_dir = os.environ.get("LIBERO_DIR", "/home/yfzhang/nvme1/LIBERO")
+    lib_dir = os.environ.get("LIBERO_DIR", "/opt/LIBERO")
     if lib_dir not in sys.path:
         sys.path.insert(0, lib_dir)
     from libero.libero import get_libero_path
@@ -457,13 +477,23 @@ def _make_libero_direct(task: Any, render_mode: str | None = "rgb_array",
         "bddl_file_name": bddl_path,
         "camera_depths": True,
         "controller": controller,
+        # The robosuite ``done`` bit is only its low-level 1000-step horizon;
+        # it is not LIBERO task success.  One OpenETA move_to call may consume
+        # tens of these controller steps, so letting that horizon terminate the
+        # environment cuts off otherwise valid long-horizon tool rollouts.
+        # OpenETA owns the high-level turn budget and _LibEnvWrapper below
+        # converts LIBERO's official positive reward into task termination.
+        "ignore_done": True,
     }
     if image_width is not None:
         kwargs["camera_widths"] = image_width
     if image_height is not None:
         kwargs["camera_heights"] = image_height
-    raw_env = OffScreenRenderEnv(**kwargs)
-    return _LibEnvWrapper(raw_env, controller=controller, controller_profile=profile)
+    from sim.libero_seed import LiberoRandomState
+    rng = LiberoRandomState(seed)
+    with rng.scope():
+        raw_env = OffScreenRenderEnv(**kwargs)
+    return _LibEnvWrapper(raw_env, controller=controller, controller_profile=profile, seed=seed)
 
 
 class _LibEnvWrapper(gym.Env):
@@ -474,11 +504,14 @@ class _LibEnvWrapper(gym.Env):
         *,
         controller: str = "OSC_POSE",
         controller_profile: str = "osc_pose",
+        seed: int = 0,
     ):
         super().__init__()
         self._env = raw_env
         self._controller = str(controller)
         self._controller_profile = str(controller_profile)
+        from sim.libero_seed import LiberoRandomState
+        self._reset_rng = LiberoRandomState(seed)
         # OSC_POSE consumes 6 Cartesian deltas + gripper. JOINT_VELOCITY
         # consumes 7 Panda joint velocities + gripper. Keeping this at the
         # historical 7 broke the shared gripper tools in Mink environments
@@ -575,7 +608,14 @@ class _LibEnvWrapper(gym.Env):
         }
 
     def reset(self, *, seed=None, options=None):
-        obs = self._env.reset()
+        if seed is not None:
+            self._reset_rng.reseed(seed)
+        with self._reset_rng.scope():
+            if seed is not None:
+                self._env.seed(self._reset_rng.seed)
+            obs = self._env.reset()
+            from sim.libero_initial_state import apply_initial_state
+            obs = apply_initial_state(self, obs)
 
         self._last_frame = obs.get("agentview_image") if isinstance(obs, dict) else None
         return obs, {}
@@ -585,9 +625,41 @@ class _LibEnvWrapper(gym.Env):
         if len(ret) == 4:
             obs, rew, done, info = ret
             self._last_frame = obs.get("agentview_image") if isinstance(obs, dict) else None
-            return obs, rew, done, done, info
+            # LIBERO inherits robosuite's legacy 4-tuple API.  Its ``done`` is
+            # a controller-step horizon, while task completion is expressed by
+            # the benchmark's binary reward.  Keep those meanings separate:
+            # positive official reward is trusted success termination; an
+            # unexpected raw horizon is truncation, never successful terminal
+            # evidence.  In normal OpenETA construction ignore_done=True keeps
+            # the raw horizon from firing at all.
+            task_success = bool(float(rew) > 0.0)
+            safe_info = dict(info) if isinstance(info, dict) else {"raw_info": str(info)}
+            safe_info.update(
+                {
+                    "openeta_task_success": task_success,
+                    "raw_backend_done": bool(done),
+                    "termination_semantics": "positive_reward_is_task_success",
+                }
+            )
+            return obs, rew, task_success, bool(done and not task_success), safe_info
         self._last_frame = ret[0].get("agentview_image") if isinstance(ret[0], dict) else None
-        return ret
+        obs, rew, terminated, truncated, info = ret
+        task_success = bool(float(rew) > 0.0)
+        safe_info = dict(info) if isinstance(info, dict) else {"raw_info": str(info)}
+        safe_info.update(
+            {
+                "openeta_task_success": task_success,
+                "raw_backend_done": bool(terminated or truncated),
+                "termination_semantics": "positive_reward_is_task_success",
+            }
+        )
+        return (
+            obs,
+            rew,
+            bool(task_success or terminated),
+            bool(truncated and not task_success),
+            safe_info,
+        )
 
     def render(self):
         return self._last_frame
@@ -597,16 +669,19 @@ class _LibEnvWrapper(gym.Env):
 
 
 def _make_libero_direct_worker(suite_name: str, task_idx: int, _unused: str,
-                                image_width: int | None = None, image_height: int | None = None) -> gym.Env:
+                                image_width: int | None = None, image_height: int | None = None,
+                                seed: int = 0) -> gym.Env:
     """Create a LIBERO env from suite name + task index."""
     import sys, os
-    lib_dir = os.environ.get("LIBERO_DIR", "/home/yfzhang/nvme1/LIBERO")
+    lib_dir = os.environ.get("LIBERO_DIR", "/opt/LIBERO")
     if lib_dir not in sys.path:
         sys.path.insert(0, lib_dir)
     from libero.libero.benchmark import get_benchmark
     b = get_benchmark(suite_name)()
     t = b.get_task(task_idx)
-    env = _make_libero_direct(t, image_width=image_width, image_height=image_height)
+    env = _make_libero_direct(t, image_width=image_width, image_height=image_height, seed=seed)
+    from sim.libero_initial_state import configure_initial_state
+    configure_initial_state(env, b, task_idx)
     env._task_description = t.language
     env._env._task_description = t.language
     return env
@@ -650,7 +725,7 @@ def _register_libero_envs() -> None:
     # sys.path.  Honour LIBERO_DIR here: hardcoding the path meant a relocated
     # checkout registered zero LIBERO envs, and the bare `except ImportError:
     # return` below made that look like "this bench has no tasks".
-    lib_dir = os.environ.get("LIBERO_DIR", "/home/yfzhang/nvme1/LIBERO")
+    lib_dir = os.environ.get("LIBERO_DIR", "/opt/LIBERO")
     if lib_dir not in sys.path:
         sys.path.insert(0, lib_dir)
     try:
@@ -953,7 +1028,129 @@ def _register_dummy_envs() -> None:
     )
 
 
+# ── RoboDojo (Isaac Sim) ─────────────────────────────────────────────
+
+def _robodojo_manifest_entries(path: str, *, required_arms: int) -> list[dict]:
+    """Read declared tasks and optionally discover upstream task/config pairs.
+
+    The checked-in manifests are the source of verification status.  Discovery
+    is deliberately opt-in for development: it exposes every task shipped by a
+    local RoboDojo checkout as ``untested`` without promoting any of them.
+    """
+    import json
+    import os
+
+    try:
+        with open(path, encoding="utf-8") as handle:
+            manifest = json.load(handle)
+    except (OSError, json.JSONDecodeError):
+        return []
+    entries = [entry for entry in manifest.get("tasks", []) if isinstance(entry, dict)]
+    if os.environ.get("OPENETA_ROBODOJO_INCLUDE_UPSTREAM_TASKS") != "1":
+        return entries
+    # The upstream task defaults are dual_x5 (see task/RoboDojo/config/_task.yml).
+    # Do not advertise those tasks as single-arm IDs without an explicit
+    # per-task single-arm declaration in the checked-in manifest.
+    if required_arms == 1 and os.environ.get("OPENETA_ROBODOJO_INCLUDE_SINGLE_UPSTREAM_TASKS") != "1":
+        return entries
+
+    root = os.environ.get("ROBODOJO_ROOT", "")
+    config_dir = os.path.join(root, "task", "RoboDojo", "config")
+    task_dir = os.path.join(root, "task", "RoboDojo", "tasks")
+    known = {str(entry.get("task", "")) for entry in entries}
+    try:
+        names = sorted(
+            filename[:-4] for filename in os.listdir(config_dir)
+            if filename.endswith(".yml") and filename != "_task.yml"
+            and os.path.isfile(os.path.join(task_dir, filename[:-4] + ".py"))
+        )
+    except OSError:
+        return entries
+    status_key = "dual_arm_status" if required_arms == 2 else "single_arm_status"
+    for name in names:
+        if name not in known:
+            entries.append({
+                "task": name,
+                "class_path": f"task.RoboDojo.tasks.{name}.{name}",
+                "required_arms": required_arms,
+                status_key: "untested",
+                "source": "upstream_discovery",
+            })
+    return entries
+
+
 # ── Behavior (BEHAVIOR-1K via OmniGibson) ────────────────────────────
+
+def _register_robodojo_envs() -> None:
+    """Register verified single-arm tasks from the local manifest.
+
+    Unverified tasks stay discoverable through the manifest but are not
+    registered as Gym IDs until a GPU canary has produced evidence.
+    Set ``OPENETA_ROBODOJO_REGISTER_UNTESTED=1`` for developer bring-up.
+    """
+    import os
+    path = os.path.join(os.path.dirname(__file__), "envs", "robodojo", "task_manifest.json")
+    allow_untested = os.environ.get("OPENETA_ROBODOJO_REGISTER_UNTESTED") == "1"
+    for entry in _robodojo_manifest_entries(path, required_arms=1):
+        task = str(entry.get("task", "")).strip()
+        if not task or entry.get("required_arms", 1) != 1:
+            continue
+        status = entry.get("single_arm_status", "untested")
+        if status != "verified" and not allow_untested:
+            continue
+        env_id = f"openeta/robodojo_single_x5_{task}-v0"
+        _register_one(
+            env_id,
+            EnvSpec(
+                id=env_id,
+                env_type="robodojo",
+                task_slug=task,
+                task_description=str(entry.get("description", f"RoboDojo task: {task}")),
+                default_robot="x5",
+                available_robots=["x5"],
+                action_dim=None,
+                max_episode_steps=1000,
+                requires_gpu=True,
+                requires_sim_install=True,
+            ),
+            env_type="robodojo",
+            task_name=task,
+            robot="x5",
+        )
+
+
+def _register_robodojo_dual_envs() -> None:
+    """Register only verified dual-X5 tasks from the separate manifest."""
+    import os
+    path = os.path.join(os.path.dirname(__file__), "envs", "robodojo", "dual_task_manifest.json")
+    if os.environ.get("OPENETA_ROBODOJO_DUAL", "0") != "1":
+        return
+    allow_untested = os.environ.get("OPENETA_ROBODOJO_REGISTER_UNTESTED") == "1"
+    for entry in _robodojo_manifest_entries(path, required_arms=2):
+        task = str(entry.get("task", "")).strip()
+        if not task or int(entry.get("required_arms", 2)) != 2:
+            continue
+        if entry.get("dual_arm_status") != "verified" and not allow_untested:
+            continue
+        env_id = f"openeta/robodojo_dual_x5_{task}-v0"
+        _register_one(
+            env_id,
+            EnvSpec(
+                id=env_id,
+                env_type="robodojo",
+                task_slug=task,
+                task_description=str(entry.get("description", f"RoboDojo dual-arm task: {task}")),
+                default_robot="x5",
+                available_robots=["x5"],
+                action_dim=14,
+                max_episode_steps=1000,
+                requires_gpu=True,
+                requires_sim_install=True,
+            ),
+            env_type="robodojo",
+            task_name=task,
+            robot="x5",
+        )
 
 
 def _register_behavior_envs() -> None:
@@ -1215,7 +1412,7 @@ def _pkg_available(import_name: str) -> bool:
     if import_name == "libero":
         try:
             import sys, os
-            lib_path = os.environ.get("LIBERO_DIR", "/home/yfzhang/nvme1/LIBERO")
+            lib_path = os.environ.get("LIBERO_DIR", "/opt/LIBERO")
             need_remove = lib_path not in sys.path
             if need_remove:
                 sys.path.insert(0, lib_path)
@@ -1241,6 +1438,8 @@ def _init_registry() -> None:
     _initialized = True
 
     _register_dummy_envs()
+    _register_robodojo_envs()
+    _register_robodojo_dual_envs()
     # Registration is static and intentionally does not import OmniGibson.
     # Instantiation still requires the isolated Isaac Sim worker environment.
     _register_behavior_envs()

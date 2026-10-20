@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import sys
 
-sys.path.insert(0, "/home/yfzhang/nvme1/openeta_fix_wt")
+sys.path.insert(0, "/opt/openeta-data/openeta_fix_wt")
 
 
 def main() -> int:
