@@ -2,12 +2,12 @@
 
 Example (requires an already-running RoboDojo simulator MCP service)::
 
-    python -m scripts.robodojo_openeta_run --robodojo-root ../OpenETA-robodojo \
+    python -m scripts.robodojo_openeta_run \
       --sim-url http://COMPUTE_NODE:PORT/mcp --config-id PRESET \
       --env-id ENV_ID --task-file TASK_FILE --output outputs/robodojo-openeta-one
 
-Model credentials use the existing OpenETA provider configuration. The sibling
-worktree supplies its checked task Host and public workflow/task guidance; no
+Model credentials use the existing OpenETA provider configuration. This checkout
+supplies the checked task Host and public workflow/task guidance; no
 Codex login or CLI is used. The selected guidance and its hashes are saved with
 each run, and the Host is pinned to the same resolved preset.
 """
@@ -146,8 +146,9 @@ def build_runtime(bridge, backend, *, memory_root: Path, context_window_tokens=N
 
 def parser():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--robodojo-root", type=Path, required=True)
-    p.add_argument("--host-python", type=Path, help="Defaults to the reference worktree .venv/bin/python")
+    p.add_argument("--robodojo-root", type=Path, default=Path(__file__).resolve().parents[1],
+                   help="Host checkout (defaults to this repository; override for historical runs)")
+    p.add_argument("--host-python", type=Path, help="Defaults to the Host checkout .venv/bin/python")
     p.add_argument("--sim-url", required=True)
     p.add_argument("--config-id", required=True)
     p.add_argument("--config-sha256")

@@ -6,6 +6,10 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
+本 fork 的 **`main` 同时包含 OpenETA 和 Codex 两条 RoboDojo 路线**。
+从[当前工作区指南](docs/robodojo-workspace.md)查看环境准备、两种运行入口、
+本地实验结果和待办；下方上游结果保留其原实验口径。
+
 [📄 论文](https://arxiv.org/abs/2608.03924) ·
 [🌐 项目主页](https://openmoss.ai/OpenETA/) ·
 [💻 GitHub](https://github.com/OpenMOSS/OpenETA)

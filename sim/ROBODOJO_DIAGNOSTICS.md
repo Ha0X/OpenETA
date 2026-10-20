@@ -1,8 +1,10 @@
 # RoboDojo 端点卡点诊断
 
-现有环境安装和 Slurm 启动约定见参考工作区的
-[`ROBODOJO_LOCAL.md`](../../OpenETA-robodojo/sim/ROBODOJO_LOCAL.md)。
+现有环境安装记录见本仓库的
+[`ROBODOJO_LOCAL.md`](ROBODOJO_LOCAL.md)。
 GPU 作业须获得授权，保留 Slurm 的 `CUDA_VISIBLE_DEVICES`。
+合并后的默认部署可令 `main_root` 与 `reference_root` 都指向当前 clone；
+保留两个路径参数用于对照旧版本。
 
 `scripts/robodojo_endpoint_diagnostic.py` 是操作员诊断工具，不是运行时模型工具。
 它只在独立诊断 worker 内包装原 `worker_bridge.operate`，不修改参考工作区、

@@ -2,7 +2,7 @@
 
 ## 目标与范围
 
-- 在本工作区基于 main 开发，参考相邻 `OpenETA-robodojo` 工作区的已验证实现。
+- 在同一 main 开发 OpenETA 和 Codex 两条路线；RoboDojo Host／控制器／仿真实现已合入当前仓库，原 `OpenETA-robodojo` 保留为历史实验参考。
 - 用 OpenETA 自身的模型调用与运行循环完成 RoboDojo 的观测、工具执行、反馈和任务收尾。
 - 用户已完成项目上手与运行链路理解，下一阶段转向迭代 `pour_balls_into_vase`，争取任务成功，同时避免针对单一场景过拟合；模型沿用已有 icodeeasy / `gpt-6-astra` / `high` 基线。
 - 复用现有环境；本轮不扩展到大规模评测，也不修改系统或 GPU 配置。
@@ -15,7 +15,7 @@
 
 - main 负责模型调用、上下文、工具执行循环和记录；双臂、连续夹爪及运动检查复用 RoboDojo Host。
 - RoboDojo 专用工具使用 `robodojo_` 前缀，`observe` 保留通用名称；原有 main 运动接口不变。
-- 通过持久 MCP 会话连接参考工作区的任务 Host，无需 Codex CLI 或 Codex 登录。目前仍依赖该工作区及其环境，未将仿真实现整套移植进 main。
+- OpenETA 通过持久 MCP 会话连接同仓库任务 Host，无需 Codex CLI 或 Codex 登录；`--robodojo-root` 可显式指向旧工作区做版本对照。Codex 入口仍使用自身 CLI 与认证。两者共用 v112 原始源码绑定；安装与启动见 `docs/robodojo-workspace.md`。
 
 ## 下一阶段：观测与操作表现
 
@@ -37,7 +37,8 @@
 - 最新基线：`outputs/robodojo-pickplace20-20261019-214650/attempt/`；入口为 `analysis.json`、`verification.json`、`summary.json`，完整请求在 `memory/sessions/*/rollout/model_calls.jsonl`，执行证据在 `host/calls/`，视频在上一级 `attempt.mp4`。
 - 最新基线实现提交 `c154ad2`，结果记录提交 `587fe83`；1200 秒、80 轮／82 Host 请求、seed 0、v112 preset，30 次模型调用无 API 错误，任务未成功。
 - Codex 对照及两条路线比较见 `PROGRESS.md`；Codex 本地试跑也未成功。不要将历史仓库成功结果、私有经验和本地实验混为同一条件。
-- 保留已有无关修改 `sim/README.md` 与未跟踪的 `sim/LIBERO.md`；重要且验证完成的改动及时本地 commit，不 push，不修改系统／GPU 配置。
+- 本次用户已授权将两条路线整理到 `https://github.com/Ha0X/OpenETA` 的 main，不新建发布分支。后续 push 仍按会话授权执行。
+- 保留已有无关修改 `sim/README.md` 与未跟踪的 `sim/LIBERO.md`；重要且验证完成的改动及时本地 commit，不修改系统／GPU 配置。
 
 ## 已知待办（暂不优先）
 

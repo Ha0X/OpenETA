@@ -1,0 +1,26 @@
+[
+  {
+    "repo": "robodojo-benchmark/RoboDojo",
+    "revision": "ee67a1468510da7624a089164402359f2afc72c8",
+    "archive": "tmp/setup/robodojo-ee67a146.tar.gz",
+    "sha256": "9356d3637ee8fd11097eac7afd86d70390aeb9091481fca565d2d1902c6cb3cf"
+  },
+  {
+    "repo": "yuechen0614/IsaacLab",
+    "revision": "afca7b09d60d8beb9c1cb28b43066499940b969b",
+    "archive": "tmp/setup/isaaclab-afca7b09.tar.gz",
+    "sha256": "ccb4caaa2df9542511274f04adfc831d3e1b35f04a7f5fc128d10864537dc0a3"
+  },
+  {
+    "repo": "yuechen0614/curobo",
+    "revision": "d17b54ce32cba095c0b000c4c58777075d11de0e",
+    "archive": "tmp/setup/curobo-d17b54ce.tar.gz",
+    "sha256": "64684411db8afcb8f372dfd6896a513a778b2319111a391f488082c5c5dced53"
+  },
+  {
+    "repo": "XPolicyLab/XPolicyLab",
+    "revision": "432f82b1758c5b1202e42a3dfe014546dbc50871",
+    "archive": "tmp/setup/xpolicylab-432f82b1.tar.gz",
+    "sha256": "03c6813456beb460a848cc35cc0d14f0c6daf4bd2000ed9d493173de4dabe396"
+  }
+]

@@ -1,8 +1,10 @@
 # RoboDojo harness — public v112 release
 
-This branch packages the v112 client, the backend overlay used in testing, and
-its server-side RoboDojo integration. It does not contain private experiment
-logs, deployment addresses, account state, or the internal development history.
+This document describes the upstream v112 client, tested backend overlay and
+server-side RoboDojo integration. This fork integrates that release with the
+OpenETA runtime on `main`; see the [current workspace guide](robodojo-workspace.md)
+for both entry points and the later local experiments. Private experiment bundles,
+account state and simulator assets are not distributed.
 
 ## Included
 
@@ -28,14 +30,14 @@ Use Python 3.11+ for a deployment that also runs RoboDojo; the generic host pack
 supports Python 3.10+. Create an isolated environment and install the host:
 
 ```bash
-git clone --branch robodojo-v112 https://github.com/OpenMOSS/OpenETA.git
+git clone https://github.com/Ha0X/OpenETA.git
 cd OpenETA
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[dev]'
 ```
 
-Install and sign in to Codex CLI using your own eligible account. The launcher
+For the Codex route, install and sign in to Codex CLI using your own eligible account. The launcher
 uses saved file-based authentication in an isolated temporary Codex home and
 removes its copied credential during cleanup. Keyring-only authentication is
 not implemented. Account/model access and usage limits still apply; no account
@@ -67,11 +69,14 @@ Assets and third-party simulator binaries are not bundled or relicensed.
 Its `robodojo` option prepares the pinned source checkout; it does not replace
 upstream asset download and Isaac installation. Point `sim/venvs/robodojo` at
 the dedicated environment whose Python can import Isaac Lab. In that environment,
-also install this checkout and the checked-controller dependencies:
+install the checked-controller dependencies using the validated Isaac constraints.
+Keep the Host/MCP package in its separate environment; the worker loads this
+checkout through its source path:
 
 ```bash
 # Run with the dedicated RoboDojo/Isaac environment's Python.
-python -m pip install -e . 'python-fcl==0.7.0.11' scipy pyyaml omegaconf websockets
+python -m pip install -c sim/setup/robodojo/isaac-constraints.txt \
+  'python-fcl==0.7.0.11' scipy pyyaml omegaconf websockets
 ```
 
 Configure paths for your machine (these are examples, not bundled directories):

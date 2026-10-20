@@ -1,0 +1,3134 @@
+{
+  "repo": "RoboDojo-Benchmark/RoboDojo",
+  "revision": "35efbc7dedfdbeeb6e95fb749bd885d73d483e41",
+  "tasks": [
+    "pour_balls_into_vase",
+    "fill_pen_holder",
+    "swap_blocks"
+  ],
+  "seed": 0,
+  "layout_index": 0,
+  "files": [
+    {
+      "type": "file",
+      "oid": "2675a714abb522a70cc374898fa0a9a59f9f365b",
+      "size": 25433817,
+      "lfs": {
+        "oid": "368251c254a47dc7aaf532a515c0bd9ad3708ce5a3c5bb520b1628bcb9a37bc0",
+        "size": 25433817,
+        "pointerSize": 133
+      },
+      "xetHash": "cff2151a5cb6aa4efe33c5feef6b1a38b099ac30db3478ff0457873dacc2409b",
+      "path": "Assets/Background/brown_photostudio_02_4k.hdr"
+    },
+    {
+      "type": "file",
+      "oid": "21f89346a868ad603d6f23abe4d5a767ac84cc9f",
+      "size": 7507,
+      "lfs": {
+        "oid": "346dfc9c75c87c9509ae3bc5d7333092df5025535baf1e2f5116b57e78cd35bc",
+        "size": 7507,
+        "pointerSize": 129
+      },
+      "xetHash": "e4dc41f0b217a07f108119966c635b3d1e2be816d99774a4706fdaf8d7e2ff6c",
+      "path": "Assets/Eval_Layout/RoboDojo/arx_x5/0/fill_pen_holder_0.json"
+    },
+    {
+      "type": "file",
+      "oid": "eb5777b021b357d91ec7eb6c7c360a56a2090920",
+      "size": 11097,
+      "lfs": {
+        "oid": "171eb88834b95edeb1e90a5786802400ad3c924f4c9e4ed412d318e98fd69000",
+        "size": 11097,
+        "pointerSize": 130
+      },
+      "xetHash": "667a47684f64c6ffe096e9781e88435b6b8ac374d5be0caaf58b4cc15b387c5f",
+      "path": "Assets/Eval_Layout/RoboDojo/arx_x5/0/pour_balls_into_vase_0.json"
+    },
+    {
+      "type": "file",
+      "oid": "fa38d328f9c6024f9112f07df4f76b53552d9c86",
+      "size": 8303,
+      "lfs": {
+        "oid": "fa3f3809370d58c0476cdb2d08c09306f4b044d7958e01a26cb42cd492ecdecd",
+        "size": 8303,
+        "pointerSize": 129
+      },
+      "xetHash": "4610c31ec5224b7b316e23a934cba3550ac532441ba088c9119fd4a7d24c5807",
+      "path": "Assets/Eval_Layout/RoboDojo/arx_x5/0/swap_blocks_0.json"
+    },
+    {
+      "type": "file",
+      "oid": "22544b6ca1776950ef6e15cb245fe549a35505f5",
+      "size": 1940,
+      "lfs": {
+        "oid": "c3c19fec59419b77a73deb0dfca6f8303fa6629af1ad93b8f4d792da8131b4cb",
+        "size": 1940,
+        "pointerSize": 129
+      },
+      "xetHash": "357277ef9fc337833d7da99960036103cfcc44cf48263c7b5a03a36e47aa729e",
+      "path": "Assets/Material/material_0122/Mahogany_Planks.mdl"
+    },
+    {
+      "type": "file",
+      "oid": "f4c49eb4237090a6e3a487a4b0a1671b8e65371b",
+      "size": 5750346,
+      "lfs": {
+        "oid": "d3e69dacd264d481738b2a995ad793531515a153ec8a168e5c4b6d5a4dfb38ec",
+        "size": 5750346,
+        "pointerSize": 132
+      },
+      "xetHash": "52ab0a569b71ea154602a226aa1931e16218a0eb9e1696b43a0c8e62b217e07a",
+      "path": "Assets/Material/material_0122/Mahogany_Planks_BaseColor.png"
+    },
+    {
+      "type": "file",
+      "oid": "a722188af0b88e907fee8c73e013bd3b10fdb457",
+      "size": 5656449,
+      "lfs": {
+        "oid": "04b0e9d1611c4e1722085e15299197c69d9f813f0b77e96b476fc04b38407edb",
+        "size": 5656449,
+        "pointerSize": 132
+      },
+      "xetHash": "a035479a97c864dd6ce1f86b60328ae38b9affa54e0981e1fe0d8cf64b665f78",
+      "path": "Assets/Material/material_0122/Mahogany_Planks_N.png"
+    },
+    {
+      "type": "file",
+      "oid": "27de5e7cc8ec3ad9ff88298262b1b761aa83e3ac",
+      "size": 6246551,
+      "lfs": {
+        "oid": "5fe20889ad4737833ca2a4425aedf28c1bf34a0d1730827bf4f0403482404797",
+        "size": 6246551,
+        "pointerSize": 132
+      },
+      "xetHash": "4fe6fdc9135d5ddd05b3a47ab2a2360744235b3e1ba792cf4231316e517325fd",
+      "path": "Assets/Material/material_0122/Mahogany_Planks_ORM.png"
+    },
+    {
+      "type": "file",
+      "oid": "fd6de147a278f6f5a07084787a48d056783b67b4",
+      "size": 123967,
+      "lfs": {
+        "oid": "60ca84bd62482b1f444f5fefab4ae74a2fa4e6b3304a08142accc50575d6be31",
+        "size": 123967,
+        "pointerSize": 131
+      },
+      "xetHash": "4124c42a353f143f2ca065f4437248a95d507b4bd859d2755ff5e1aa95c15adb",
+      "path": "Assets/Material/material_0564/Wood_Tiles_Fineline.mdl"
+    },
+    {
+      "type": "file",
+      "oid": "ad3bdab1fb785e59aefdd3de8d2953c0723103f0",
+      "size": 5190594,
+      "lfs": {
+        "oid": "72708e20c100534f06761e90010e339b21807c03ab5339fdc0f6c70298aa34b2",
+        "size": 5190594,
+        "pointerSize": 132
+      },
+      "xetHash": "6ca6866a58524562990cae769ca0563a009737048218c611be10cfb46a8b76ac",
+      "path": "Assets/Material/material_0564/brickbond_R_edgewear_G_gaps_B_gaps_rough.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "b9c77ea1bd762da262faa40a889232f0a59c40ca",
+      "size": 61671,
+      "lfs": {
+        "oid": "9fd00d71ac34a2bc3ae995a93f3b3b4bef47c4a9b672ed5eec66c1a8af8b8894",
+        "size": 61671,
+        "pointerSize": 130
+      },
+      "xetHash": "8f9e9577eb9bcc78a98bd82e83b2032e449f769695aa6965cfdf6e81cc4ff432",
+      "path": "Assets/Material/material_0564/brickbond_R_id_G_offs_B_rotation.png"
+    },
+    {
+      "type": "file",
+      "oid": "b3b8fbdfb97ce7d9a520725e29f292116abcec83",
+      "size": 5097857,
+      "lfs": {
+        "oid": "36f065ec0cc3be3632cd9855942e0022e651ea2704c5eb4b3c93914679eaac46",
+        "size": 5097857,
+        "pointerSize": 132
+      },
+      "xetHash": "cb1eac096c0e05232bfcd8ebc94914e43019b07083bc25113bf47564f712b377",
+      "path": "Assets/Material/material_0564/brickbond_norm.png"
+    },
+    {
+      "type": "file",
+      "oid": "6c9e10385cc3fcfe5232fef409e7d8ec79706026",
+      "size": 5192773,
+      "lfs": {
+        "oid": "2e0cabf2d39d63984f8dc6b45304b1d6dce0fa7b462ba5cda17a564c63c13ba2",
+        "size": 5192773,
+        "pointerSize": 132
+      },
+      "xetHash": "72024acd4a06391f4df6c2a1d55509331da94bfd030e52184e6f6c95aec7c5fa",
+      "path": "Assets/Material/material_0564/chantilly_R_edgewear_G_gaps_B_gaps_rough.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "b10d7021e2e61d1677a33323a1afd01630d95735",
+      "size": 165856,
+      "lfs": {
+        "oid": "3eac1bf2d9fefaba86c8160cdc1413206682c7eee1b92ae78e790ac7fcf49dd8",
+        "size": 165856,
+        "pointerSize": 131
+      },
+      "xetHash": "d59c1cc721dd92de59e9c469a79c3f97b9109276a4b65644bd4a205d5e62f6dd",
+      "path": "Assets/Material/material_0564/chantilly_R_id_G_offs_B_rotation.png"
+    },
+    {
+      "type": "file",
+      "oid": "4d47924ff6d6d5646d66d403b0eb22e384f9fdf9",
+      "size": 5219533,
+      "lfs": {
+        "oid": "a49b4ddd3eb9d1aca27491dc5a46ee821f26adebc8c50a5d7c04d8cf8d4d7bb4",
+        "size": 5219533,
+        "pointerSize": 132
+      },
+      "xetHash": "88c6e73094ace3a280bf65feac71a45e482316de1360fafe809f2d3937e4b4b7",
+      "path": "Assets/Material/material_0564/chantilly_norm.png"
+    },
+    {
+      "type": "file",
+      "oid": "abfbf377deb53b57b2dc852c55741787d83beb97",
+      "size": 5561847,
+      "lfs": {
+        "oid": "3a7cded4f69a5bf02630fbd6e68d177d6ca31f73dcafe5125efdf3ed77d8f235",
+        "size": 5561847,
+        "pointerSize": 132
+      },
+      "xetHash": "c4ff999f577d218433a2bb7ad92a3ad01f7cced39a1256cc7c88f5da9b2b520f",
+      "path": "Assets/Material/material_0564/chevron_R_edgewear_G_gaps_B_gaps_rough.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "773f17e791b8ec3ef817652f35d2d10e057043b3",
+      "size": 253093,
+      "lfs": {
+        "oid": "a8672aa9e976b6f1f4414269e05b09eef306c75d8ac8e711f8daa2b617213c3f",
+        "size": 253093,
+        "pointerSize": 131
+      },
+      "xetHash": "b467ce514f5e7a52e18cc474d795b03591e2a0a282e7576b8ca9bc3e89be3977",
+      "path": "Assets/Material/material_0564/chevron_R_id_G_offs_B_rotation.png"
+    },
+    {
+      "type": "file",
+      "oid": "385c806fdb22cf9d6593ee94e08264c0ddde5cc9",
+      "size": 7660298,
+      "lfs": {
+        "oid": "efcf37cdd9bd301b9e3513f3df53cbc9f0e74ca6ec7db8d2be6047ae893b6257",
+        "size": 7660298,
+        "pointerSize": 132
+      },
+      "xetHash": "6a3d2c65b205a1f1247f26d0b006dda81b38c2aef9b34e95c06bd54b2c8bce77",
+      "path": "Assets/Material/material_0564/chevron_norm.png"
+    },
+    {
+      "type": "file",
+      "oid": "ff0b3c61a7b7a7cb2f930c42b5a175bfc6b5e3d3",
+      "size": 5282713,
+      "lfs": {
+        "oid": "7903a3bf94df642d678feec55c7798a16fd18bb8e3f50dff1873b4ebc7068400",
+        "size": 5282713,
+        "pointerSize": 132
+      },
+      "xetHash": "0c649dc74ab9005000b81b28a8ac976b2573f339338a56e0ff38df993bc5567a",
+      "path": "Assets/Material/material_0564/cubes_R_edgewear_G_gaps_B_gaps_rough.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "e9b891846cced81c763a667e9f0b53f0a50dae2c",
+      "size": 188376,
+      "lfs": {
+        "oid": "9bdd0f5580f45c8112000f0ce338d0bf95cf9a91cf3851adddcff2ee7c42a53b",
+        "size": 188376,
+        "pointerSize": 131
+      },
+      "xetHash": "212df085dae86cbee2daa3d99eb904cc59c8c5ce67fcaa7495c8222e0c2ec6a8",
+      "path": "Assets/Material/material_0564/cubes_R_id_G_offs_B_rotation.png"
+    },
+    {
+      "type": "file",
+      "oid": "70bb7bc477f08e2e561d70a5f72146e2657a11c3",
+      "size": 5932734,
+      "lfs": {
+        "oid": "bc8219f0ac1573a4871777d26a773bccd4084e850f88e30a4b03fd1cec0f07be",
+        "size": 5932734,
+        "pointerSize": 132
+      },
+      "xetHash": "9376fe630b772d9f5edcb4b2f2c5e11bfc587c101fab8701cf7aee3689aef373",
+      "path": "Assets/Material/material_0564/cubes_norm.png"
+    },
+    {
+      "type": "file",
+      "oid": "d8d7d76fa63452c6ab7b1e19064fa018a3cf3147",
+      "size": 5507965,
+      "lfs": {
+        "oid": "ec63497a0ed3753608d8904a91abbad0bff232d1fa51ab5d2f7598a2e53f1481",
+        "size": 5507965,
+        "pointerSize": 132
+      },
+      "xetHash": "9079c05f6e2101fdc36783db5c9a162bd2b1bb49c4973c51c8f891a3a292685b",
+      "path": "Assets/Material/material_0564/diagonal_R_edgewear_G_gaps_B_gaps_rough.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "83aebabfc747811ac2f5ff7ffefb115bfbeedc8c",
+      "size": 278035,
+      "lfs": {
+        "oid": "95db350abe05f308e61f9e8ee81e8bfd926ae4a44105248b03dd2120fd2a551f",
+        "size": 278035,
+        "pointerSize": 131
+      },
+      "xetHash": "b90dae88a4fbb89778ae486c378c657e1139ef28026e484dd5d9758c63d554d3",
+      "path": "Assets/Material/material_0564/diagonal_R_id_G_offs_B_rotation.png"
+    },
+    {
+      "type": "file",
+      "oid": "6640e26b29201fa290745b428753d432bb16f62c",
+      "size": 7421414,
+      "lfs": {
+        "oid": "0708f89b7dc534c9681783946bb01386a49d4d16afb417e16ac27b16f06e9c92",
+        "size": 7421414,
+        "pointerSize": 132
+      },
+      "xetHash": "6d35e80e5b716a336e1e48b3d89c2c8c03c081f514b8184f1f7418fa60ce6178",
+      "path": "Assets/Material/material_0564/diagonal_norm.png"
+    },
+    {
+      "type": "file",
+      "oid": "85a3f40a54e61241477b9fc189b95324bb98e108",
+      "size": 2216725,
+      "lfs": {
+        "oid": "36f485d03362d1f853e73c617005e44e800608cb3616a71c8c7fd92e565ba605",
+        "size": 2216725,
+        "pointerSize": 132
+      },
+      "xetHash": "f4b7ef4c5af72fc28dab39034c6f220b43df77bc771f29863163e4f83ae83460",
+      "path": "Assets/Material/material_0564/fineline_diff.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "346760da63b06237f4a98113d345e1e4c98995c7",
+      "size": 2748933,
+      "lfs": {
+        "oid": "991f65d02adcb3c0b1fa285531dd478bfda2480bbc07009e7f1f44fb06c49bdb",
+        "size": 2748933,
+        "pointerSize": 132
+      },
+      "xetHash": "0c5a64d882b804d0ed0da22d20d52ba07d17e24b7ebb2216417bb359d64cc68b",
+      "path": "Assets/Material/material_0564/fineline_norm.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "eefd0e57bd8306968af0828a793c5d5b134e8407",
+      "size": 2583516,
+      "lfs": {
+        "oid": "882f61d1a41796829c3b8f919ec316331d7444b79f21341140ef567ecda71b2e",
+        "size": 2583516,
+        "pointerSize": 132
+      },
+      "xetHash": "c903168a465e9af56f8f9a730b49149f90d3e15d9243043fdbf197c5505cd6b7",
+      "path": "Assets/Material/material_0564/fineline_rough_detail.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "5a5e19e752cc1667dc300e4c3e7faae924d32d94",
+      "size": 1592267,
+      "lfs": {
+        "oid": "534d2005cb09b2eb8c9ab730ead8483ac838aa204c3cf250650184ab70a0c038",
+        "size": 1592267,
+        "pointerSize": 132
+      },
+      "xetHash": "335bbc7454ab4f689ce48f0bdd8a08536e8a689edcd4e398ac1bdbae79a0eb19",
+      "path": "Assets/Material/material_0564/fineline_rough_grain.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "62938629e22adf7a02b8a96ac79c91b0c16505b7",
+      "size": 5509842,
+      "lfs": {
+        "oid": "f6d1d4db4b5d09f95f27e90fb17dbe60b8f4a9ab266d98bcd4ee9b0506480962",
+        "size": 5509842,
+        "pointerSize": 132
+      },
+      "xetHash": "894e16538d377ada37d865a2d66e74cd987377a9fa905672d66e24b4f5697e49",
+      "path": "Assets/Material/material_0564/herringbone_R_edgewear_G_gaps_B_gaps_rough.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "9da42b1d90046303db83b56490ece5d77ec19fad",
+      "size": 304083,
+      "lfs": {
+        "oid": "d9c4f7944ddcb9e6c919e4f2f044ab1efe9660042a568f142365e08a424194fd",
+        "size": 304083,
+        "pointerSize": 131
+      },
+      "xetHash": "bff2863b2752d423f58a589ad90a0e8565c3519f76ba1ef0052f3811bf714e3a",
+      "path": "Assets/Material/material_0564/herringbone_R_id_G_offs_B_rotation.png"
+    },
+    {
+      "type": "file",
+      "oid": "fe1e06b00f4907fa3ca58f72302e1313ca119a0e",
+      "size": 7592872,
+      "lfs": {
+        "oid": "e7b5c153686bfdfe25af7ed9820b2ae2bbd9b73986d51e85f326d7bde2d67b58",
+        "size": 7592872,
+        "pointerSize": 132
+      },
+      "xetHash": "f0fd2fdd2c22e178dc3b17d08388cb764883c243657b862944b19cd9ed62b70d",
+      "path": "Assets/Material/material_0564/herringbone_norm.png"
+    },
+    {
+      "type": "file",
+      "oid": "4b6635bc11e70d3106387b23632b2aac688d9308",
+      "size": 5345943,
+      "lfs": {
+        "oid": "b6b9fb4c15e1ad3fe24783be2897c00447f3374433fd923e7a42bf4920fcf8ba",
+        "size": 5345943,
+        "pointerSize": 132
+      },
+      "xetHash": "5a922b75b1060934c5b4f1342b53a0b933821e2bf99255f08241fbbb1f0ac8c2",
+      "path": "Assets/Material/material_0564/mosaic_R_edgewear_G_gaps_B_gaps_rough.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "04285efb57eeddeed4dfd1fe290603ac21391143",
+      "size": 74735,
+      "lfs": {
+        "oid": "1c4f6877c6be7b39bb705ee1a53c65691e23de2f66d5be524bac2b0890d7859a",
+        "size": 74735,
+        "pointerSize": 130
+      },
+      "xetHash": "4597e27bc8332014e700eb9d7a4af2a86f809dea712b9412bc984ce948c74c42",
+      "path": "Assets/Material/material_0564/mosaic_R_id_G_offs_B_rotation.png"
+    },
+    {
+      "type": "file",
+      "oid": "199139c62fc98e5b0f2f312999dd6b99bd559a7e",
+      "size": 5988778,
+      "lfs": {
+        "oid": "fdf922e6866e7e39fd4aa23e7f82374c1fcd5f1b65c17ffde7aa18eba457d8ec",
+        "size": 5988778,
+        "pointerSize": 132
+      },
+      "xetHash": "2d389714798fe2975e381297ae15f9231bc100b21513d50f6f1ba702d26206e8",
+      "path": "Assets/Material/material_0564/mosaic_norm.png"
+    },
+    {
+      "type": "file",
+      "oid": "67654b48ce206cea96b3b23e7ca1d1cca4be897a",
+      "size": 5339370,
+      "lfs": {
+        "oid": "361f1c0bcd09e62fdce1fade132a4129e660efe17f3c610ecbff83a6c72a2b09",
+        "size": 5339370,
+        "pointerSize": 132
+      },
+      "xetHash": "7a54aeae26c45cf733e179a7b912d42eccc5bde14b037d25a1b3fc80f5d80d82",
+      "path": "Assets/Material/material_0564/stackbond_R_edgewear_G_gaps_B_gaps_rough.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "4ff3286575d0f7120afe4d07ec970ff5c8926a36",
+      "size": 622237,
+      "lfs": {
+        "oid": "fb0d4cdde31299ff9b1c3a7ef65eb7b29a2c7c1e881f33f70131c37493a9b4f1",
+        "size": 622237,
+        "pointerSize": 131
+      },
+      "xetHash": "ea1bfcbb4dc723788fb804f77e2aa7d6f1668b2a530630c899073d1a4214e1d4",
+      "path": "Assets/Material/material_0564/stackbond_R_id_G_offs_B_rotation.png"
+    },
+    {
+      "type": "file",
+      "oid": "5a1afb0ab7194b8c49fcffe9e749ae5f078de9f7",
+      "size": 5205492,
+      "lfs": {
+        "oid": "083c1c77a805a98d962d9c3d9066b8121c9513cb8bca941d2f1a20a7d012459e",
+        "size": 5205492,
+        "pointerSize": 132
+      },
+      "xetHash": "90af2d9aa4c0587efc633670b136cceb435d8600ff1e7596183a76afc6c19ebc",
+      "path": "Assets/Material/material_0564/stackbond_norm.png"
+    },
+    {
+      "type": "file",
+      "oid": "d9abc424636350e1ba6a86dfc77219b09e7c22a2",
+      "size": 5318464,
+      "lfs": {
+        "oid": "73f07f9f0053a64f77123e0c2c6b7c04fb13c6c3845fbdb73a899c13e1416ad0",
+        "size": 5318464,
+        "pointerSize": 132
+      },
+      "xetHash": "c177dbc98f30ba483e0133a56a46bd7dbf73844bed0fdb92e5c72207223632b8",
+      "path": "Assets/Material/material_0564/tiles_wood_R_rough_G_dents_B_spots.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "965e21ba6fb80d237eef71127af86e8557b0d380",
+      "size": 583443,
+      "lfs": {
+        "oid": "14b18dba2a5e4978a8d14cb1efd17e3a7a8c7ad5e5b3438ddc7d025c6453fbfe",
+        "size": 583443,
+        "pointerSize": 131
+      },
+      "xetHash": "f4257ebaacaf43926b637497815a15d9a3ced93896c401ee37c7d551bd219d87",
+      "path": "Assets/Material/material_0564/tiles_wood_orangepeel_norm.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "7024f5c4212213abf1633c4ceaadf5ea3b657ff7",
+      "size": 5489803,
+      "lfs": {
+        "oid": "7bf177cbb47fb36b44923ad36bad818f405604b6e1113119314f4e8291800cf1",
+        "size": 5489803,
+        "pointerSize": 132
+      },
+      "xetHash": "b14304b06908ed8e97fe5dc2406febe6ea3805902fadc987a6c99c564ae6beb6",
+      "path": "Assets/Material/material_0564/versailles_R_edgewear_G_gaps_B_gaps_rough.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "db046898ed8faa01f4cd8d7862e18a29acd1aa75",
+      "size": 164987,
+      "lfs": {
+        "oid": "bb6e5627e4bd516c16a2e14ee94b05e2e527697a7d7139dd87bdc79ac3f175e8",
+        "size": 164987,
+        "pointerSize": 131
+      },
+      "xetHash": "e4e7d23153e934a364bbc9ad07bf66abdeedbf7f8b3c9bee834701bb69cc9f4d",
+      "path": "Assets/Material/material_0564/versailles_R_id_G_offs_B_rotation.png"
+    },
+    {
+      "type": "file",
+      "oid": "9edb45008853deab30294c2047db733b30ac9f44",
+      "size": 6678546,
+      "lfs": {
+        "oid": "bd57efebab075c03b8f290d7c47651eee8650d04c650d0ca3fdd33b1e662d006",
+        "size": 6678546,
+        "pointerSize": 132
+      },
+      "xetHash": "11272f0030473dd85d172e06dd2a58a42bc5212ef190f5637a77dca54c19f73d",
+      "path": "Assets/Material/material_0564/versailles_norm.png"
+    },
+    {
+      "type": "file",
+      "oid": "68ac4d4a21a6a069173137e1fa9887167c8887b8",
+      "size": 5342612,
+      "lfs": {
+        "oid": "5fbe05e89f160fb283e17f621a33844ecc6b3abd555b43e94a1ff8f3b9d8a336",
+        "size": 5342612,
+        "pointerSize": 132
+      },
+      "xetHash": "392c1620a4a9b9ea34d4b2e993a051abbb2843598d6cdf3a9d85fc3c3e645480",
+      "path": "Assets/Material/material_0564/woodstrip_R_edgewear_G_gaps_B_gaps_rough.jpg"
+    },
+    {
+      "type": "file",
+      "oid": "d9dd9b1f3cd4464d0b6aac87418df0cebc48a3e4",
+      "size": 525457,
+      "lfs": {
+        "oid": "f57463c41a8cb21a1b69253d37c0d33b808d367f789765b2290d8fbff3e18c73",
+        "size": 525457,
+        "pointerSize": 131
+      },
+      "xetHash": "30cf9239725b0b88f0b8ccacd1e1b698b548c32d749753678371c3a8035c717b",
+      "path": "Assets/Material/material_0564/woodstrip_R_id_G_offs_B_rotation.png"
+    },
+    {
+      "type": "file",
+      "oid": "9f50dbae9dc24eb37e799490aa1961f69c78093f",
+      "size": 5122769,
+      "lfs": {
+        "oid": "ff6c49a20fca5088736b8fa0cc2612a2f8225466824189af7f96df818481511a",
+        "size": 5122769,
+        "pointerSize": 132
+      },
+      "xetHash": "af3d466bea2e8a24873b3f7e62276f46f5f39f95f3b100d44369111fd09d76f3",
+      "path": "Assets/Material/material_0564/woodstrip_norm.png"
+    },
+    {
+      "type": "file",
+      "oid": "d5c90a0b535ab46ec5f2b8fc44913e937700ec5a",
+      "size": 4770,
+      "lfs": {
+        "oid": "a1056b0f7d47da98468cd47120d0f108129a44e49a79a6e0992eb3feb2cd3675",
+        "size": 4770,
+        "pointerSize": 129
+      },
+      "xetHash": "11c6bf320adf572d04f25903cd2f35aa3083b666e5267d2d0c367c54ba2cabfe",
+      "path": "Assets/Object/RoboDojo/Articulation/SpringButton/00002/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "a36269b469960e1ea153a04ff82bed50a2fe9736",
+      "size": 6894847,
+      "lfs": {
+        "oid": "0b5e0adeeaa15179b3ab14a56a581c960fe118d4917957b6914e3ecdd7a1330d",
+        "size": 6894847,
+        "pointerSize": 132
+      },
+      "xetHash": "bef12409c7c5bec439eb272f40d8c41ed2939bda29c4966c057afae03cc0274f",
+      "path": "Assets/Object/RoboDojo/Articulation/SpringButton/00002/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "37cec2d18eaf4505543a8f7a05a6f5b629de7945",
+      "size": 2414,
+      "lfs": {
+        "oid": "981392df89e5a45a28c0240ef0cb289b778550ec7ad49e98419a813865bb3d30",
+        "size": 2414,
+        "pointerSize": 129
+      },
+      "xetHash": "fa0529794c9a5f4bcc37c41e3d4effd31771b7054a837b2ca020b2c2494fd30f",
+      "path": "Assets/Object/RoboDojo/Geometry/camera_stand/00000/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "6cf99eeea57b912fdae745a52d3895d2b24f03ca",
+      "size": 8103315,
+      "lfs": {
+        "oid": "6c4b9ec4cd325f6e47d862b87e7dddbe9adc5e9a5aa0f04224c47d0f16a600a8",
+        "size": 8103315,
+        "pointerSize": 132
+      },
+      "xetHash": "f5888a199c01c70fadd4711317e5ce5882d96e84a5ca1a6e6b3c2ee71bfeed76",
+      "path": "Assets/Object/RoboDojo/Geometry/camera_stand/00000/object.usd"
+    },
+    {
+      "type": "file",
+      "oid": "53a178584c7eea68e27126589ee59fae929940f2",
+      "size": 6465,
+      "lfs": {
+        "oid": "dcdc54274c84fca2be7f025620452f5c29f6578b8910e3ee22d16734349d0b1f",
+        "size": 6465,
+        "pointerSize": 129
+      },
+      "xetHash": "c0d0e28bac3718fb98920a7b3ef6c0fd9c606280fc70a66d0013ff79253106da",
+      "path": "Assets/Object/RoboDojo/Geometry/cube_cushion/00001/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "ef7d9563ff3904c7fa1350ae6b8f9028bb979044",
+      "size": 3985,
+      "lfs": {
+        "oid": "3c82040b4ee36d5aabfebc19c0640aad6952ed79e941951506956093b5a39798",
+        "size": 3985,
+        "pointerSize": 129
+      },
+      "xetHash": "037d2ba5db18dd7b120aa3c941e819b85ecce53279f2543141f4979d25eda8b2",
+      "path": "Assets/Object/RoboDojo/Geometry/cube_cushion/00001/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "7222beb2732ba7d8b36dfc57870961efca743ff6",
+      "size": 12596771,
+      "lfs": {
+        "oid": "9c992024c6baa8c0c2b6d8615e21eb6879dffaaa7f1dd60b6ddeb4752c56ccc3",
+        "size": 12596771,
+        "pointerSize": 133
+      },
+      "xetHash": "29255ae81ce25200eb6a678feac4261419255fe95f2f385094db9be09c4920a3",
+      "path": "Assets/Object/RoboDojo/Geometry/cube_cushion/00001/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "6c424ff8cab8afe3103733a7399170d80fd44693",
+      "size": 6952,
+      "lfs": {
+        "oid": "4810af324b738bd0b259a088fe55d48f54f40deb75a67360d3b1ade0ceb84052",
+        "size": 6952,
+        "pointerSize": 129
+      },
+      "xetHash": "dcece4aed4d8f2b471ac77993a8845bd410a2405954755dd34beab6644c9ae8f",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00000/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "de3cdbce6230edcb3eb00b4fbd06cf5599573b2f",
+      "size": 3499,
+      "lfs": {
+        "oid": "91672687d4547ed7110622b9246b75a90074925d06c6fd2d231a2147c36b5fa8",
+        "size": 3499,
+        "pointerSize": 129
+      },
+      "xetHash": "48029c53af056eb811e68dd4c1291aedd8da7bae485fd1a77af36958ceb20e34",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00000/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "aaf7ba6d3ff15deb8b133261fa3b27b51c71f83e",
+      "size": 12631673,
+      "lfs": {
+        "oid": "80a5b45d92fe70e6c62267d5deaffc5235fece1f2874e0421ffb5a336e6d40b9",
+        "size": 12631673,
+        "pointerSize": 133
+      },
+      "xetHash": "2310a982bd54a3ad93f263e2e63757ae2c9fdcc55ec4ec79abcf805d89fa8477",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00000/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "1af13c3033860867f429f3423f9a67dff51f1512",
+      "size": 6192,
+      "lfs": {
+        "oid": "2f6e42c98a89357d82c2753b334db879c86ff62f24d062f2d7b2c9f567196bac",
+        "size": 6192,
+        "pointerSize": 129
+      },
+      "xetHash": "ce416c7b8812f637014df1611623889a8cce6512d23a7a59b1c1a030a316c3c5",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00001/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "05ecadc795ac2bb860ca7336304a77e9a6978a66",
+      "size": 3497,
+      "lfs": {
+        "oid": "6463cb1d667965975e0fef01fbc22ba73b0c4ae1f8486f773e6c13b7440f9175",
+        "size": 3497,
+        "pointerSize": 129
+      },
+      "xetHash": "beb35b73c07669928b04c271cc623456c6eaadcccbe366855fc27a0301ad0202",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00001/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "3c22c46847c1c5f866e632ae5bfcbacc2937da9c",
+      "size": 14577182,
+      "lfs": {
+        "oid": "aee08df80c2a7d6310ab2bc348854fab41b2d3021c8ce36cd54f5d725b8af025",
+        "size": 14577182,
+        "pointerSize": 133
+      },
+      "xetHash": "eae41793033f1b66aa949c5c4bab8ff2cd701def1070e3bdf760f899f5a7d4da",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00001/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "415daa493b93c5b62b0893cda7e2d16b2b84d58a",
+      "size": 7214,
+      "lfs": {
+        "oid": "de6887e6b5bd9986a61812b9833444d8d2aa8cdd56db10c21db4457296167dc1",
+        "size": 7214,
+        "pointerSize": 129
+      },
+      "xetHash": "3928160a8a3abf3589ea1a54a46dd717805213fbca30fbc5bf42f359b0a57a76",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00002/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "e0fde3917af8f75d257b5e5692223328f34d8e0e",
+      "size": 3500,
+      "lfs": {
+        "oid": "b4a66b75f5c3ad151c83444d691f8247a3782deebd559de77591bf9238f6f4e4",
+        "size": 3500,
+        "pointerSize": 129
+      },
+      "xetHash": "b6058df9fa69712179af7f36c92a9a39c83a5df98d2188845374984f8ea89b7f",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00002/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "902bf672b9d37e7eb2df192b1292066ae1663d10",
+      "size": 12888235,
+      "lfs": {
+        "oid": "bda45f305a2c0f60b8025570c8a9f3ec25f6b58c00373c3105f22cf40f4d8b87",
+        "size": 12888235,
+        "pointerSize": 133
+      },
+      "xetHash": "17a9da3e2ab3c5946423ace889e2a56fe7e623041a42e0a721d116ade76c71ba",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00002/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "7720c76388d930c2b115471c0bb15bdf16b31f8d",
+      "size": 6393,
+      "lfs": {
+        "oid": "64d3a52089358406939272e303683ec1506e697f354bb1fad60afd198f6b1e3d",
+        "size": 6393,
+        "pointerSize": 129
+      },
+      "xetHash": "f6e343f5fdbf3b4cf20f860fae128b9a0b15d3c3492abddd2b39537398a6c866",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00003/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "51dbaf916302dc42fb0798a0f92fd1a4ac7b6ae7",
+      "size": 3500,
+      "lfs": {
+        "oid": "8753bc042306ed4c012aceb1efcd7d726244f3888e0b9993d50f6ce38caa2a98",
+        "size": 3500,
+        "pointerSize": 129
+      },
+      "xetHash": "45f2c6733ba3dfbb8e53aba03173f772dacae81dc33f56d463db3965a7a6dd9f",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00003/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "fd592b42bf0bd6e973080c4239937d3b119dbd1f",
+      "size": 27511247,
+      "lfs": {
+        "oid": "57a2a7ab799d203804985ce369d3a8d3ec2a6e0b679a026e553cbf6477cacf65",
+        "size": 27511247,
+        "pointerSize": 133
+      },
+      "xetHash": "2be34b13df28dda47ad854d26fc6dadb4609c33cd980ac99515a0bfcef96124b",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00003/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "aa8cb6a4643c4c115839508bce698addba5ea273",
+      "size": 7286,
+      "lfs": {
+        "oid": "f7a5346eede475cb3166ed731a5a023d20ac3965ecb815a9cad081b575f613db",
+        "size": 7286,
+        "pointerSize": 129
+      },
+      "xetHash": "be5762a63f916e89ac9678b15f7e1644c3a92656ef7c5f062b836bfc052a28ed",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00004/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "0c4b9dc5650ecda3929e150d7f61b5d3fe486ff2",
+      "size": 3513,
+      "lfs": {
+        "oid": "58784ad560fb89ba4bb09ff3e178e0b551b58cdcea556ebdbe3f523fb0498995",
+        "size": 3513,
+        "pointerSize": 129
+      },
+      "xetHash": "a76aa7e752e1fd002d123a4e4238a4828cdb626194cbddc80deb727fc6c96a6d",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00004/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "f8df9fdfd44769b4775ec6cb2f07bb8b90c0c100",
+      "size": 18485042,
+      "lfs": {
+        "oid": "23e7caf2f1c8e329f409c1fdf33f5d8ec72526a4d900d1285b4ab69861ceebc8",
+        "size": 18485042,
+        "pointerSize": 133
+      },
+      "xetHash": "1e508946a5b72f6f3210f40651837c0445615971b37784603717852592d30542",
+      "path": "Assets/Object/RoboDojo/Geometry/vase/00004/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "2596b21fa118743b0588c6bce4fa5dca1f3696e6",
+      "size": 7172,
+      "lfs": {
+        "oid": "e376eb9f205023444059e328e988cd15a878dbad76e8525aa7de887ab6eac599",
+        "size": 7172,
+        "pointerSize": 129
+      },
+      "xetHash": "b3ff9ae98c85cb38e5d8c40291751ba18a80be6b92a7fc6ab5a22cc037597e79",
+      "path": "Assets/Object/RoboDojo/Rigid/cube/00003/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "7460bfdb9b1b6927899f0a8c9389b482b018fff0",
+      "size": 4373,
+      "lfs": {
+        "oid": "af8a01a59769cc6aeea06ea1d573fa1f552feb752ab789044d7f4d1f04388c4d",
+        "size": 4373,
+        "pointerSize": 129
+      },
+      "xetHash": "0a019366da632c35b6870eaf235b0873d9a40441ff1e68e70c10c345bcd2b524",
+      "path": "Assets/Object/RoboDojo/Rigid/cube/00003/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "97d808e0be13a22d4a7b7af8f8ad82a089350798",
+      "size": 6632,
+      "lfs": {
+        "oid": "66eb66bdd05680c118dc0c8996a392625c712f244735a487f323038e7ccf4640",
+        "size": 6632,
+        "pointerSize": 129
+      },
+      "xetHash": "64194f2d170bc8d60d1e7fe6b8848a8078d1c27cf6f4339a13025f412938aa34",
+      "path": "Assets/Object/RoboDojo/Rigid/cube/00003/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "349a0e4ae5a447cf8a2ef29509f478f54907c82e",
+      "size": 7329,
+      "lfs": {
+        "oid": "dc24d9dcb8ed23a86844cd3622f428d3c271bf11188445664d1751f9a6292f32",
+        "size": 7329,
+        "pointerSize": 129
+      },
+      "xetHash": "d8c46d931a9f8b0577747feb7d9ca7a43733a3c92802c4763e0a054d9b52c0b5",
+      "path": "Assets/Object/RoboDojo/Rigid/cup/00006/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "64ac1b469a9c3a034d2587dfe2d672d8529630e1",
+      "size": 3460,
+      "lfs": {
+        "oid": "02983a69c9f6121398308941db912b250b07879b8a99be89092d9d5ad5fba328",
+        "size": 3460,
+        "pointerSize": 129
+      },
+      "xetHash": "478c3372b5a69caac7617674810e2df4ac5d649ada39702d05fa222265c5a6c9",
+      "path": "Assets/Object/RoboDojo/Rigid/cup/00006/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "254ee9345d18a664ac8c77c4c0adcdb6cd8fa837",
+      "size": 2919082,
+      "lfs": {
+        "oid": "ccee68b7e35e05728db3c4d9b95920b6b7ebe7f22159c9dcbfce63098accf52b",
+        "size": 2919082,
+        "pointerSize": 132
+      },
+      "xetHash": "7bb332879a4dbc352ed36ba12cc8207df9e0bdc3a2daa0d4e52c576d7f69c464",
+      "path": "Assets/Object/RoboDojo/Rigid/cup/00006/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "9f3adcce9cd2223908b5e2594f02c25aabd58fbd",
+      "size": 7527,
+      "lfs": {
+        "oid": "1550ad6f41bbca37ff0ee5dabe126c68349f4c1fc80dd7387da30c97b2dad0e1",
+        "size": 7527,
+        "pointerSize": 129
+      },
+      "xetHash": "7e7a787bf78e7d971ae7a824a8f3e8833878a4104164d3ef4a30f2d818237d79",
+      "path": "Assets/Object/RoboDojo/Rigid/oil_pen/00000/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "2ab65435d357701e62f99cc6fc311569a66dc3d7",
+      "size": 4911,
+      "lfs": {
+        "oid": "1d2a741f605e351c35c5db925cefca75e9a59bc6dd0e8c2d3eb8e59862fd8416",
+        "size": 4911,
+        "pointerSize": 129
+      },
+      "xetHash": "e7836820931944568d5c88507f12aba6c607d0cccd42a31d6172735ae16209c7",
+      "path": "Assets/Object/RoboDojo/Rigid/oil_pen/00000/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "8b0975dc60f2d2b53979f6455adc1d2b902576dd",
+      "size": 22817390,
+      "lfs": {
+        "oid": "779c84a9f57e13e18bb950d862f7829c0c2965108482b854a05318f84cc4b216",
+        "size": 22817390,
+        "pointerSize": 133
+      },
+      "xetHash": "891444336b846d690db6edd9aa6e606bd15a78b928b72b2cdfb39b1b4dc37454",
+      "path": "Assets/Object/RoboDojo/Rigid/oil_pen/00000/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "a7b7515b570fe37fb7d64e8ddac6db176298f933",
+      "size": 7721,
+      "lfs": {
+        "oid": "1f211db5e4ef480b48b9872739aae9c4f9307f71f08f981c95984e98845e8d52",
+        "size": 7721,
+        "pointerSize": 129
+      },
+      "xetHash": "caa939deae0b6430610f0e207b44c6021f9f9b1a76f94646984ebdab616dd2f3",
+      "path": "Assets/Object/RoboDojo/Rigid/oil_pen/00001/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "a7a0b1128cba0c0f59f4c059eac2ceaf59685d0c",
+      "size": 4896,
+      "lfs": {
+        "oid": "7ee97ba5d1e4aefbe0e5aacb15fa85371ead9b6fc0282f4ea049e85299bcd504",
+        "size": 4896,
+        "pointerSize": 129
+      },
+      "xetHash": "b95e3b372f6c9e1ce95c7b4d9e782d57f51fbdf0bc0224676045a9a65728dd28",
+      "path": "Assets/Object/RoboDojo/Rigid/oil_pen/00001/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "c6f0a3d63dd4202624f40cdfbfd2cdce22c32660",
+      "size": 22596502,
+      "lfs": {
+        "oid": "b53adc5cda22e6bd205d083958b853a48342e30c55ce0b6db6b35c6a3c88c460",
+        "size": 22596502,
+        "pointerSize": 133
+      },
+      "xetHash": "5bea04cc695d513b3369bb21fe996929d4e0006135f0bf0b9d9df8b55a96362f",
+      "path": "Assets/Object/RoboDojo/Rigid/oil_pen/00001/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "98be7772663264b2395086bbb3e98c583a626f45",
+      "size": 7254,
+      "lfs": {
+        "oid": "7ebdadb420ceb82063d0199c6490965551b748c7ee65265a980ee532e565fe46",
+        "size": 7254,
+        "pointerSize": 129
+      },
+      "xetHash": "71e0968bc8eccac60e516819ff4ea4f24498524e892853146a898a37841b0a8c",
+      "path": "Assets/Object/RoboDojo/Rigid/pen/00000/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "134baae84da9ddb8befb7ce6f90f67464656fa12",
+      "size": 5348,
+      "lfs": {
+        "oid": "096ae5b15c74600a7e84171f6c0fc25e05dd25fe2244ff18ab8cce08347f57e1",
+        "size": 5348,
+        "pointerSize": 129
+      },
+      "xetHash": "f9c9d2066cbf130c1d9f0d8198422423fe039b84904153a9593d38d14c335fd0",
+      "path": "Assets/Object/RoboDojo/Rigid/pen/00000/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "1ea703bfaca8b9aa2f1e2f7e6b4937b5dd41a1ef",
+      "size": 26609991,
+      "lfs": {
+        "oid": "6b557305841de9ea67ebccfb237cc0c69d55a6de806f0b12a3224f33f6ab6340",
+        "size": 26609991,
+        "pointerSize": 133
+      },
+      "xetHash": "7b5d153a6842e72377eaada936be042c164fb8f034d1fb44215fde1d1df99d86",
+      "path": "Assets/Object/RoboDojo/Rigid/pen/00000/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "23ef527255613a6cc45f4ec57b7a3c2856269fb5",
+      "size": 6032,
+      "lfs": {
+        "oid": "2e8e60a0f618c4a141e01d4750e4e497eb753b265b473d66d0ec142ea4b50cc2",
+        "size": 6032,
+        "pointerSize": 129
+      },
+      "xetHash": "2ae1d5a12cf8b69e0621baa13f4fedbd3857769ad7dc1818790d065429616c9a",
+      "path": "Assets/Object/RoboDojo/Rigid/pen/00001/description.json"
+    },
+    {
+      "type": "file",
+      "oid": "c3c6dea69a820ed4cf0db17b82871aaf05774a62",
+      "size": 4845,
+      "lfs": {
+        "oid": "ba06cdc6765b77f685b781c498afbd6f169683da933bdbde4ac37d67a380d1da",
+        "size": 4845,
+        "pointerSize": 129
+      },
+      "xetHash": "83b5144b315713224ee0fbfd6948fcb33b3cf79615ff7c52057a9dc637c763c3",
+      "path": "Assets/Object/RoboDojo/Rigid/pen/00001/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "4953585e8acf4426ea83ff1a5f33033d80fecf28",
+      "size": 5024889,
+      "lfs": {
+        "oid": "41e4041e99bf385d7279935e02761e0d4ecc61f526377b38d990da3fe6eaced5",
+        "size": 5024889,
+        "pointerSize": 132
+      },
+      "xetHash": "9f4555fbf66428e4adced350fc82b52734a179f1d456e1d0ea2730e300fca092",
+      "path": "Assets/Object/RoboDojo/Rigid/pen/00001/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "58667ed6ceac12b2acbcf5757eaefb0b18e129b5",
+      "size": 5316,
+      "lfs": {
+        "oid": "d5b71fa6a96ced02ad6dbb266ed91f741825112f8b712becda742457a2cca831",
+        "size": 5316,
+        "pointerSize": 129
+      },
+      "xetHash": "2d858f4c98d0e3103ae11ecda01d1233775eb2a5acb11c821dfddddfc147e381",
+      "path": "Assets/Object/RoboDojo/Rigid/pen/00004/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "a3baea1e4dbd8de5569bb7de9bf226b02a2059e9",
+      "size": 1241025,
+      "lfs": {
+        "oid": "418cbfae8d531b2a63084c1635c34561c2cfe5d7ce0eacdf813e2227a1e81d6b",
+        "size": 1241025,
+        "pointerSize": 132
+      },
+      "xetHash": "f8598ba5ae155362488027e841e78b6a66a8e8a610fdc3a11c4d24e418f56404",
+      "path": "Assets/Object/RoboDojo/Rigid/pen/00004/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "50d269d7e4d923bc4227823e8216c8e903823896",
+      "size": 3444,
+      "lfs": {
+        "oid": "9176f45ce9289da6ddad9cd918b961c941248952c0346c4e1bb32d9bda3fa785",
+        "size": 3444,
+        "pointerSize": 129
+      },
+      "xetHash": "08e2eb08f0c6b90c01c56564aef1bc0c0e558cf2b3d01d4fd44ac36b304941b7",
+      "path": "Assets/Object/RoboDojo/Rigid/pen_holder/00000/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "4ae41f8709deeb0c079ca28c75f7664b79d3ed24",
+      "size": 97034,
+      "lfs": {
+        "oid": "8774e50e0eee97cad170bbffb4f2e7ab4e4d487212e5eee7b92ba947aa916b63",
+        "size": 97034,
+        "pointerSize": 130
+      },
+      "xetHash": "9a52c0c6bd626df98d5f7e28235a2b9d976c9deae601b2132effa7ac24067367",
+      "path": "Assets/Object/RoboDojo/Rigid/pen_holder/00000/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "4a15e4575d271b1d11e601937408394054cd3f3d",
+      "size": 3403,
+      "lfs": {
+        "oid": "6295d330219334d93da83edfea375106aebc1936bf5526cede94c6210e73177b",
+        "size": 3403,
+        "pointerSize": 129
+      },
+      "xetHash": "8c961d0637b2c4c7113ed1b8d1c069f4191d0b9c3a262d7fa0dfe36eadbda02b",
+      "path": "Assets/Object/RoboDojo/Rigid/sphere/00000/metadata.json"
+    },
+    {
+      "type": "file",
+      "oid": "812eb15873fd260e345e1e22ef4d1afd22f9f17a",
+      "size": 56009662,
+      "lfs": {
+        "oid": "c44c5e80df506501d59c66ad10dc9bb72ad8e7a6406d6b30468556eefc7ac0f9",
+        "size": 56009662,
+        "pointerSize": 133
+      },
+      "xetHash": "fa2b9fd6302c4060d0fa7496ba38a9b87ba85b193320ecf9e50491466ef40150",
+      "path": "Assets/Object/RoboDojo/Rigid/sphere/00000/object.usdz"
+    },
+    {
+      "type": "file",
+      "oid": "45f0bb7006fa141bf73f6f31d5893a6958cf0f1e",
+      "size": 28300821,
+      "lfs": {
+        "oid": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63",
+        "size": 28300821,
+        "pointerSize": 133
+      },
+      "xetHash": "64c6fc9fec8678038d5487c48d6cf95871da6f5a367a63ae5bdbda4c4bfe6e92",
+      "path": "Assets/Robots/x5/ARX.usd"
+    },
+    {
+      "type": "file",
+      "oid": "24f163e5deafaafe89398592ac4f9405186956bb",
+      "size": 9218,
+      "lfs": {
+        "oid": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+        "size": 9218,
+        "pointerSize": 129
+      },
+      "xetHash": "7b2c8f459443105c23ce516e174e32d268b39b41e257c2e94dc8525e54bf2689",
+      "path": "Assets/Robots/x5/X5A.urdf"
+    },
+    {
+      "type": "file",
+      "oid": "55889f96fa9d68de52093473fb2e26d88fe77295",
+      "size": 28281338,
+      "lfs": {
+        "oid": "01a382332e3a60ee2fc61013d2ad13dd0df287d43142e2b854a6b3853e0c892b",
+        "size": 28281338,
+        "pointerSize": 133
+      },
+      "xetHash": "2003ca80ae58f840b00b1645a654e97bfa1f90cc584c17e73e1998badc34659d",
+      "path": "Assets/Robots/x5/configuration/ARX_base.usd"
+    },
+    {
+      "type": "file",
+      "oid": "af736deec42cc42ec7b25af3a656075727dcc24c",
+      "size": 5459,
+      "lfs": {
+        "oid": "96369690dd2a0bdc583f21e7a985e2a0c0d9a50e0f4c6d41d8dc4d9c918df53b",
+        "size": 5459,
+        "pointerSize": 129
+      },
+      "xetHash": "7c8437490838520d19b54c5fb63f9a87d76c4a874d036373450bf034078349ac",
+      "path": "Assets/Robots/x5/configuration/ARX_physics.usd"
+    },
+    {
+      "type": "file",
+      "oid": "f10a40deb4436251b82bc73ef8db1caa1a4f4de4",
+      "size": 1843,
+      "lfs": {
+        "oid": "89b2d4349c05691d71d13007f7747e61b64ab5bf7707cca55fcb0e575f45a063",
+        "size": 1843,
+        "pointerSize": 129
+      },
+      "xetHash": "0b7535a35ba6f5b2f0a9b1fc3a7e206273f74fba52a6c029df30045f98cd530b",
+      "path": "Assets/Robots/x5/configuration/ARX_robot.usd"
+    },
+    {
+      "type": "file",
+      "oid": "06ef0ccd5763eb4eca8a4eae8c6da6591dc8a4da",
+      "size": 643,
+      "lfs": {
+        "oid": "7dfddb8b25ea5ff43e327b63b22c496141bc727c89b616a06e022abcca847677",
+        "size": 643,
+        "pointerSize": 128
+      },
+      "xetHash": "1ea0b1f3bc8c009cb9a58f8ab94e684cac8b8582d0ae6444a6238709ba91a0b9",
+      "path": "Assets/Robots/x5/configuration/ARX_sensor.usd"
+    },
+    {
+      "type": "file",
+      "oid": "c4ba39cf5aa794dec45edf04d4b509805871b213",
+      "size": 28282173,
+      "lfs": {
+        "oid": "18ac17e17edc1e6e1661f3b20cf59edd3ba4292150dfcb02c4f5c1def2a199ec",
+        "size": 28282173,
+        "pointerSize": 133
+      },
+      "xetHash": "fe47aa9b6401a3e8c91698cf32fa09a67c8218625700d72af4ca73ec9e95b6ba",
+      "path": "Assets/Robots/x5/configuration/X5A_temp_base.usd"
+    },
+    {
+      "type": "file",
+      "oid": "82b97f7413e89547860a052290f1f5233ea38951",
+      "size": 5752,
+      "lfs": {
+        "oid": "71959c376a0cb79c9cfef3e7c6449c9aa204590095965bdc37a094c1dad9f1e5",
+        "size": 5752,
+        "pointerSize": 129
+      },
+      "xetHash": "d3109f25823827257515240f07a807550c1d11a736543978e1bd464a8c0056f7",
+      "path": "Assets/Robots/x5/configuration/X5A_temp_physics.usd"
+    },
+    {
+      "type": "file",
+      "oid": "f10a40deb4436251b82bc73ef8db1caa1a4f4de4",
+      "size": 1843,
+      "lfs": {
+        "oid": "89b2d4349c05691d71d13007f7747e61b64ab5bf7707cca55fcb0e575f45a063",
+        "size": 1843,
+        "pointerSize": 129
+      },
+      "xetHash": "0b7535a35ba6f5b2f0a9b1fc3a7e206273f74fba52a6c029df30045f98cd530b",
+      "path": "Assets/Robots/x5/configuration/X5A_temp_robot.usd"
+    },
+    {
+      "type": "file",
+      "oid": "06ef0ccd5763eb4eca8a4eae8c6da6591dc8a4da",
+      "size": 643,
+      "lfs": {
+        "oid": "7dfddb8b25ea5ff43e327b63b22c496141bc727c89b616a06e022abcca847677",
+        "size": 643,
+        "pointerSize": 128
+      },
+      "xetHash": "1ea0b1f3bc8c009cb9a58f8ab94e684cac8b8582d0ae6444a6238709ba91a0b9",
+      "path": "Assets/Robots/x5/configuration/X5A_temp_sensor.usd"
+    },
+    {
+      "type": "file",
+      "oid": "a389e3c2e7a8cca3ca8e69cb79e55436013112d7",
+      "size": 12526,
+      "lfs": {
+        "oid": "5eea08bf7ef276bf9dfd078ef9f69221e9a67c8cf6cd19fce5ef66d42e96b3f2",
+        "size": 12526,
+        "pointerSize": 130
+      },
+      "xetHash": "b9b64b986808224d85e1a3a2244c91971b3996064d20cee9f33bcf99bd46dc66",
+      "path": "Assets/Robots/x5/curobo_tmp.yml"
+    },
+    {
+      "type": "file",
+      "oid": "6532aa58efa197ba50c4d252e8299f4c3a0da9af",
+      "size": 1611284,
+      "lfs": {
+        "oid": "898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92",
+        "size": 1611284,
+        "pointerSize": 132
+      },
+      "xetHash": "bd5a11104161c5b6101feef59e923fdde3fc852c06d0723a742c188e830719a8",
+      "path": "Assets/Robots/x5/meshes/base_link.STL"
+    },
+    {
+      "type": "file",
+      "oid": "c4bea71e3276fff3dbd825b88b68ff250922f8c6",
+      "size": 15899328,
+      "lfs": {
+        "oid": "9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c",
+        "size": 15899328,
+        "pointerSize": 133
+      },
+      "xetHash": "4f50c3217e16a5727b868c714290429cac6ef29be33f2cc78a7b7e6d736c4cb5",
+      "path": "Assets/Robots/x5/meshes/camera.glb"
+    },
+    {
+      "type": "file",
+      "oid": "2113e94c722ca2b42c5678f460bdd0e8a3c219d1",
+      "size": 62332,
+      "lfs": {
+        "oid": "d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0",
+        "size": 62332,
+        "pointerSize": 130
+      },
+      "xetHash": "219f0f6bdccd0581733fe271e4b4c69c441fbf5455ffa912e55a8da7b2a2a44a",
+      "path": "Assets/Robots/x5/meshes/camera_base.glb"
+    },
+    {
+      "type": "file",
+      "oid": "5e5cf5feff7cd7d8695cee6b5d1ed55de9d59e30",
+      "size": 162184,
+      "lfs": {
+        "oid": "04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885",
+        "size": 162184,
+        "pointerSize": 131
+      },
+      "xetHash": "1cc5aa32344b5c997e45c90f4cffefbb7bf022413cf912a4ac129c85a22ee91d",
+      "path": "Assets/Robots/x5/meshes/link1.STL"
+    },
+    {
+      "type": "file",
+      "oid": "5a3dc4c31ae213d358d13acc94a3631bf0228247",
+      "size": 4353884,
+      "lfs": {
+        "oid": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+        "size": 4353884,
+        "pointerSize": 132
+      },
+      "xetHash": "f224bf6889f23fd6de2b5dd32037d8617d49112c1f01e431a167442e4fe8700b",
+      "path": "Assets/Robots/x5/meshes/link2.STL"
+    },
+    {
+      "type": "file",
+      "oid": "cd3831724a6c4cbe0a3d6c86ffb48a558844bed2",
+      "size": 1052684,
+      "lfs": {
+        "oid": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0",
+        "size": 1052684,
+        "pointerSize": 132
+      },
+      "xetHash": "5fe7e73a011e904c5f8eb7fc1d2b238748220967689b66577b5c46ef3ccabcc4",
+      "path": "Assets/Robots/x5/meshes/link3.STL"
+    },
+    {
+      "type": "file",
+      "oid": "7a02de5c1e6acfe96ce6c8687e1c93d4ea14d8fe",
+      "size": 142784,
+      "lfs": {
+        "oid": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4",
+        "size": 142784,
+        "pointerSize": 131
+      },
+      "xetHash": "d2912535d3de21e3a4910ddb4f44da64be7f7cb1ebc92c4a2388a51745b8d505",
+      "path": "Assets/Robots/x5/meshes/link4.STL"
+    },
+    {
+      "type": "file",
+      "oid": "ce3d65cfb78e8065de96e456b0a06e6a71c2e038",
+      "size": 679584,
+      "lfs": {
+        "oid": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464",
+        "size": 679584,
+        "pointerSize": 131
+      },
+      "xetHash": "ab250d5425285b8c2074859a07b7cabce41cae594dc52ff5c78a800f2fcc4829",
+      "path": "Assets/Robots/x5/meshes/link5.STL"
+    },
+    {
+      "type": "file",
+      "oid": "e78a94aa6973f9f01de45176c4f0e17b0d185ed4",
+      "size": 643784,
+      "lfs": {
+        "oid": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e",
+        "size": 643784,
+        "pointerSize": 131
+      },
+      "xetHash": "b25705ad4b85c669fc484c43133cbc69037ac0af36799c76b09f987a584fdb12",
+      "path": "Assets/Robots/x5/meshes/link6.STL"
+    },
+    {
+      "type": "file",
+      "oid": "71c00d30d73d785a2bb31b88038aec6e30a1b579",
+      "size": 65284,
+      "lfs": {
+        "oid": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+        "size": 65284,
+        "pointerSize": 130
+      },
+      "xetHash": "55149786eec5fa088c372a88b3024d6a724c4b2908f5288a7bed01882591b947",
+      "path": "Assets/Robots/x5/meshes/link7.STL"
+    },
+    {
+      "type": "file",
+      "oid": "7acde1c443ed69cd3e54c5c96d0cd91fffd0e262",
+      "size": 65284,
+      "lfs": {
+        "oid": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60",
+        "size": 65284,
+        "pointerSize": 130
+      },
+      "xetHash": "a84fcefae62f20e7fa0e7c28f438e748eb5bed5f30d68c4614ef9d560203bac0",
+      "path": "Assets/Robots/x5/meshes/link8.STL"
+    },
+    {
+      "type": "file",
+      "oid": "4d23bf5e1da782832bbb815e009db6fde84fdf91",
+      "size": 794,
+      "lfs": {
+        "oid": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9",
+        "size": 794,
+        "pointerSize": 128
+      },
+      "xetHash": "00fbb3ca03a0c61c580586891cba3a1e29f2b9b3ed786873fb8000ff47b5b341",
+      "path": "Assets/Robots/x5/robot_config.yml"
+    },
+    {
+      "type": "file",
+      "oid": "e97941f1f17cadb94f16baa04d55a576eee5c68a",
+      "size": 54337,
+      "lfs": {
+        "oid": "26aa63c797b2b85bec13865521c60f7f34f15f8bffa34799ae0678aa44b85668",
+        "size": 54337,
+        "pointerSize": 130
+      },
+      "xetHash": "eac07d9f02e6ab8004cd0f2131f4baddd42692108b80fd64d46b9ff306e7293c",
+      "path": "Assets/Room/Simple_Room_nolight/.thumbs/256x256/SimpleRoom.usd.png"
+    },
+    {
+      "type": "file",
+      "oid": "6712b1fddf6d683834c3643f2a5963ae365d73c7",
+      "size": 416,
+      "lfs": {
+        "oid": "ea5adc9b0a1602b1a4c301c01c386a1adf7e49dc18e1239080ebe4a04bda73d2",
+        "size": 416,
+        "pointerSize": 128
+      },
+      "xetHash": "28be89ee39dfef6e057636b18fb8ee82e6ac50df1b718752b3280d0296f562d2",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/SimpleRoom.json"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/SimpleRoom.png"
+    },
+    {
+      "type": "file",
+      "oid": "c2850725fd879de95e779757b666b2a86c158d24",
+      "size": 28181,
+      "lfs": {
+        "oid": "a6226f57d18aeb57a70c5e76d951fdb242231ff8d3747c7dd18c77bfe264c09f",
+        "size": 28181,
+        "pointerSize": 130
+      },
+      "xetHash": "1f7b2081f2208d82e83cd379f489b3d1aff0ded8228d0ce65d0188b21366a724",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/SimpleRoom_room001.json"
+    },
+    {
+      "type": "file",
+      "oid": "c13fc58f3849ac863b17ce926b52ec143c00e2c4",
+      "size": 901,
+      "lfs": {
+        "oid": "88fd176941a815caa5b7c43a714d571952c839ab906495e43bca9142ffa56f7f",
+        "size": 901,
+        "pointerSize": 128
+      },
+      "xetHash": "c404ed7755505b468a44f8bc3df452ffea54e9c9dc6e7408a91f1ecb88dd3954",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice000.png"
+    },
+    {
+      "type": "file",
+      "oid": "c13fc58f3849ac863b17ce926b52ec143c00e2c4",
+      "size": 901,
+      "lfs": {
+        "oid": "88fd176941a815caa5b7c43a714d571952c839ab906495e43bca9142ffa56f7f",
+        "size": 901,
+        "pointerSize": 128
+      },
+      "xetHash": "c404ed7755505b468a44f8bc3df452ffea54e9c9dc6e7408a91f1ecb88dd3954",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice001.png"
+    },
+    {
+      "type": "file",
+      "oid": "c13fc58f3849ac863b17ce926b52ec143c00e2c4",
+      "size": 901,
+      "lfs": {
+        "oid": "88fd176941a815caa5b7c43a714d571952c839ab906495e43bca9142ffa56f7f",
+        "size": 901,
+        "pointerSize": 128
+      },
+      "xetHash": "c404ed7755505b468a44f8bc3df452ffea54e9c9dc6e7408a91f1ecb88dd3954",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice002.png"
+    },
+    {
+      "type": "file",
+      "oid": "c13fc58f3849ac863b17ce926b52ec143c00e2c4",
+      "size": 901,
+      "lfs": {
+        "oid": "88fd176941a815caa5b7c43a714d571952c839ab906495e43bca9142ffa56f7f",
+        "size": 901,
+        "pointerSize": 128
+      },
+      "xetHash": "c404ed7755505b468a44f8bc3df452ffea54e9c9dc6e7408a91f1ecb88dd3954",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice003.png"
+    },
+    {
+      "type": "file",
+      "oid": "efd91481bfb2f59f851b2f82504e5c755bc920ac",
+      "size": 879,
+      "lfs": {
+        "oid": "463907aca0e35cfe142d49e893289710e7fb47d87b539b8bf8a0ad871d10a2cd",
+        "size": 879,
+        "pointerSize": 128
+      },
+      "xetHash": "ac3d78d7730103e93acb20c9ebc7331451fd87245ba4a10cec9a0e2b61d47921",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice004.png"
+    },
+    {
+      "type": "file",
+      "oid": "efd91481bfb2f59f851b2f82504e5c755bc920ac",
+      "size": 879,
+      "lfs": {
+        "oid": "463907aca0e35cfe142d49e893289710e7fb47d87b539b8bf8a0ad871d10a2cd",
+        "size": 879,
+        "pointerSize": 128
+      },
+      "xetHash": "ac3d78d7730103e93acb20c9ebc7331451fd87245ba4a10cec9a0e2b61d47921",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice005.png"
+    },
+    {
+      "type": "file",
+      "oid": "efd91481bfb2f59f851b2f82504e5c755bc920ac",
+      "size": 879,
+      "lfs": {
+        "oid": "463907aca0e35cfe142d49e893289710e7fb47d87b539b8bf8a0ad871d10a2cd",
+        "size": 879,
+        "pointerSize": 128
+      },
+      "xetHash": "ac3d78d7730103e93acb20c9ebc7331451fd87245ba4a10cec9a0e2b61d47921",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice006.png"
+    },
+    {
+      "type": "file",
+      "oid": "efd91481bfb2f59f851b2f82504e5c755bc920ac",
+      "size": 879,
+      "lfs": {
+        "oid": "463907aca0e35cfe142d49e893289710e7fb47d87b539b8bf8a0ad871d10a2cd",
+        "size": 879,
+        "pointerSize": 128
+      },
+      "xetHash": "ac3d78d7730103e93acb20c9ebc7331451fd87245ba4a10cec9a0e2b61d47921",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice007.png"
+    },
+    {
+      "type": "file",
+      "oid": "efd91481bfb2f59f851b2f82504e5c755bc920ac",
+      "size": 879,
+      "lfs": {
+        "oid": "463907aca0e35cfe142d49e893289710e7fb47d87b539b8bf8a0ad871d10a2cd",
+        "size": 879,
+        "pointerSize": 128
+      },
+      "xetHash": "ac3d78d7730103e93acb20c9ebc7331451fd87245ba4a10cec9a0e2b61d47921",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice008.png"
+    },
+    {
+      "type": "file",
+      "oid": "efd91481bfb2f59f851b2f82504e5c755bc920ac",
+      "size": 879,
+      "lfs": {
+        "oid": "463907aca0e35cfe142d49e893289710e7fb47d87b539b8bf8a0ad871d10a2cd",
+        "size": 879,
+        "pointerSize": 128
+      },
+      "xetHash": "ac3d78d7730103e93acb20c9ebc7331451fd87245ba4a10cec9a0e2b61d47921",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice009.png"
+    },
+    {
+      "type": "file",
+      "oid": "efd91481bfb2f59f851b2f82504e5c755bc920ac",
+      "size": 879,
+      "lfs": {
+        "oid": "463907aca0e35cfe142d49e893289710e7fb47d87b539b8bf8a0ad871d10a2cd",
+        "size": 879,
+        "pointerSize": 128
+      },
+      "xetHash": "ac3d78d7730103e93acb20c9ebc7331451fd87245ba4a10cec9a0e2b61d47921",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice010.png"
+    },
+    {
+      "type": "file",
+      "oid": "efd91481bfb2f59f851b2f82504e5c755bc920ac",
+      "size": 879,
+      "lfs": {
+        "oid": "463907aca0e35cfe142d49e893289710e7fb47d87b539b8bf8a0ad871d10a2cd",
+        "size": 879,
+        "pointerSize": 128
+      },
+      "xetHash": "ac3d78d7730103e93acb20c9ebc7331451fd87245ba4a10cec9a0e2b61d47921",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice011.png"
+    },
+    {
+      "type": "file",
+      "oid": "efd91481bfb2f59f851b2f82504e5c755bc920ac",
+      "size": 879,
+      "lfs": {
+        "oid": "463907aca0e35cfe142d49e893289710e7fb47d87b539b8bf8a0ad871d10a2cd",
+        "size": 879,
+        "pointerSize": 128
+      },
+      "xetHash": "ac3d78d7730103e93acb20c9ebc7331451fd87245ba4a10cec9a0e2b61d47921",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice012.png"
+    },
+    {
+      "type": "file",
+      "oid": "efd91481bfb2f59f851b2f82504e5c755bc920ac",
+      "size": 879,
+      "lfs": {
+        "oid": "463907aca0e35cfe142d49e893289710e7fb47d87b539b8bf8a0ad871d10a2cd",
+        "size": 879,
+        "pointerSize": 128
+      },
+      "xetHash": "ac3d78d7730103e93acb20c9ebc7331451fd87245ba4a10cec9a0e2b61d47921",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice013.png"
+    },
+    {
+      "type": "file",
+      "oid": "9a15dc8b6178597249f2a1e13e54633187a9f3b0",
+      "size": 877,
+      "lfs": {
+        "oid": "89b76b36c06b662fdda3033ecc4cb229b89c48f31c2c434995601f30401d7e5b",
+        "size": 877,
+        "pointerSize": 128
+      },
+      "xetHash": "afc4bae1081e9d9c42decf73896ac7adb33d01e41b9c90e94135d12dbc422196",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice014.png"
+    },
+    {
+      "type": "file",
+      "oid": "9a15dc8b6178597249f2a1e13e54633187a9f3b0",
+      "size": 877,
+      "lfs": {
+        "oid": "89b76b36c06b662fdda3033ecc4cb229b89c48f31c2c434995601f30401d7e5b",
+        "size": 877,
+        "pointerSize": 128
+      },
+      "xetHash": "afc4bae1081e9d9c42decf73896ac7adb33d01e41b9c90e94135d12dbc422196",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice015.png"
+    },
+    {
+      "type": "file",
+      "oid": "9a15dc8b6178597249f2a1e13e54633187a9f3b0",
+      "size": 877,
+      "lfs": {
+        "oid": "89b76b36c06b662fdda3033ecc4cb229b89c48f31c2c434995601f30401d7e5b",
+        "size": 877,
+        "pointerSize": 128
+      },
+      "xetHash": "afc4bae1081e9d9c42decf73896ac7adb33d01e41b9c90e94135d12dbc422196",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice016.png"
+    },
+    {
+      "type": "file",
+      "oid": "9a15dc8b6178597249f2a1e13e54633187a9f3b0",
+      "size": 877,
+      "lfs": {
+        "oid": "89b76b36c06b662fdda3033ecc4cb229b89c48f31c2c434995601f30401d7e5b",
+        "size": 877,
+        "pointerSize": 128
+      },
+      "xetHash": "afc4bae1081e9d9c42decf73896ac7adb33d01e41b9c90e94135d12dbc422196",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice017.png"
+    },
+    {
+      "type": "file",
+      "oid": "9a15dc8b6178597249f2a1e13e54633187a9f3b0",
+      "size": 877,
+      "lfs": {
+        "oid": "89b76b36c06b662fdda3033ecc4cb229b89c48f31c2c434995601f30401d7e5b",
+        "size": 877,
+        "pointerSize": 128
+      },
+      "xetHash": "afc4bae1081e9d9c42decf73896ac7adb33d01e41b9c90e94135d12dbc422196",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice018.png"
+    },
+    {
+      "type": "file",
+      "oid": "9a15dc8b6178597249f2a1e13e54633187a9f3b0",
+      "size": 877,
+      "lfs": {
+        "oid": "89b76b36c06b662fdda3033ecc4cb229b89c48f31c2c434995601f30401d7e5b",
+        "size": 877,
+        "pointerSize": 128
+      },
+      "xetHash": "afc4bae1081e9d9c42decf73896ac7adb33d01e41b9c90e94135d12dbc422196",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice019.png"
+    },
+    {
+      "type": "file",
+      "oid": "9a15dc8b6178597249f2a1e13e54633187a9f3b0",
+      "size": 877,
+      "lfs": {
+        "oid": "89b76b36c06b662fdda3033ecc4cb229b89c48f31c2c434995601f30401d7e5b",
+        "size": 877,
+        "pointerSize": 128
+      },
+      "xetHash": "afc4bae1081e9d9c42decf73896ac7adb33d01e41b9c90e94135d12dbc422196",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice020.png"
+    },
+    {
+      "type": "file",
+      "oid": "9a15dc8b6178597249f2a1e13e54633187a9f3b0",
+      "size": 877,
+      "lfs": {
+        "oid": "89b76b36c06b662fdda3033ecc4cb229b89c48f31c2c434995601f30401d7e5b",
+        "size": 877,
+        "pointerSize": 128
+      },
+      "xetHash": "afc4bae1081e9d9c42decf73896ac7adb33d01e41b9c90e94135d12dbc422196",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice021.png"
+    },
+    {
+      "type": "file",
+      "oid": "9a15dc8b6178597249f2a1e13e54633187a9f3b0",
+      "size": 877,
+      "lfs": {
+        "oid": "89b76b36c06b662fdda3033ecc4cb229b89c48f31c2c434995601f30401d7e5b",
+        "size": 877,
+        "pointerSize": 128
+      },
+      "xetHash": "afc4bae1081e9d9c42decf73896ac7adb33d01e41b9c90e94135d12dbc422196",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice022.png"
+    },
+    {
+      "type": "file",
+      "oid": "f26bd2102af4eaac5b396f2a335ac9ab28995d09",
+      "size": 878,
+      "lfs": {
+        "oid": "94a02b1f801a04be5c2c321d74c12d94f54c6d96c6971fdcb23203ef5f892eea",
+        "size": 878,
+        "pointerSize": 128
+      },
+      "xetHash": "d11f8f198222245cfe81d1fe1dc8e849b8a67dbfe0f4cd141600b15e5988f49e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice023.png"
+    },
+    {
+      "type": "file",
+      "oid": "f26bd2102af4eaac5b396f2a335ac9ab28995d09",
+      "size": 878,
+      "lfs": {
+        "oid": "94a02b1f801a04be5c2c321d74c12d94f54c6d96c6971fdcb23203ef5f892eea",
+        "size": 878,
+        "pointerSize": 128
+      },
+      "xetHash": "d11f8f198222245cfe81d1fe1dc8e849b8a67dbfe0f4cd141600b15e5988f49e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice024.png"
+    },
+    {
+      "type": "file",
+      "oid": "f26bd2102af4eaac5b396f2a335ac9ab28995d09",
+      "size": 878,
+      "lfs": {
+        "oid": "94a02b1f801a04be5c2c321d74c12d94f54c6d96c6971fdcb23203ef5f892eea",
+        "size": 878,
+        "pointerSize": 128
+      },
+      "xetHash": "d11f8f198222245cfe81d1fe1dc8e849b8a67dbfe0f4cd141600b15e5988f49e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice025.png"
+    },
+    {
+      "type": "file",
+      "oid": "f26bd2102af4eaac5b396f2a335ac9ab28995d09",
+      "size": 878,
+      "lfs": {
+        "oid": "94a02b1f801a04be5c2c321d74c12d94f54c6d96c6971fdcb23203ef5f892eea",
+        "size": 878,
+        "pointerSize": 128
+      },
+      "xetHash": "d11f8f198222245cfe81d1fe1dc8e849b8a67dbfe0f4cd141600b15e5988f49e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice026.png"
+    },
+    {
+      "type": "file",
+      "oid": "f26bd2102af4eaac5b396f2a335ac9ab28995d09",
+      "size": 878,
+      "lfs": {
+        "oid": "94a02b1f801a04be5c2c321d74c12d94f54c6d96c6971fdcb23203ef5f892eea",
+        "size": 878,
+        "pointerSize": 128
+      },
+      "xetHash": "d11f8f198222245cfe81d1fe1dc8e849b8a67dbfe0f4cd141600b15e5988f49e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice027.png"
+    },
+    {
+      "type": "file",
+      "oid": "f26bd2102af4eaac5b396f2a335ac9ab28995d09",
+      "size": 878,
+      "lfs": {
+        "oid": "94a02b1f801a04be5c2c321d74c12d94f54c6d96c6971fdcb23203ef5f892eea",
+        "size": 878,
+        "pointerSize": 128
+      },
+      "xetHash": "d11f8f198222245cfe81d1fe1dc8e849b8a67dbfe0f4cd141600b15e5988f49e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice028.png"
+    },
+    {
+      "type": "file",
+      "oid": "bd7e3daad1b3a4da84acd8360b593d4587bf6ea7",
+      "size": 882,
+      "lfs": {
+        "oid": "d4723cea179d0b1e37107c97aa58684bce13a575e65957eb75ca5d4b09a0fd43",
+        "size": 882,
+        "pointerSize": 128
+      },
+      "xetHash": "7853fa0882d76877b8ecb4d9d4540ceb71efaa9217dd9c39f66262f327448397",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice029.png"
+    },
+    {
+      "type": "file",
+      "oid": "bd7e3daad1b3a4da84acd8360b593d4587bf6ea7",
+      "size": 882,
+      "lfs": {
+        "oid": "d4723cea179d0b1e37107c97aa58684bce13a575e65957eb75ca5d4b09a0fd43",
+        "size": 882,
+        "pointerSize": 128
+      },
+      "xetHash": "7853fa0882d76877b8ecb4d9d4540ceb71efaa9217dd9c39f66262f327448397",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice030.png"
+    },
+    {
+      "type": "file",
+      "oid": "bd7e3daad1b3a4da84acd8360b593d4587bf6ea7",
+      "size": 882,
+      "lfs": {
+        "oid": "d4723cea179d0b1e37107c97aa58684bce13a575e65957eb75ca5d4b09a0fd43",
+        "size": 882,
+        "pointerSize": 128
+      },
+      "xetHash": "7853fa0882d76877b8ecb4d9d4540ceb71efaa9217dd9c39f66262f327448397",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice031.png"
+    },
+    {
+      "type": "file",
+      "oid": "1757eb7c04bdd70dcfab264530b18ce0242d2145",
+      "size": 880,
+      "lfs": {
+        "oid": "70a66b17f2b8f7cbab7f9fdad53382b9eed17c2e2c7d83e2edd79602ed5a29a4",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "57a0f405f7481cf55dcd28fe2eb09905615d5cf5072693a92709759bdee15756",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice032.png"
+    },
+    {
+      "type": "file",
+      "oid": "1757eb7c04bdd70dcfab264530b18ce0242d2145",
+      "size": 880,
+      "lfs": {
+        "oid": "70a66b17f2b8f7cbab7f9fdad53382b9eed17c2e2c7d83e2edd79602ed5a29a4",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "57a0f405f7481cf55dcd28fe2eb09905615d5cf5072693a92709759bdee15756",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice033.png"
+    },
+    {
+      "type": "file",
+      "oid": "1757eb7c04bdd70dcfab264530b18ce0242d2145",
+      "size": 880,
+      "lfs": {
+        "oid": "70a66b17f2b8f7cbab7f9fdad53382b9eed17c2e2c7d83e2edd79602ed5a29a4",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "57a0f405f7481cf55dcd28fe2eb09905615d5cf5072693a92709759bdee15756",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice034.png"
+    },
+    {
+      "type": "file",
+      "oid": "1757eb7c04bdd70dcfab264530b18ce0242d2145",
+      "size": 880,
+      "lfs": {
+        "oid": "70a66b17f2b8f7cbab7f9fdad53382b9eed17c2e2c7d83e2edd79602ed5a29a4",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "57a0f405f7481cf55dcd28fe2eb09905615d5cf5072693a92709759bdee15756",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice035.png"
+    },
+    {
+      "type": "file",
+      "oid": "1757eb7c04bdd70dcfab264530b18ce0242d2145",
+      "size": 880,
+      "lfs": {
+        "oid": "70a66b17f2b8f7cbab7f9fdad53382b9eed17c2e2c7d83e2edd79602ed5a29a4",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "57a0f405f7481cf55dcd28fe2eb09905615d5cf5072693a92709759bdee15756",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice036.png"
+    },
+    {
+      "type": "file",
+      "oid": "1757eb7c04bdd70dcfab264530b18ce0242d2145",
+      "size": 880,
+      "lfs": {
+        "oid": "70a66b17f2b8f7cbab7f9fdad53382b9eed17c2e2c7d83e2edd79602ed5a29a4",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "57a0f405f7481cf55dcd28fe2eb09905615d5cf5072693a92709759bdee15756",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice037.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e9ed2d34466a7ca1b58464a56d792f9bc4ed78c",
+      "size": 880,
+      "lfs": {
+        "oid": "69c0c10bdf3766d1e1b43d17b1218c28420047e0494f21d8bf01c483b53223f1",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "fb7412a8faf71ee8184dcb90c868a86703e1498027c5d099388251df1cd942c8",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice038.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e9ed2d34466a7ca1b58464a56d792f9bc4ed78c",
+      "size": 880,
+      "lfs": {
+        "oid": "69c0c10bdf3766d1e1b43d17b1218c28420047e0494f21d8bf01c483b53223f1",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "fb7412a8faf71ee8184dcb90c868a86703e1498027c5d099388251df1cd942c8",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice039.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e9ed2d34466a7ca1b58464a56d792f9bc4ed78c",
+      "size": 880,
+      "lfs": {
+        "oid": "69c0c10bdf3766d1e1b43d17b1218c28420047e0494f21d8bf01c483b53223f1",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "fb7412a8faf71ee8184dcb90c868a86703e1498027c5d099388251df1cd942c8",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice040.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e9ed2d34466a7ca1b58464a56d792f9bc4ed78c",
+      "size": 880,
+      "lfs": {
+        "oid": "69c0c10bdf3766d1e1b43d17b1218c28420047e0494f21d8bf01c483b53223f1",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "fb7412a8faf71ee8184dcb90c868a86703e1498027c5d099388251df1cd942c8",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice041.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e9ed2d34466a7ca1b58464a56d792f9bc4ed78c",
+      "size": 880,
+      "lfs": {
+        "oid": "69c0c10bdf3766d1e1b43d17b1218c28420047e0494f21d8bf01c483b53223f1",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "fb7412a8faf71ee8184dcb90c868a86703e1498027c5d099388251df1cd942c8",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice042.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e9ed2d34466a7ca1b58464a56d792f9bc4ed78c",
+      "size": 880,
+      "lfs": {
+        "oid": "69c0c10bdf3766d1e1b43d17b1218c28420047e0494f21d8bf01c483b53223f1",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "fb7412a8faf71ee8184dcb90c868a86703e1498027c5d099388251df1cd942c8",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice043.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e9ed2d34466a7ca1b58464a56d792f9bc4ed78c",
+      "size": 880,
+      "lfs": {
+        "oid": "69c0c10bdf3766d1e1b43d17b1218c28420047e0494f21d8bf01c483b53223f1",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "fb7412a8faf71ee8184dcb90c868a86703e1498027c5d099388251df1cd942c8",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice044.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e9ed2d34466a7ca1b58464a56d792f9bc4ed78c",
+      "size": 880,
+      "lfs": {
+        "oid": "69c0c10bdf3766d1e1b43d17b1218c28420047e0494f21d8bf01c483b53223f1",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "fb7412a8faf71ee8184dcb90c868a86703e1498027c5d099388251df1cd942c8",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice045.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e9ed2d34466a7ca1b58464a56d792f9bc4ed78c",
+      "size": 880,
+      "lfs": {
+        "oid": "69c0c10bdf3766d1e1b43d17b1218c28420047e0494f21d8bf01c483b53223f1",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "fb7412a8faf71ee8184dcb90c868a86703e1498027c5d099388251df1cd942c8",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice046.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e9ed2d34466a7ca1b58464a56d792f9bc4ed78c",
+      "size": 880,
+      "lfs": {
+        "oid": "69c0c10bdf3766d1e1b43d17b1218c28420047e0494f21d8bf01c483b53223f1",
+        "size": 880,
+        "pointerSize": 128
+      },
+      "xetHash": "fb7412a8faf71ee8184dcb90c868a86703e1498027c5d099388251df1cd942c8",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice047.png"
+    },
+    {
+      "type": "file",
+      "oid": "676aaeb5f094c61e79850757d4aa43e4fd5e89b5",
+      "size": 902,
+      "lfs": {
+        "oid": "27bfe7c7e69352e3d7b76f090d99336c9a085171050df06428abf0c77b5d00dd",
+        "size": 902,
+        "pointerSize": 128
+      },
+      "xetHash": "226279f9dc15419905f4c67362557a88a179e16a92932d92301f065e24fb394e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice048.png"
+    },
+    {
+      "type": "file",
+      "oid": "676aaeb5f094c61e79850757d4aa43e4fd5e89b5",
+      "size": 902,
+      "lfs": {
+        "oid": "27bfe7c7e69352e3d7b76f090d99336c9a085171050df06428abf0c77b5d00dd",
+        "size": 902,
+        "pointerSize": 128
+      },
+      "xetHash": "226279f9dc15419905f4c67362557a88a179e16a92932d92301f065e24fb394e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice049.png"
+    },
+    {
+      "type": "file",
+      "oid": "676aaeb5f094c61e79850757d4aa43e4fd5e89b5",
+      "size": 902,
+      "lfs": {
+        "oid": "27bfe7c7e69352e3d7b76f090d99336c9a085171050df06428abf0c77b5d00dd",
+        "size": 902,
+        "pointerSize": 128
+      },
+      "xetHash": "226279f9dc15419905f4c67362557a88a179e16a92932d92301f065e24fb394e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice050.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e043ac6a2ccf034e0460a8984225995fc17bfac",
+      "size": 902,
+      "lfs": {
+        "oid": "53cabbf69d4eb817315198ef19be6b3171f1ed2ec73f9203e02152e01e436e4c",
+        "size": 902,
+        "pointerSize": 128
+      },
+      "xetHash": "d7ce6c4fb6515150a7a8c46337d144c8eafb0a4848e741561e8e3f72e484cc8a",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice051.png"
+    },
+    {
+      "type": "file",
+      "oid": "7e043ac6a2ccf034e0460a8984225995fc17bfac",
+      "size": 902,
+      "lfs": {
+        "oid": "53cabbf69d4eb817315198ef19be6b3171f1ed2ec73f9203e02152e01e436e4c",
+        "size": 902,
+        "pointerSize": 128
+      },
+      "xetHash": "d7ce6c4fb6515150a7a8c46337d144c8eafb0a4848e741561e8e3f72e484cc8a",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice052.png"
+    },
+    {
+      "type": "file",
+      "oid": "08c2822befba473005dee598f56ef94c3e01db40",
+      "size": 903,
+      "lfs": {
+        "oid": "ee32043a3662e1b91209b247c21b38cb9b7fd4b906a758e19f34e7579a9475ca",
+        "size": 903,
+        "pointerSize": 128
+      },
+      "xetHash": "cf53d64180470c5e77f35d3cb4177002ef692dbb3dfff6837a34d881c22cae65",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice053.png"
+    },
+    {
+      "type": "file",
+      "oid": "08c2822befba473005dee598f56ef94c3e01db40",
+      "size": 903,
+      "lfs": {
+        "oid": "ee32043a3662e1b91209b247c21b38cb9b7fd4b906a758e19f34e7579a9475ca",
+        "size": 903,
+        "pointerSize": 128
+      },
+      "xetHash": "cf53d64180470c5e77f35d3cb4177002ef692dbb3dfff6837a34d881c22cae65",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice054.png"
+    },
+    {
+      "type": "file",
+      "oid": "9fc366c06dd1a834e4f68f1ea58755684c518cd1",
+      "size": 907,
+      "lfs": {
+        "oid": "67efc49c6554776e7b2e0c6c4dbbe46697dfb5a403c0b6af5ccc3b89ba4d4e3f",
+        "size": 907,
+        "pointerSize": 128
+      },
+      "xetHash": "d9af6f97e1a83ef2321407ec36ecce1ec749af0300ae7345b0c66ce558cf03e1",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice055.png"
+    },
+    {
+      "type": "file",
+      "oid": "9fc366c06dd1a834e4f68f1ea58755684c518cd1",
+      "size": 907,
+      "lfs": {
+        "oid": "67efc49c6554776e7b2e0c6c4dbbe46697dfb5a403c0b6af5ccc3b89ba4d4e3f",
+        "size": 907,
+        "pointerSize": 128
+      },
+      "xetHash": "d9af6f97e1a83ef2321407ec36ecce1ec749af0300ae7345b0c66ce558cf03e1",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice056.png"
+    },
+    {
+      "type": "file",
+      "oid": "9fc366c06dd1a834e4f68f1ea58755684c518cd1",
+      "size": 907,
+      "lfs": {
+        "oid": "67efc49c6554776e7b2e0c6c4dbbe46697dfb5a403c0b6af5ccc3b89ba4d4e3f",
+        "size": 907,
+        "pointerSize": 128
+      },
+      "xetHash": "d9af6f97e1a83ef2321407ec36ecce1ec749af0300ae7345b0c66ce558cf03e1",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice057.png"
+    },
+    {
+      "type": "file",
+      "oid": "f4f606e386e91c7c0727352ee15aadd3124492ae",
+      "size": 905,
+      "lfs": {
+        "oid": "4c2ac213ba37ca8a68357b52b4e8e1e24c0f6ebe6ae8c5b9d819e3d6a600a6b7",
+        "size": 905,
+        "pointerSize": 128
+      },
+      "xetHash": "e62c4e83f28486f67645169d602ae656a53520c3f8a648ffc94bd2ba9ee21188",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/room_boundaries/room001/SimpleRoom_slice058.png"
+    },
+    {
+      "type": "file",
+      "oid": "bc0ac25a1d0ae9c27e960fb67e1ec79f5e1d7561",
+      "size": 885,
+      "lfs": {
+        "oid": "6eca35c75aab7f66c9c90db8ebfe5b35d412ba17003763eadd85426410209683",
+        "size": 885,
+        "pointerSize": 128
+      },
+      "xetHash": "9a919b812282e83ce03eabf59cfd014bf235ab6890a897e4b8da55f1e503cdfb",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice000.png"
+    },
+    {
+      "type": "file",
+      "oid": "bc0ac25a1d0ae9c27e960fb67e1ec79f5e1d7561",
+      "size": 885,
+      "lfs": {
+        "oid": "6eca35c75aab7f66c9c90db8ebfe5b35d412ba17003763eadd85426410209683",
+        "size": 885,
+        "pointerSize": 128
+      },
+      "xetHash": "9a919b812282e83ce03eabf59cfd014bf235ab6890a897e4b8da55f1e503cdfb",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice001.png"
+    },
+    {
+      "type": "file",
+      "oid": "bc0ac25a1d0ae9c27e960fb67e1ec79f5e1d7561",
+      "size": 885,
+      "lfs": {
+        "oid": "6eca35c75aab7f66c9c90db8ebfe5b35d412ba17003763eadd85426410209683",
+        "size": 885,
+        "pointerSize": 128
+      },
+      "xetHash": "9a919b812282e83ce03eabf59cfd014bf235ab6890a897e4b8da55f1e503cdfb",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice002.png"
+    },
+    {
+      "type": "file",
+      "oid": "7f4b26fb9d1ea9b07526b96a19c98756cbb574d7",
+      "size": 885,
+      "lfs": {
+        "oid": "fb8321cc6d9add94513f92c40c73097b8ff20ac86250ff049c3745dd1970f57c",
+        "size": 885,
+        "pointerSize": 128
+      },
+      "xetHash": "79155bceb76b0db1e4c2fcc82b566459dc0e122e2ca78ce00a09b7b8c7920f3a",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice003.png"
+    },
+    {
+      "type": "file",
+      "oid": "c506e44ae17136331ead7dbfaa34631961d12d27",
+      "size": 860,
+      "lfs": {
+        "oid": "1e747c42e4ce57ad9f745b77d230d34ae2ecfb6c0b74e77043729b08afbf485b",
+        "size": 860,
+        "pointerSize": 128
+      },
+      "xetHash": "7c4d27975c6922e72b70350cf71c5bea4edd3c1c581295fd2e85e7c1b779be6a",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice004.png"
+    },
+    {
+      "type": "file",
+      "oid": "c506e44ae17136331ead7dbfaa34631961d12d27",
+      "size": 860,
+      "lfs": {
+        "oid": "1e747c42e4ce57ad9f745b77d230d34ae2ecfb6c0b74e77043729b08afbf485b",
+        "size": 860,
+        "pointerSize": 128
+      },
+      "xetHash": "7c4d27975c6922e72b70350cf71c5bea4edd3c1c581295fd2e85e7c1b779be6a",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice005.png"
+    },
+    {
+      "type": "file",
+      "oid": "f92d552b4d450d6908b1d00fa9a0118a02b64dfc",
+      "size": 856,
+      "lfs": {
+        "oid": "b2569b5d8fbcac96e887d1a9804298c022edf102cd536a77ab51dcb6eb7d2a40",
+        "size": 856,
+        "pointerSize": 128
+      },
+      "xetHash": "c8b5ff3cc4e0440add713ef71bb796f0166e7c18e4fdc8629148f22a082d040c",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice006.png"
+    },
+    {
+      "type": "file",
+      "oid": "f92d552b4d450d6908b1d00fa9a0118a02b64dfc",
+      "size": 856,
+      "lfs": {
+        "oid": "b2569b5d8fbcac96e887d1a9804298c022edf102cd536a77ab51dcb6eb7d2a40",
+        "size": 856,
+        "pointerSize": 128
+      },
+      "xetHash": "c8b5ff3cc4e0440add713ef71bb796f0166e7c18e4fdc8629148f22a082d040c",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice007.png"
+    },
+    {
+      "type": "file",
+      "oid": "f92d552b4d450d6908b1d00fa9a0118a02b64dfc",
+      "size": 856,
+      "lfs": {
+        "oid": "b2569b5d8fbcac96e887d1a9804298c022edf102cd536a77ab51dcb6eb7d2a40",
+        "size": 856,
+        "pointerSize": 128
+      },
+      "xetHash": "c8b5ff3cc4e0440add713ef71bb796f0166e7c18e4fdc8629148f22a082d040c",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice008.png"
+    },
+    {
+      "type": "file",
+      "oid": "f92d552b4d450d6908b1d00fa9a0118a02b64dfc",
+      "size": 856,
+      "lfs": {
+        "oid": "b2569b5d8fbcac96e887d1a9804298c022edf102cd536a77ab51dcb6eb7d2a40",
+        "size": 856,
+        "pointerSize": 128
+      },
+      "xetHash": "c8b5ff3cc4e0440add713ef71bb796f0166e7c18e4fdc8629148f22a082d040c",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice009.png"
+    },
+    {
+      "type": "file",
+      "oid": "f92d552b4d450d6908b1d00fa9a0118a02b64dfc",
+      "size": 856,
+      "lfs": {
+        "oid": "b2569b5d8fbcac96e887d1a9804298c022edf102cd536a77ab51dcb6eb7d2a40",
+        "size": 856,
+        "pointerSize": 128
+      },
+      "xetHash": "c8b5ff3cc4e0440add713ef71bb796f0166e7c18e4fdc8629148f22a082d040c",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice010.png"
+    },
+    {
+      "type": "file",
+      "oid": "f92d552b4d450d6908b1d00fa9a0118a02b64dfc",
+      "size": 856,
+      "lfs": {
+        "oid": "b2569b5d8fbcac96e887d1a9804298c022edf102cd536a77ab51dcb6eb7d2a40",
+        "size": 856,
+        "pointerSize": 128
+      },
+      "xetHash": "c8b5ff3cc4e0440add713ef71bb796f0166e7c18e4fdc8629148f22a082d040c",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice011.png"
+    },
+    {
+      "type": "file",
+      "oid": "d06ebc1611097df15cbfc535b079c3c23108fedc",
+      "size": 855,
+      "lfs": {
+        "oid": "985c786f2e4c1adbcaca0eb00ed3ac003a573b5b50e0bea3df6dad29b3f22fa9",
+        "size": 855,
+        "pointerSize": 128
+      },
+      "xetHash": "51b03ff9eb6eb16d0d90b153abebf7c0fa45ad50359c5803a5952dd403bad013",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice012.png"
+    },
+    {
+      "type": "file",
+      "oid": "d06ebc1611097df15cbfc535b079c3c23108fedc",
+      "size": 855,
+      "lfs": {
+        "oid": "985c786f2e4c1adbcaca0eb00ed3ac003a573b5b50e0bea3df6dad29b3f22fa9",
+        "size": 855,
+        "pointerSize": 128
+      },
+      "xetHash": "51b03ff9eb6eb16d0d90b153abebf7c0fa45ad50359c5803a5952dd403bad013",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice013.png"
+    },
+    {
+      "type": "file",
+      "oid": "07f1edcb148bf52f44ba00d7dc5b11f06386f2ee",
+      "size": 862,
+      "lfs": {
+        "oid": "d61969d1e1a025f3c48f504e2e2e507f2e6cb45a496c60a90e9ce212d8134f04",
+        "size": 862,
+        "pointerSize": 128
+      },
+      "xetHash": "7813565f83c0b25df9a307f9e572e5967e54c73532a9eaae9a9ea4f326586cd6",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice014.png"
+    },
+    {
+      "type": "file",
+      "oid": "07f1edcb148bf52f44ba00d7dc5b11f06386f2ee",
+      "size": 862,
+      "lfs": {
+        "oid": "d61969d1e1a025f3c48f504e2e2e507f2e6cb45a496c60a90e9ce212d8134f04",
+        "size": 862,
+        "pointerSize": 128
+      },
+      "xetHash": "7813565f83c0b25df9a307f9e572e5967e54c73532a9eaae9a9ea4f326586cd6",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice015.png"
+    },
+    {
+      "type": "file",
+      "oid": "07f1edcb148bf52f44ba00d7dc5b11f06386f2ee",
+      "size": 862,
+      "lfs": {
+        "oid": "d61969d1e1a025f3c48f504e2e2e507f2e6cb45a496c60a90e9ce212d8134f04",
+        "size": 862,
+        "pointerSize": 128
+      },
+      "xetHash": "7813565f83c0b25df9a307f9e572e5967e54c73532a9eaae9a9ea4f326586cd6",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice016.png"
+    },
+    {
+      "type": "file",
+      "oid": "07f1edcb148bf52f44ba00d7dc5b11f06386f2ee",
+      "size": 862,
+      "lfs": {
+        "oid": "d61969d1e1a025f3c48f504e2e2e507f2e6cb45a496c60a90e9ce212d8134f04",
+        "size": 862,
+        "pointerSize": 128
+      },
+      "xetHash": "7813565f83c0b25df9a307f9e572e5967e54c73532a9eaae9a9ea4f326586cd6",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice017.png"
+    },
+    {
+      "type": "file",
+      "oid": "07f1edcb148bf52f44ba00d7dc5b11f06386f2ee",
+      "size": 862,
+      "lfs": {
+        "oid": "d61969d1e1a025f3c48f504e2e2e507f2e6cb45a496c60a90e9ce212d8134f04",
+        "size": 862,
+        "pointerSize": 128
+      },
+      "xetHash": "7813565f83c0b25df9a307f9e572e5967e54c73532a9eaae9a9ea4f326586cd6",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice018.png"
+    },
+    {
+      "type": "file",
+      "oid": "07f1edcb148bf52f44ba00d7dc5b11f06386f2ee",
+      "size": 862,
+      "lfs": {
+        "oid": "d61969d1e1a025f3c48f504e2e2e507f2e6cb45a496c60a90e9ce212d8134f04",
+        "size": 862,
+        "pointerSize": 128
+      },
+      "xetHash": "7813565f83c0b25df9a307f9e572e5967e54c73532a9eaae9a9ea4f326586cd6",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice019.png"
+    },
+    {
+      "type": "file",
+      "oid": "07f1edcb148bf52f44ba00d7dc5b11f06386f2ee",
+      "size": 862,
+      "lfs": {
+        "oid": "d61969d1e1a025f3c48f504e2e2e507f2e6cb45a496c60a90e9ce212d8134f04",
+        "size": 862,
+        "pointerSize": 128
+      },
+      "xetHash": "7813565f83c0b25df9a307f9e572e5967e54c73532a9eaae9a9ea4f326586cd6",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice020.png"
+    },
+    {
+      "type": "file",
+      "oid": "07f1edcb148bf52f44ba00d7dc5b11f06386f2ee",
+      "size": 862,
+      "lfs": {
+        "oid": "d61969d1e1a025f3c48f504e2e2e507f2e6cb45a496c60a90e9ce212d8134f04",
+        "size": 862,
+        "pointerSize": 128
+      },
+      "xetHash": "7813565f83c0b25df9a307f9e572e5967e54c73532a9eaae9a9ea4f326586cd6",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice021.png"
+    },
+    {
+      "type": "file",
+      "oid": "07f1edcb148bf52f44ba00d7dc5b11f06386f2ee",
+      "size": 862,
+      "lfs": {
+        "oid": "d61969d1e1a025f3c48f504e2e2e507f2e6cb45a496c60a90e9ce212d8134f04",
+        "size": 862,
+        "pointerSize": 128
+      },
+      "xetHash": "7813565f83c0b25df9a307f9e572e5967e54c73532a9eaae9a9ea4f326586cd6",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice022.png"
+    },
+    {
+      "type": "file",
+      "oid": "853cb2b675f0a343109b513c9c424c3667662665",
+      "size": 865,
+      "lfs": {
+        "oid": "947c91f85994d2f0f2349e0abe56168006e20cacb6e6c8a0a6bd1a7ca42e17a7",
+        "size": 865,
+        "pointerSize": 128
+      },
+      "xetHash": "5d032335e2a49fae80cf475ab9a95a1538ce54bf4a9419072db94f2837673b63",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice023.png"
+    },
+    {
+      "type": "file",
+      "oid": "853cb2b675f0a343109b513c9c424c3667662665",
+      "size": 865,
+      "lfs": {
+        "oid": "947c91f85994d2f0f2349e0abe56168006e20cacb6e6c8a0a6bd1a7ca42e17a7",
+        "size": 865,
+        "pointerSize": 128
+      },
+      "xetHash": "5d032335e2a49fae80cf475ab9a95a1538ce54bf4a9419072db94f2837673b63",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice024.png"
+    },
+    {
+      "type": "file",
+      "oid": "853cb2b675f0a343109b513c9c424c3667662665",
+      "size": 865,
+      "lfs": {
+        "oid": "947c91f85994d2f0f2349e0abe56168006e20cacb6e6c8a0a6bd1a7ca42e17a7",
+        "size": 865,
+        "pointerSize": 128
+      },
+      "xetHash": "5d032335e2a49fae80cf475ab9a95a1538ce54bf4a9419072db94f2837673b63",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice025.png"
+    },
+    {
+      "type": "file",
+      "oid": "853cb2b675f0a343109b513c9c424c3667662665",
+      "size": 865,
+      "lfs": {
+        "oid": "947c91f85994d2f0f2349e0abe56168006e20cacb6e6c8a0a6bd1a7ca42e17a7",
+        "size": 865,
+        "pointerSize": 128
+      },
+      "xetHash": "5d032335e2a49fae80cf475ab9a95a1538ce54bf4a9419072db94f2837673b63",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice026.png"
+    },
+    {
+      "type": "file",
+      "oid": "853cb2b675f0a343109b513c9c424c3667662665",
+      "size": 865,
+      "lfs": {
+        "oid": "947c91f85994d2f0f2349e0abe56168006e20cacb6e6c8a0a6bd1a7ca42e17a7",
+        "size": 865,
+        "pointerSize": 128
+      },
+      "xetHash": "5d032335e2a49fae80cf475ab9a95a1538ce54bf4a9419072db94f2837673b63",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice027.png"
+    },
+    {
+      "type": "file",
+      "oid": "853cb2b675f0a343109b513c9c424c3667662665",
+      "size": 865,
+      "lfs": {
+        "oid": "947c91f85994d2f0f2349e0abe56168006e20cacb6e6c8a0a6bd1a7ca42e17a7",
+        "size": 865,
+        "pointerSize": 128
+      },
+      "xetHash": "5d032335e2a49fae80cf475ab9a95a1538ce54bf4a9419072db94f2837673b63",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice028.png"
+    },
+    {
+      "type": "file",
+      "oid": "79f9213586b475069b3e7e286b09d56d250faea9",
+      "size": 869,
+      "lfs": {
+        "oid": "94fbc396548542a0bf45f57a11f045ea45b415712069e0b31345a70f227b0856",
+        "size": 869,
+        "pointerSize": 128
+      },
+      "xetHash": "b913425f85767ede845c5fda3f0e48b45596e955bbd4bb2d99e8b7181cd352fe",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice029.png"
+    },
+    {
+      "type": "file",
+      "oid": "79f9213586b475069b3e7e286b09d56d250faea9",
+      "size": 869,
+      "lfs": {
+        "oid": "94fbc396548542a0bf45f57a11f045ea45b415712069e0b31345a70f227b0856",
+        "size": 869,
+        "pointerSize": 128
+      },
+      "xetHash": "b913425f85767ede845c5fda3f0e48b45596e955bbd4bb2d99e8b7181cd352fe",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice030.png"
+    },
+    {
+      "type": "file",
+      "oid": "79f9213586b475069b3e7e286b09d56d250faea9",
+      "size": 869,
+      "lfs": {
+        "oid": "94fbc396548542a0bf45f57a11f045ea45b415712069e0b31345a70f227b0856",
+        "size": 869,
+        "pointerSize": 128
+      },
+      "xetHash": "b913425f85767ede845c5fda3f0e48b45596e955bbd4bb2d99e8b7181cd352fe",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice031.png"
+    },
+    {
+      "type": "file",
+      "oid": "97dbe8a7be8c67941c8ed87e807b7156fd517a43",
+      "size": 869,
+      "lfs": {
+        "oid": "da2650c156624d79878519469eb25cfa00629fe6274855d2497ec91665039c60",
+        "size": 869,
+        "pointerSize": 128
+      },
+      "xetHash": "9e9af5990105c0dc3f259435064cf722d103a846a4b4e54205c2039929a4fa46",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice032.png"
+    },
+    {
+      "type": "file",
+      "oid": "97dbe8a7be8c67941c8ed87e807b7156fd517a43",
+      "size": 869,
+      "lfs": {
+        "oid": "da2650c156624d79878519469eb25cfa00629fe6274855d2497ec91665039c60",
+        "size": 869,
+        "pointerSize": 128
+      },
+      "xetHash": "9e9af5990105c0dc3f259435064cf722d103a846a4b4e54205c2039929a4fa46",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice033.png"
+    },
+    {
+      "type": "file",
+      "oid": "97dbe8a7be8c67941c8ed87e807b7156fd517a43",
+      "size": 869,
+      "lfs": {
+        "oid": "da2650c156624d79878519469eb25cfa00629fe6274855d2497ec91665039c60",
+        "size": 869,
+        "pointerSize": 128
+      },
+      "xetHash": "9e9af5990105c0dc3f259435064cf722d103a846a4b4e54205c2039929a4fa46",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice034.png"
+    },
+    {
+      "type": "file",
+      "oid": "97dbe8a7be8c67941c8ed87e807b7156fd517a43",
+      "size": 869,
+      "lfs": {
+        "oid": "da2650c156624d79878519469eb25cfa00629fe6274855d2497ec91665039c60",
+        "size": 869,
+        "pointerSize": 128
+      },
+      "xetHash": "9e9af5990105c0dc3f259435064cf722d103a846a4b4e54205c2039929a4fa46",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice035.png"
+    },
+    {
+      "type": "file",
+      "oid": "97dbe8a7be8c67941c8ed87e807b7156fd517a43",
+      "size": 869,
+      "lfs": {
+        "oid": "da2650c156624d79878519469eb25cfa00629fe6274855d2497ec91665039c60",
+        "size": 869,
+        "pointerSize": 128
+      },
+      "xetHash": "9e9af5990105c0dc3f259435064cf722d103a846a4b4e54205c2039929a4fa46",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice036.png"
+    },
+    {
+      "type": "file",
+      "oid": "97dbe8a7be8c67941c8ed87e807b7156fd517a43",
+      "size": 869,
+      "lfs": {
+        "oid": "da2650c156624d79878519469eb25cfa00629fe6274855d2497ec91665039c60",
+        "size": 869,
+        "pointerSize": 128
+      },
+      "xetHash": "9e9af5990105c0dc3f259435064cf722d103a846a4b4e54205c2039929a4fa46",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice037.png"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice038.png"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice039.png"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice040.png"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice041.png"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice042.png"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice043.png"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice044.png"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice045.png"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice046.png"
+    },
+    {
+      "type": "file",
+      "oid": "8f35e78afaffccd133549106277365c5b134f553",
+      "size": 871,
+      "lfs": {
+        "oid": "e33c865a2910f9553952368c6a315538779efd5aae47b85206ffb0020d0d1b58",
+        "size": 871,
+        "pointerSize": 128
+      },
+      "xetHash": "382aef2150ee13c67d3eb632baf77c99c6042697f414c5565af3b821755786c0",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice047.png"
+    },
+    {
+      "type": "file",
+      "oid": "6496f3ffc17856a0746ca5c51247bd464948394e",
+      "size": 895,
+      "lfs": {
+        "oid": "d20e10ba6fa7e608db3a236ac385a990d79cd64f3bbc3daf5def64b70c8e6e2a",
+        "size": 895,
+        "pointerSize": 128
+      },
+      "xetHash": "5bc5749798b6ad39be47ba02acdd2f96caff9d93391259434e1e79d526a026ae",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice048.png"
+    },
+    {
+      "type": "file",
+      "oid": "6496f3ffc17856a0746ca5c51247bd464948394e",
+      "size": 895,
+      "lfs": {
+        "oid": "d20e10ba6fa7e608db3a236ac385a990d79cd64f3bbc3daf5def64b70c8e6e2a",
+        "size": 895,
+        "pointerSize": 128
+      },
+      "xetHash": "5bc5749798b6ad39be47ba02acdd2f96caff9d93391259434e1e79d526a026ae",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice049.png"
+    },
+    {
+      "type": "file",
+      "oid": "6496f3ffc17856a0746ca5c51247bd464948394e",
+      "size": 895,
+      "lfs": {
+        "oid": "d20e10ba6fa7e608db3a236ac385a990d79cd64f3bbc3daf5def64b70c8e6e2a",
+        "size": 895,
+        "pointerSize": 128
+      },
+      "xetHash": "5bc5749798b6ad39be47ba02acdd2f96caff9d93391259434e1e79d526a026ae",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice050.png"
+    },
+    {
+      "type": "file",
+      "oid": "542959b2158711307acc0e7fb50fe882fcc97766",
+      "size": 892,
+      "lfs": {
+        "oid": "e0693626ccad288973567af279978e379b9f910d0254cb8c841c10a2442c7eca",
+        "size": 892,
+        "pointerSize": 128
+      },
+      "xetHash": "3ff1a82e7b83a9882ca9c5e1d3772a4bbd255f5b64c88581cd28ba48606fd55e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice051.png"
+    },
+    {
+      "type": "file",
+      "oid": "542959b2158711307acc0e7fb50fe882fcc97766",
+      "size": 892,
+      "lfs": {
+        "oid": "e0693626ccad288973567af279978e379b9f910d0254cb8c841c10a2442c7eca",
+        "size": 892,
+        "pointerSize": 128
+      },
+      "xetHash": "3ff1a82e7b83a9882ca9c5e1d3772a4bbd255f5b64c88581cd28ba48606fd55e",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice052.png"
+    },
+    {
+      "type": "file",
+      "oid": "9fd70f180c0eaf741b31fcb8233c4d6732415332",
+      "size": 891,
+      "lfs": {
+        "oid": "b0adca0340da745695f9d18ff927fdb5f016a49dc15f89a001edf0a8ee91e696",
+        "size": 891,
+        "pointerSize": 128
+      },
+      "xetHash": "d3d75fb0339154b0873991b098e2b0e17dab849b5dd3a37f0875079b605890eb",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice053.png"
+    },
+    {
+      "type": "file",
+      "oid": "9fd70f180c0eaf741b31fcb8233c4d6732415332",
+      "size": 891,
+      "lfs": {
+        "oid": "b0adca0340da745695f9d18ff927fdb5f016a49dc15f89a001edf0a8ee91e696",
+        "size": 891,
+        "pointerSize": 128
+      },
+      "xetHash": "d3d75fb0339154b0873991b098e2b0e17dab849b5dd3a37f0875079b605890eb",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice054.png"
+    },
+    {
+      "type": "file",
+      "oid": "ad3837771c82b3e2e6af8dc6e16a3f7cbbf461bb",
+      "size": 892,
+      "lfs": {
+        "oid": "a4260b45cccbff6d80e9178b8f4ffeda6ff5865586cad5a310a98b73e1352cbf",
+        "size": 892,
+        "pointerSize": 128
+      },
+      "xetHash": "18f9f909b79276f672848f4a276f9fadd2fdd745ffdbb7a90033986e32c9b0ba",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice055.png"
+    },
+    {
+      "type": "file",
+      "oid": "ad3837771c82b3e2e6af8dc6e16a3f7cbbf461bb",
+      "size": 892,
+      "lfs": {
+        "oid": "a4260b45cccbff6d80e9178b8f4ffeda6ff5865586cad5a310a98b73e1352cbf",
+        "size": 892,
+        "pointerSize": 128
+      },
+      "xetHash": "18f9f909b79276f672848f4a276f9fadd2fdd745ffdbb7a90033986e32c9b0ba",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice056.png"
+    },
+    {
+      "type": "file",
+      "oid": "ad3837771c82b3e2e6af8dc6e16a3f7cbbf461bb",
+      "size": 892,
+      "lfs": {
+        "oid": "a4260b45cccbff6d80e9178b8f4ffeda6ff5865586cad5a310a98b73e1352cbf",
+        "size": 892,
+        "pointerSize": 128
+      },
+      "xetHash": "18f9f909b79276f672848f4a276f9fadd2fdd745ffdbb7a90033986e32c9b0ba",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice057.png"
+    },
+    {
+      "type": "file",
+      "oid": "cd4ffc6ae6acffaa314f248f2caf38bbae3d34da",
+      "size": 885,
+      "lfs": {
+        "oid": "8308fb4d1fedf684c85a4b7aa3d7262f5de814bf465945ccf164e322ab2e24c4",
+        "size": 885,
+        "pointerSize": 128
+      },
+      "xetHash": "cdc2ec80af7cf70bbc64ec55cee2b3de66b9f9c527e34576ebb3624bff8cf3b5",
+      "path": "Assets/Room/Simple_Room_nolight/Annotation/scene_slices/SimpleRoom_slice058.png"
+    },
+    {
+      "type": "file",
+      "oid": "175b09c5652d0b235820d1f6f1814bb5b9d56024",
+      "size": 309606,
+      "lfs": {
+        "oid": "49a93f3124cc628d579ac7ad39708ef1692c642668fd9ae784264dd728069bfd",
+        "size": 309606,
+        "pointerSize": 131
+      },
+      "xetHash": "8472049c8552a90f7786cda267a47a454b23eb996d9f4a816d4175443a747f22",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/DefaultMaterial_Base_Color.png"
+    },
+    {
+      "type": "file",
+      "oid": "12aa919d665ff08a2cbc50d0898ae5d6f965c1dc",
+      "size": 1110839,
+      "lfs": {
+        "oid": "1a53593fa84590c8339714c247a7b5b71bd578ce72fc0168b1e335efb0a17cd5",
+        "size": 1110839,
+        "pointerSize": 132
+      },
+      "xetHash": "7c773cc165240201df4986d7866f6843c7256018b4a6eaae8efd4c5cbb23e17f",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/DefaultMaterial_Mixed_AO.png"
+    },
+    {
+      "type": "file",
+      "oid": "f09118d6cf7b5442303dc6ed773c27b976fd4978",
+      "size": 2052839,
+      "lfs": {
+        "oid": "12aec50406cf9ba8f5c32cb27d35dd1af367433a7cd91de5d191fe0ddec57009",
+        "size": 2052839,
+        "pointerSize": 132
+      },
+      "xetHash": "d9001a9076dd13f69a111d46e5a1a321b3f78875440d4d9a97a053922d64c70d",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/DefaultMaterial_Normal_DirectX.png"
+    },
+    {
+      "type": "file",
+      "oid": "97423a129cbac2f87213a9bff78c4f9366621074",
+      "size": 87313,
+      "lfs": {
+        "oid": "0ab8364b5adfab4bd74ac4df359eb271595b3f0593eaf7e50ffd539b6155ad7c",
+        "size": 87313,
+        "pointerSize": 130
+      },
+      "xetHash": "2e970015e3b2da0dadd830f0471de3a87809b6ba19a3a0d7ee45aa146f1601a9",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/DefaultMaterial_Roughness.png"
+    },
+    {
+      "type": "file",
+      "oid": "0cddc9ed0f48ebcbcdf4a978047aa7000418f49d",
+      "size": 100361,
+      "lfs": {
+        "oid": "8917fc3f37e3e5985823f01339d5009eb2094ba3156f6f1326cd3ada0e9836c3",
+        "size": 100361,
+        "pointerSize": 131
+      },
+      "xetHash": "b48b0f9ce36d2ed4670252edf714116e8cd40d63ca6e82c679a0c8b37b9f6ad7",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/Parquet_AO.png"
+    },
+    {
+      "type": "file",
+      "oid": "2f0e656f140eceb056f66d689f5ed70d70878214",
+      "size": 17770200,
+      "lfs": {
+        "oid": "c67a4b0c0d77134cbe667af01b81861b5c157a738d7659fb3d348dabc204fe2f",
+        "size": 17770200,
+        "pointerSize": 133
+      },
+      "xetHash": "2aa7692c198e1120f5c70e6eaaa3337b394af7da453504e136869d09e61b5cea",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/Parquet_Color.png"
+    },
+    {
+      "type": "file",
+      "oid": "ce295dda12cd9b7b5bec4c74092aded0f331b03f",
+      "size": 9157075,
+      "lfs": {
+        "oid": "ef2d766ab27ff02e3b519a9438746d94264dc130bdc23f6ddddd89fed57e8c81",
+        "size": 9157075,
+        "pointerSize": 132
+      },
+      "xetHash": "ddceb08829f48188e3d5d725563f1222d1708e08b6e72676bb4cf537c4de5695",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/Parquet_Normal.png"
+    },
+    {
+      "type": "file",
+      "oid": "59e8d1deee036c9e93127e8a800fa7d27a2d99fa",
+      "size": 7945746,
+      "lfs": {
+        "oid": "dd7abcbf1627299aaddc730f4399683a51dbae4dca8180e683d71e4533d67b96",
+        "size": 7945746,
+        "pointerSize": 132
+      },
+      "xetHash": "6ef49ab243751afc0f01120a3ca0784f256f060f6457d73d301995c4d2ec9845",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/Parquet_Rough.png"
+    },
+    {
+      "type": "file",
+      "oid": "b4be550436ea636ae4408f443ed19b16dfb9253d",
+      "size": 22115990,
+      "lfs": {
+        "oid": "5890ba4255bf7ce41465c5ec8131d02aa04853480ceafa99dbee2106bdc15906",
+        "size": 22115990,
+        "pointerSize": 133
+      },
+      "xetHash": "4cc0eae1ef6ac2d928c95bdb50a410f1fdd52024b7d128c9c2d2f21b486ae13f",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/WallWood_Color.png"
+    },
+    {
+      "type": "file",
+      "oid": "67f5c1961b9d9228da57422c28f8da8c561528fc",
+      "size": 11588550,
+      "lfs": {
+        "oid": "9082f2f18db24a5e9d92282aab6b01c930d9d1d1d97825540e7cb7465f561b94",
+        "size": 11588550,
+        "pointerSize": 133
+      },
+      "xetHash": "adc3e46841e0ec30451500faa884f1e3d4197fd841a74ec742aa3cc50a272f65",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/WallWood_Normal.png"
+    },
+    {
+      "type": "file",
+      "oid": "2ca3ac76f59da1b871fad128f9aa45e49a1d4169",
+      "size": 7578363,
+      "lfs": {
+        "oid": "52246dd49107cec33307654ae1021b88cd65af53069b9e235f703aa34f90be7b",
+        "size": 7578363,
+        "pointerSize": 132
+      },
+      "xetHash": "57074f0fe46046ca152cc5f9ecf0b4927f549e372e3e26f666bd1ec3902d706a",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/WallWood_Rough.png"
+    },
+    {
+      "type": "file",
+      "oid": "cfb729c918dd482f6e9b982460d045f02c733537",
+      "size": 4639472,
+      "lfs": {
+        "oid": "f1705e778fe56e1b22f86d7e4fb8e12def7e5e0a1c053be46db5100fec093861",
+        "size": 4639472,
+        "pointerSize": 132
+      },
+      "xetHash": "7e44b5738ebf94f92984fcc2fc4f3b860cae9296798c9d9414d84005a5d2682b",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/WhitePlastic_Color.png"
+    },
+    {
+      "type": "file",
+      "oid": "de7af6d585058e742c094632bc78afa378da2a3b",
+      "size": 304449,
+      "lfs": {
+        "oid": "67eac4ffbea3538fcf40a44c63abfa432517c78895c5537396dea7b87cca7f7c",
+        "size": 304449,
+        "pointerSize": 131
+      },
+      "xetHash": "414da1d63fab1e835b9b3c4b34cf26531cf89bab01d173c072f592c80c9086b7",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/WhitePlastic_Normal.png"
+    },
+    {
+      "type": "file",
+      "oid": "02a686257852bc5c59550c21ece05bb8f7d06296",
+      "size": 8055045,
+      "lfs": {
+        "oid": "9f94f83edcfb93a03f79df531db6f5237fceb20eacee46c0cb8c07c1ed66c86e",
+        "size": 8055045,
+        "pointerSize": 132
+      },
+      "xetHash": "7d4fbdb4dcfed65b65348888e115fb488771fd55089d4e7c62df2e06ee24074c",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/WhitePlastic_Rough.png"
+    },
+    {
+      "type": "file",
+      "oid": "31149296a7f9bda36c1fa9a3c8ee8a8cfd0cf081",
+      "size": 25661358,
+      "lfs": {
+        "oid": "3797789e0e71990f3129c5ebdd052883c458b5834845a239d8c822f5a577a389",
+        "size": 25661358,
+        "pointerSize": 133
+      },
+      "xetHash": "b4cb4438d26b6f5f0eb62bb0b5ed78503b402ddf69c41b0e116502b6343d2283",
+      "path": "Assets/Room/Simple_Room_nolight/SubUSDs/textures/abandoned_parking_4k.hdr"
+    },
+    {
+      "type": "file",
+      "oid": "34089b17cd3c9abf181e4395c5bb1a65fe9b9db4",
+      "size": 2206556,
+      "lfs": {
+        "oid": "699c27f4a28af012a8e6fb7e5daaab9f87e0a6fcb6fa874912e73a70fe48e88d",
+        "size": 2206556,
+        "pointerSize": 132
+      },
+      "xetHash": "8750f3d2b84b90016c895046f0994f8b12ba237dfcbc886df92639d58d558137",
+      "path": "Assets/Room/Simple_Room_nolight/simple_room_nolight.usd"
+    },
+    {
+      "type": "file",
+      "oid": "39cbcf46bcd4e0680e41e316d015b7e54cfd2eb5",
+      "size": 14710,
+      "lfs": {
+        "oid": "b84af20b4bc69fe97f899f3c5b051ed0fbd054afddfaa52da09727e3801185e3",
+        "size": 14710,
+        "pointerSize": 130
+      },
+      "xetHash": "a94e0b22c4e5c88ef881cade766b1ec9fc924dd254269f78fcb82f6a562ad20a",
+      "path": "Assets/Sensor/Camera/.thumbs/256x256/kinect.usd.png"
+    },
+    {
+      "type": "file",
+      "oid": "897e6dcc052122f484d92df353272171c64592a6",
+      "size": 16722445,
+      "lfs": {
+        "oid": "ae411320e9dfee5a9105802ba82fcdb4ab62d4c36912fc55ae33f488a0c97107",
+        "size": 16722445,
+        "pointerSize": 133
+      },
+      "xetHash": "5623dfd33a51434450898e0ddb05e3130af83b9fc5aeab7d7aec2390056145a1",
+      "path": "Assets/Sensor/Camera/d435/configuration/d435_base.usd"
+    },
+    {
+      "type": "file",
+      "oid": "f0fd48eff254b4f477957e7d49b2201fab44037c",
+      "size": 1262,
+      "lfs": {
+        "oid": "35e2166c1eff8bb1cdf6114ca45176d31f0f486fc682c301253177da5002c813",
+        "size": 1262,
+        "pointerSize": 129
+      },
+      "xetHash": "65d7cd9383774b22d81da35216ead36b05461f15bc11bdc460424fb215aa5efc",
+      "path": "Assets/Sensor/Camera/d435/configuration/d435_physics.usd"
+    },
+    {
+      "type": "file",
+      "oid": "b87dc70137f0a409e493c7f1c49a93016f41aa3f",
+      "size": 1092,
+      "lfs": {
+        "oid": "a9f55686fcf197a1819f592fc025b79abc9d388fd3ce1889acf4ab5bb1160c51",
+        "size": 1092,
+        "pointerSize": 129
+      },
+      "xetHash": "d2e6de95fa24078010902b6e302e65961269a70077eb478e4937e3148aaf2f5b",
+      "path": "Assets/Sensor/Camera/d435/configuration/d435_robot.usd"
+    },
+    {
+      "type": "file",
+      "oid": "d016be57d4c944bbc896213b2885d7349d9faf62",
+      "size": 657,
+      "lfs": {
+        "oid": "1855185cfd6c99ec7c07d11c1830a1192f6c6fca440222a2cf74b0f2c0c9a927",
+        "size": 657,
+        "pointerSize": 128
+      },
+      "xetHash": "145dbdb3dfeef54d7112f9889cbab01b5ef5d13ce0e452946ad370a9ed8702c5",
+      "path": "Assets/Sensor/Camera/d435/configuration/d435_sensor.usd"
+    },
+    {
+      "type": "file",
+      "oid": "7bff5e675b00cef42885fb22b2b7ae575085454e",
+      "size": 3983,
+      "lfs": {
+        "oid": "e362c184d7dc445510b2513d1b8d379131af1a23708866cffdd1632175c5b65b",
+        "size": 3983,
+        "pointerSize": 129
+      },
+      "xetHash": "9771f6b5bff7d88e0abe2bcfe4daae32941f10562401f1a8b3d3985790bc410e",
+      "path": "Assets/Sensor/Camera/d435/d435.usd"
+    },
+    {
+      "type": "file",
+      "oid": "69cb5afe729101345e4d0813ba83c5faea62a890",
+      "size": 6296680,
+      "lfs": {
+        "oid": "eef0dbe023189bd36454d9bc28eaeb9a72a0e03438ae5af67453cc580498df64",
+        "size": 6296680,
+        "pointerSize": 132
+      },
+      "xetHash": "58b1fb0ab5c531dd0f3f18289754e7615c8a2d71c079b1ae6764b73a6d5c4c48",
+      "path": "Assets/Sensor/Camera/kinect.usd"
+    },
+    {
+      "type": "file",
+      "oid": "cb4723b8b25eee281b69dd1ec8b3f97e3e694ce2",
+      "size": 4452170,
+      "lfs": {
+        "oid": "faa959e07afe6acfb53e2330cc5aca5643ab6e950503ce782c1304552d393594",
+        "size": 4452170,
+        "pointerSize": 132
+      },
+      "xetHash": "7c5c3c53a97bf569ef780ec38c1a313cfe01f926c5fef68e6eee254e7e1a28ea",
+      "path": "Assets/Sensor/Camera/realsense.usd"
+    }
+  ],
+  "total_bytes": 685773995
+}

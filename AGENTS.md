@@ -5,7 +5,7 @@
 ## 工作范围与讨论
 
 - 当前开发工作区是 `/remote-home1/yhxu/workspace/agent/OpenETA`，以 main 的 OpenETA harness 为开发基础；修改前确认所在分支和工作区状态。
-- `/remote-home1/yhxu/workspace/agent/OpenETA-robodojo` 是 RoboDojo 实现与已验证实验的参考工作区。未经任务要求，不同步修改两个工作区。
+- main 已合入 RoboDojo Host、仿真支持和 Codex 入口；默认从当前仓库运行。`/remote-home1/yhxu/workspace/agent/OpenETA-robodojo` 保留为历史实现与实验的参考工作区，未经任务要求不再同步修改。接续说明见 `docs/robodojo-workspace.md`。
 - 涉及 harness 选择、工具接口变更、跨分支移植或实验口径调整，先说明差异和取舍、讨论确定后再实现。已确定范围内的常规实现与修复自主推进。
 - 当前目标、待讨论问题和实施状态见 `PLAN.md`；不要把候选方案当成已批准的设计。
 

@@ -6,6 +6,11 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
+This fork keeps **OpenETA and Codex RoboDojo execution together on `main`**.
+See the [current workspace guide](docs/robodojo-workspace.md) for setup, both
+entry points, recorded local results and pending work. Upstream results below
+retain their original experimental scope.
+
 [📄 Paper](https://arxiv.org/abs/2608.03924) ·
 [🌐 Project Page](https://openmoss.ai/OpenETA/) ·
 [💻 GitHub](https://github.com/OpenMOSS/OpenETA)
