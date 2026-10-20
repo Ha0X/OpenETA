@@ -1,0 +1,752 @@
+{
+  "snapshot_utc": "2026-10-16T11:35:51.186999+00:00",
+  "provisional": true,
+  "denominator": 42,
+  "model": "GPT-6 Astra",
+  "reasoning_effort": "high",
+  "seed": 0,
+  "tool_call_limit": 200,
+  "native_action_limit": null,
+  "episode_wall_clock_limit": null,
+  "method": "Human-assisted cross-version harness RSI, not fixed-version independent pass@k. Unfinished/unfilled attempts contribute no success to this provisional coverage chart.",
+  "tasks": {
+    "general_pickup": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 237.133,
+        "tool_calls": 11,
+        "native_actions": 87
+      }
+    ],
+    "align_blocks": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 2107.249,
+        "tool_calls": 30,
+        "native_actions": 272
+      }
+    ],
+    "arrange_largest_number": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 14253.388,
+        "tool_calls": 125,
+        "native_actions": 1200
+      },
+      {
+        "version": "v111",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 5923.85,
+        "tool_calls": 109,
+        "native_actions": 1285
+      }
+    ],
+    "build_tower": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 6339.068,
+        "tool_calls": 114,
+        "native_actions": 2355
+      }
+    ],
+    "classify_objects": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 2233.112,
+        "tool_calls": 94,
+        "native_actions": 1394
+      }
+    ],
+    "classify_objects_by_language": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 2672.311,
+        "tool_calls": 84,
+        "native_actions": 1599
+      }
+    ],
+    "cover_blocks": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 882.893,
+        "tool_calls": 55,
+        "native_actions": 758
+      }
+    ],
+    "deposit_coin": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 1206.521,
+        "tool_calls": 58,
+        "native_actions": 588
+      }
+    ],
+    "fasten_screws": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "completed",
+        "elapsed_s": 828.641,
+        "tool_calls": 29,
+        "native_actions": 243
+      },
+      {
+        "version": "v111",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 3778.023,
+        "tool_calls": 107,
+        "native_actions": 1206
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 8097.758,
+        "tool_calls": 158,
+        "native_actions": 2227
+      }
+    ],
+    "fill_egg_holder": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 2222.018,
+        "tool_calls": 88,
+        "native_actions": 842
+      },
+      {
+        "version": "v111",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 3074.917,
+        "tool_calls": 84,
+        "native_actions": 565
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 1930.635,
+        "tool_calls": 54,
+        "native_actions": 460
+      }
+    ],
+    "fill_pen_holder": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 2719.439,
+        "tool_calls": 126,
+        "native_actions": 1582
+      },
+      {
+        "version": "v111",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 18938.659,
+        "tool_calls": 190,
+        "native_actions": 2473
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "codex_failed",
+        "elapsed_s": 12009.159,
+        "tool_calls": 115,
+        "native_actions": 1249
+      }
+    ],
+    "fold_clothes": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 1551.741,
+        "tool_calls": 67,
+        "native_actions": 392
+      },
+      {
+        "version": "v111",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 1213.521,
+        "tool_calls": 72,
+        "native_actions": 416
+      }
+    ],
+    "hang_mugs": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 3856.211,
+        "tool_calls": 173,
+        "native_actions": 1764
+      }
+    ],
+    "imitate_sorting_sequence": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 10085.522,
+        "tool_calls": 66,
+        "native_actions": 1448
+      }
+    ],
+    "insert_key": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 8942.865,
+        "tool_calls": 78,
+        "native_actions": 616
+      },
+      {
+        "version": "v111",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "completed",
+        "elapsed_s": 5044.022,
+        "tool_calls": 86,
+        "native_actions": 573
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 6423.299,
+        "tool_calls": 100,
+        "native_actions": 839
+      }
+    ],
+    "insert_tubes": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 14116.212,
+        "tool_calls": 80,
+        "native_actions": 808
+      }
+    ],
+    "make_kong": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "codex_failed",
+        "elapsed_s": 5912.699,
+        "tool_calls": 58,
+        "native_actions": 641
+      },
+      {
+        "version": "v111",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 31618.121,
+        "tool_calls": 198,
+        "native_actions": 2727
+      }
+    ],
+    "make_toast": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 9551.418,
+        "tool_calls": 68,
+        "native_actions": 510
+      },
+      {
+        "version": "v111",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 6999.113,
+        "tool_calls": 92,
+        "native_actions": 673
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 7254.607,
+        "tool_calls": 65,
+        "native_actions": 565
+      }
+    ],
+    "match_and_pick_from_conveyor": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 3624.191,
+        "tool_calls": 28,
+        "native_actions": 513
+      }
+    ],
+    "organize_table": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 7998.795,
+        "tool_calls": 93,
+        "native_actions": 1233
+      },
+      {
+        "version": "v109",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 28362.533,
+        "tool_calls": 197,
+        "native_actions": 2939
+      },
+      {
+        "version": "v111",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "completed",
+        "elapsed_s": 10002.388,
+        "tool_calls": 107,
+        "native_actions": 1258
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 20330.348,
+        "tool_calls": 180,
+        "native_actions": 2007
+      }
+    ],
+    "pack_objects_into_box": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 5608.356,
+        "tool_calls": 134,
+        "native_actions": 1999
+      }
+    ],
+    "pick_from_conveyor_by_image": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 1031.294,
+        "tool_calls": 44,
+        "native_actions": 359
+      }
+    ],
+    "play_Xylophone": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 1738.545,
+        "tool_calls": 78,
+        "native_actions": 1378
+      }
+    ],
+    "play_stacking_toy": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "completed",
+        "elapsed_s": 1896.03,
+        "tool_calls": 93,
+        "native_actions": 939
+      },
+      {
+        "version": "v111",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "completed",
+        "elapsed_s": 4137.209,
+        "tool_calls": 81,
+        "native_actions": 1056
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "codex_failed",
+        "elapsed_s": 4192.293,
+        "tool_calls": 36,
+        "native_actions": 312
+      }
+    ],
+    "play_tic_tac_toe": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 1861.245,
+        "tool_calls": 58,
+        "native_actions": 1397
+      }
+    ],
+    "plug_in_charger": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 2236.342,
+        "tool_calls": 88,
+        "native_actions": 744
+      }
+    ],
+    "pour_balls_into_vase": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 1213.428,
+        "tool_calls": 61,
+        "native_actions": 345
+      },
+      {
+        "version": "v111",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "completed",
+        "elapsed_s": 608.472,
+        "tool_calls": 40,
+        "native_actions": 243
+      },
+      {
+        "version": "v112",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 7126.175,
+        "tool_calls": 121,
+        "native_actions": 1010
+      }
+    ],
+    "pour_by_language": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 475.727,
+        "tool_calls": 17,
+        "native_actions": 176
+      },
+      {
+        "version": "v111",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "codex_failed",
+        "elapsed_s": 892.845,
+        "tool_calls": 12,
+        "native_actions": 179
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 2346.015,
+        "tool_calls": 20,
+        "native_actions": 185
+      }
+    ],
+    "pour_liquid_into_cup": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 644.279,
+        "tool_calls": 39,
+        "native_actions": 231
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 598.429,
+        "tool_calls": 34,
+        "native_actions": 124
+      }
+    ],
+    "press_by_number": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 857.244,
+        "tool_calls": 44,
+        "native_actions": 467
+      },
+      {
+        "version": "v109",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 935.485,
+        "tool_calls": 41,
+        "native_actions": 487
+      }
+    ],
+    "push_T": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 1307.137,
+        "tool_calls": 92,
+        "native_actions": 771
+      }
+    ],
+    "put_bottles_into_dustbin": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 2422.345,
+        "tool_calls": 113,
+        "native_actions": 1269
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 1466.579,
+        "tool_calls": 52,
+        "native_actions": 488
+      }
+    ],
+    "solve_equation": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 716.033,
+        "tool_calls": 27,
+        "native_actions": 364
+      }
+    ],
+    "sort_nesting_dolls_by_size": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 3377.194,
+        "tool_calls": 80,
+        "native_actions": 1489
+      }
+    ],
+    "stack_blocks": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 1055.784,
+        "tool_calls": 37,
+        "native_actions": 302
+      }
+    ],
+    "stack_blocks_by_language": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 1083.58,
+        "tool_calls": 34,
+        "native_actions": 370
+      }
+    ],
+    "stack_bowls": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 1009.803,
+        "tool_calls": 41,
+        "native_actions": 536
+      }
+    ],
+    "store_laptop_and_headphones": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "completed",
+        "elapsed_s": 916.486,
+        "tool_calls": 29,
+        "native_actions": 146
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 348.275,
+        "tool_calls": 22,
+        "native_actions": 59
+      }
+    ],
+    "store_tools_in_toolbox": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 14081.015,
+        "tool_calls": 186,
+        "native_actions": 2882
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "codex_failed",
+        "elapsed_s": 10206.611,
+        "tool_calls": 66,
+        "native_actions": 724
+      }
+    ],
+    "swap_T": [
+      {
+        "version": "v108",
+        "official_success": true,
+        "classification": "success",
+        "launcher_status": "completed",
+        "elapsed_s": 2243.836,
+        "tool_calls": 27,
+        "native_actions": 740
+      }
+    ],
+    "swap_blocks": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 11484.846,
+        "tool_calls": 80,
+        "native_actions": 949
+      },
+      {
+        "version": "v112",
+        "official_success": false,
+        "classification": "task_unsuccessful",
+        "launcher_status": "completed",
+        "elapsed_s": 8047.152,
+        "tool_calls": 52,
+        "native_actions": 642
+      }
+    ],
+    "sweep_blocks": [
+      {
+        "version": "v108",
+        "official_success": false,
+        "classification": "infrastructure_or_host_interruption",
+        "launcher_status": "completed",
+        "elapsed_s": 13355.449,
+        "tool_calls": 111,
+        "native_actions": 1009
+      }
+    ]
+  },
+  "active_at_snapshot": [
+    {
+      "version": "v112",
+      "task": "sweep_blocks"
+    }
+  ],
+  "excluded_zero_action_startups": 4,
+  "points": [
+    {
+      "attempt_budget": 1,
+      "successes": 23,
+      "total": 42
+    },
+    {
+      "attempt_budget": 2,
+      "successes": 27,
+      "total": 42
+    },
+    {
+      "attempt_budget": 3,
+      "successes": 28,
+      "total": 42
+    }
+  ]
+}
